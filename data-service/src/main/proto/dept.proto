@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari";
+option java_outer_classname = "DeptProto";
+
+package dept;
+
+service Dept {
+    rpc list (DeptRequest) returns (DeptReply) {}
+    rpc save (DeptRequest) returns (DeptReply) {}
+    rpc get (DeptRequest) returns (DeptReply) {}
+    rpc update (DeptRequest) returns (DeptReply) {}
+    rpc remove (DeptRequest) returns (DeptReply) {}
+}
+
+message DeptRequest { string data = 1; }
+
+message DeptReply { string data = 1; }
