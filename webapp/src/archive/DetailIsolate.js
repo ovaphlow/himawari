@@ -9,16 +9,11 @@ export default function DetailIsolate() {
   const [data, setData] = useState({})
 
   useEffect(() => {
-    const fetchData = async id => {
+    ;(async id => {
       const response = await fetch(`/api/archive/isolate/${id}`)
       const res = await response.json()
-      if (res.message) {
-        window.alert(res.message)
-        return
-      }
       setData(res.content)
-    }
-    fetchData(id)
+    })(id)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
