@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package user;
+
+service User {
+    rpc list(UserRequest) returns (UserReply) {}
+    rpc save(UserRequest) returns (UserReply) {}
+    rpc get(UserRequest) returns (UserReply) {}
+    rpc update(UserRequest) returns (UserReply) {}
+    rpc remove(UserRequest) returns (UserReply) {}
+}
+
+message UserRequest { string data = 1; }
+
+message UserReply { string data = 1; }

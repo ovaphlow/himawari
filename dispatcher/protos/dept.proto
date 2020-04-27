@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package dept;
+
+service Dept {
+    rpc list (DeptRequest) returns (DeptReply) {}
+    rpc save (DeptRequest) returns (DeptReply) {}
+    rpc get (DeptRequest) returns (DeptReply) {}
+    rpc update (DeptRequest) returns (DeptReply) {}
+    rpc remove (DeptRequest) returns (DeptReply) {}
+}
+
+message DeptRequest { string data = 1; }
+
+message DeptReply { string data = 1; }

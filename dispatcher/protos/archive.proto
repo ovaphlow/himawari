@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package archive;
+
+service Archive {
+    rpc search (ArchiveRequest) returns (ArchiveReply) {}
+    rpc filter (ArchiveRequest) returns (ArchiveReply) {}
+    rpc checkValid (ArchiveRequest) returns (ArchiveReply) {}
+    rpc checkValidWithId (ArchiveRequest) returns (ArchiveReply) {}
+
+    rpc list (ArchiveRequest) returns (ArchiveReply) {}
+    rpc save (ArchiveRequest) returns (ArchiveReply) {}
+    rpc get (ArchiveRequest) returns (ArchiveReply) {}
+    rpc update (ArchiveRequest) returns (ArchiveReply) {}
+    rpc remove (ArchiveRequest) returns (ArchiveReply) {}
+
+    rpc transferOut (ArchiveRequest) returns (ArchiveReply) {}
+    rpc transferIn (ArchiveRequest) returns (ArchiveReply) {}
+
+    rpc listPicture (ArchiveRequest) returns (ArchiveReply) {}
+    rpc saveBase64 (ArchiveRequest) returns (ArchiveReply) {}
+    rpc getPicture (ArchiveRequest) returns (ArchiveReply) {}
+
+    rpc listIsolate (ArchiveRequest) returns (ArchiveReply) {}
+    rpc getIsolate (ArchiveRequest) returns (ArchiveReply) {}
+    rpc updateIsolate (ArchiveRequest) returns (ArchiveReply) {}
+    rpc removeIsolate (ArchiveRequest) returns (ArchiveReply) {}
+    rpc filterIsolate (ArchiveRequest) returns (ArchiveReply) {}
+}
+
+message ArchiveRequest { string data = 1; }
+
+message ArchiveReply { string data = 1; }
