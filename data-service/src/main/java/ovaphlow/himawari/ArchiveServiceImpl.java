@@ -457,7 +457,8 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try {
             Connection conn = DBUtil.getConn();
-            String sql = "select id, master_id, content from himawari.picture where master_id = ?";
+//            String sql = "select id, master_id, content from himawari.picture where master_id = ?";
+            String sql = "select id, master_id from himawari.picture where master_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
             Double id = Double.parseDouble(body.get("id").toString());
