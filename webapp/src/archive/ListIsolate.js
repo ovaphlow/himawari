@@ -98,7 +98,8 @@ export default function ListIsolate() {
                   <th>附加档案号</th>
                   <th>身份证</th>
                   <th>姓名</th>
-                  <th className="text-right">操作</th>
+                  <th>性别</th>
+                  <th>出生日期</th>
                 </tr>
               </thead>
 
@@ -106,11 +107,9 @@ export default function ListIsolate() {
                 {data.map(it => (
                   <tr key={it.id}>
                     <td>
-                      <span className="text-primary">
-                        <i className="fa fa-fw fa-edit"
-                          onClick={() => window.location = `#档案/中转区/${it.id}`}
-                        ></i>
-                      </span>
+                      <a href={`#档案/${it.id}?opt=中转区`}>
+                        <i className="fa fa-fw fa-edit"></i>
+                      </a>
 
                       <span className="pull-right">{it.id}</span>
                     </td>
@@ -120,12 +119,8 @@ export default function ListIsolate() {
                     <td>{it.sn_alt}</td>
                     <td>{it.identity}</td>
                     <td>{it.name}</td>
-                    <td className="text-right">
-                      <button type="button" className="btn btn-link text-danger">
-                        <i className="fa fa-fw fa-download"></i>
-                        转入档案
-                      </button>
-                    </td>
+                    <td>{it.gender}</td>
+                    <td>{it.birthday}</td>
                   </tr>
                 ))}
               </tbody>

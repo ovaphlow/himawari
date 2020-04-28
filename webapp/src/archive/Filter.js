@@ -98,6 +98,7 @@ export default function Filter() {
                   <th>附加档案号</th>
                   <th>身份证</th>
                   <th>姓名</th>
+                  <th>性别</th>
                   <th>出生日期</th>
                 </tr>
               </thead>
@@ -117,6 +118,7 @@ export default function Filter() {
                       <td>{it.sn_alt}</td>
                       <td>{it.identity}</td>
                       <td>{it.name}</td>
+                      <td>{it.gender}</td>
                       <td>{it.birthday}</td>
                     </tr>
                   ))
