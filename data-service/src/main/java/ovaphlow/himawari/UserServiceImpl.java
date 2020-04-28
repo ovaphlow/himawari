@@ -46,6 +46,42 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
 
     @Override
     @SuppressWarnings("unchecked")
+    public void filter(UserRequest req, StreamObserver<UserReply> responseObserver) {
+        Gson gson = new Gson();
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("message", "");
+        resp.put("content", "");
+
+        try {
+            Connection conn = DBUtil.getConn();
+            String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, c.v as dept, " +
+                    "(select super from himawari.auth where user_id = u.id) as super " +
+                    "from public.user as u left join public.common as c on c.id = u.dept_id " +
+                    "where position(? in u.name) > 0 " +
+                    "or position(? in u.username) > 0 " +
+                    "or position(? in c.v) > 0 " +
+                    "order by id desc limit 200";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+            ps.setString(1, body.get("filter_string").toString());
+            ps.setString(2, body.get("filter_string").toString());
+            ps.setString(3, body.get("filter_string").toString());
+            ResultSet rs = ps.executeQuery();
+
+            resp.put("content", DBUtil.getList(rs));
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.put("message", "gRPC服务器错误");
+        }
+
+        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public void save(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();

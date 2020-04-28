@@ -37,6 +37,7 @@ const Toolbar = () => (
 
 function List() {
   const [list, setList] = useState([])
+  const [filter_string, setFilterString] = useState('')
 
   useEffect(() => {
     ;(async () => {
@@ -45,6 +46,23 @@ function List() {
       setList(res.content)
     })()
   }, [])
+
+  const handleFilter = async () => {
+    setList([])
+    let res = await window.fetch('/api/user/', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        filter_string: filter_string
+      })
+    })
+    res = await res.json()
+    if (res.message) {
+      window.alert(res.message)
+      return
+    }
+    setList(res.content)
+  }
 
   return (
     <div className="row mt-3">
@@ -63,8 +81,36 @@ function List() {
         <Toolbar />
 
         <div className="card shadow mt-2">
-          <div className="card-header" style={{ display: 'none' }}>
-            查询条件
+          <div className="card-header">
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text">姓名/用户名/部门</span>
+              </div>
+              <input type="search" name="filter_string" value={filter_string || ''}
+                className="form-control"
+                onChange={event => setFilterString(event.target.value)}
+              />
+            </div>
+
+            <div className="clearfix"></div>
+
+            <div className="btn-group">
+              <button type="button" className="btn btn-outline-secondary btn-sm"
+                onClick={() => window.location.reload(true)}
+              >
+                <i className="fa fa-fw fa-refresh"></i>
+                重置
+              </button>
+            </div>
+
+            <div className="btn-group pull-right">
+              <button type="button" className="btn btn-outline-primary btn-sm"
+                onClick={handleFilter}
+              >
+                <i className="fa fa-fw fa-search"></i>
+                查询
+              </button>
+            </div>
           </div>
 
           <div className="card-body">
