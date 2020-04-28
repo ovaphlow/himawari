@@ -74,6 +74,7 @@ function List() {
                   <th className="text-right">序号</th>
                   <th>姓名</th>
                   <th>用户名</th>
+                  <th>部门</th>
                   <th>管理员权限</th>
                   <th>操作记录</th>
                 </tr>
@@ -91,6 +92,7 @@ function List() {
                     </td>
                     <td>{it.name}</td>
                     <td>{it.username}</td>
+                    <td>{it.dept}</td>
                     <td>{it.super === 1 ? '是' : '否'}</td>
                     <td>
                       <a href={`#数据管理/操作记录/用户/${it.id}`}>

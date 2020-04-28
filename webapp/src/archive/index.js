@@ -10,7 +10,6 @@ import PictureList from './PictureList'
 import Picture from './Picture'
 import TransferOut from './TransferOut'
 import ListIsolate from './ListIsolate'
-import DetailIsolate from './DetailIsolate'
 import ImportData from './ImportData'
 
 export default function Index() {
@@ -30,7 +29,6 @@ export default function Index() {
             <Route exact path="/档案/查询"><Filter /></Route>
             <Route exact path="/档案/转入"><Detail category="转入" /></Route>
             <Route exact path="/档案/中转区"><ListIsolate /></Route>
-            <Route exact path="/档案/中转区/:id"><DetailIsolate /></Route>
             <Route exact path="/档案/导入"><ImportData /></Route>
             <Route exact path="/档案/:id/扫描"><Capture /></Route>
             <Route exact path="/档案/:id/图像"><PictureList /></Route>

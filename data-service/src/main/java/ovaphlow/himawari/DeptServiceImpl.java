@@ -24,7 +24,10 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
 
         try {
             Connection conn = DBUtil.getConn();
-            String sql = "select * from public.common where k = '部门' order by id desc";
+            String sql = "select c.*, " +
+                    "(select count(*) from public.user where dept_id = c.id) as qty_user " +
+                    "from public.common as c " +
+                    "where k = '部门'";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 

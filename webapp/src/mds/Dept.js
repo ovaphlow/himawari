@@ -110,7 +110,7 @@ function List() {
                         </span>
                       </td>
                       <td>{it.v}</td>
-                      <td>0</td>
+                      <td>{it.qty_user}</td>
                       <td>
                         <a href={`#数据管理/操作记录/部门/${it.id}`}>
                           <i className="fa fa-fw fa-history"></i>
