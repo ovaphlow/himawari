@@ -18,7 +18,10 @@ const packageDefinition = protoLoader.loadSync(__dirname + '/../protos/archive.p
 const proto = grpc.loadPackageDefinition(packageDefinition).archive
 const grpcClient = new proto.Archive(
   `${config.grpcServer.host}:${config.grpcServer.port}`,
-  grpc.credentials.createInsecure()
+  grpc.credentials.createInsecure(), {
+    'grpc.max_receive_message_length': config.grpcServer.settings["grpc.max_receive_message_length"],
+    'grpc.max_send_message_length': config.grpcServer.settings["grpc.max_send_message_length"]
+  }
 )
 
 const router = new Router({
