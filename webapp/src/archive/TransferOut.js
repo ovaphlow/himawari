@@ -7,36 +7,28 @@ import Toolbar from './components/Toolbar'
 export default function TransferOut() {
   const { id } = useParams()
   const [data, setData] = useState(0)
-  const [dataIsolate, setDataIsolate] = useState({ reason: '' })
+  const [reason, setReason] = useState('')
 
   useEffect(() => {
-    const fetchData = async id => {
+    ;(async id => {
       const response = await fetch(`/api/archive/${id}`)
       const res = await response.json()
-      if (res.message) {
-        window.alert(res.message)
-        return
-      }
       setData(res.content)
-    }
-    fetchData(id)
+    })(id)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleChange = e => {
-    const { value, name } = e.target
-    setDataIsolate(prev => ({ ...prev, [name]: value }))
-  }
-
   const handleSubmit = async () => {
-    if (!!!dataIsolate.reason) {
+    if (!!!reason) {
       window.alert('请完整填写所需信息')
       return
     }
     const response = await fetch(`/api/archive/transfer-out`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
-      body: JSON.stringify(Object.assign(dataIsolate, data))
+      body: JSON.stringify(Object.assign({
+        reason: reason
+      }, data))
     })
     const res = await response.json()
     if (res.message) {
@@ -62,9 +54,9 @@ export default function TransferOut() {
           <div className="card-body">
             <div className="form-group">
               <label>转出原因</label>
-              <input type="text" name="reason" value={dataIsolate.reason || ''}
+              <input type="text" value={reason || ''}
                 className="form-control"
-                onChange={handleChange}
+                onChange={event => setReason(event.target.value)}
               />
             </div>
           </div>
