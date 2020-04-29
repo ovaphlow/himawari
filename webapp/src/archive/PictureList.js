@@ -6,21 +6,18 @@ import Toolbar from './components/Toolbar'
 
 export default function PictureList() {
   const { id } = useParams()
-  // const [picture_index, setPictureIndex] = useState([])
   const [picture_list, setPictureList] = useState([])
 
   useEffect(() => {
     ;(async id => {
       let res = await window.fetch(`/api/archive/${id}/picture/`)
       res = await res.json()
-      // const list = []
       const loop = async (picture_index, index, picture_list) => {
         if (index >= picture_index.length) return
         let _res = await window.fetch(`/api/archive/${picture_index[index].master_id}/picture/${picture_index[index].id}`)
         _res = await _res.json()
         picture_list.push(_res.content)
-        // console.info(picture_list)
-        setPictureList(picture_list)
+        setPictureList(picture_list.slice())
         loop(picture_index, ++index, picture_list)
       }
       loop(res.content, 0, [])
