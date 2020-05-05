@@ -13,8 +13,7 @@ const packageDefinition = protoLoader.loadSync(__dirname + '/../protos/vault.pro
 })
 const proto = grpc.loadPackageDefinition(packageDefinition).vault
 const grpcClient = new proto.Vault(
-  // `${config.grpcServer.host}:${config.grpcServer.port}`,
-  `${config.grpcServer.host}:50051`,
+  `${config.grpcServer.host}:${config.grpcServer.port}`,
   grpc.credentials.createInsecure()
 )
 
