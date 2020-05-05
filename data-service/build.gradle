@@ -27,8 +27,9 @@ dependencies {
     implementation "commons-cli:commons-cli:1.4"
     implementation "ch.qos.logback:logback-classic:1.2.3"
 
-    implementation "com.zaxxer:HikariCP:3.4.2"
     implementation "org.postgresql:postgresql:42.2.12"
+    implementation "com.zaxxer:HikariCP:3.4.2"
+    implementation 'commons-dbutils:commons-dbutils:1.7'
 }
 
 protobuf {
@@ -57,8 +58,8 @@ tasks.withType(JavaCompile) {
 }
 
 task dataService(type: CreateStartScripts) {
-    mainClassName = 'ovaphlow.himawari.DataService'
-    applicationName = 'ovaphlow.himawari.data-service.202004-1'
+    mainClassName = 'ovaphlow.himawari.service.data.Application'
+    applicationName = 'ovaphlow.himawari.service.data.202004-1'
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
 }

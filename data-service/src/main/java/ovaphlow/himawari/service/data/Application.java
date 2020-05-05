@@ -1,4 +1,4 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class DataService {
-    private static final Logger logger = LoggerFactory.getLogger(DataService.class);
+public class Application {
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private Server server;
 
@@ -29,7 +29,7 @@ public class DataService {
             public void run() {
                 System.err.println("*** shutting down gRPC server since JVM is shutting down");
                 try {
-                    DataService.this.stop();
+                    Application.this.stop();
                 } catch (InterruptedException e) {
                     e.printStackTrace(System.err);
                 }
@@ -85,7 +85,7 @@ public class DataService {
             e.printStackTrace();
         }
 
-        final DataService server = new DataService();
+        final Application server = new Application();
         server.start();
         server.blockUntilShutdown();
     }

@@ -1,7 +1,10 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,20 +25,16 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select u.id, u.dept_id, u.username, u.name, " +
                     "(select super from himawari.auth where user_id = u.id) as super, " +
                     "(select v from public.common where id = u.dept_id) as dept " +
                     "from public.user as u " +
                     "order by id desc limit 200";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            resp.put("content", DBUtil.getList(rs));
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -48,12 +47,12 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
     @SuppressWarnings("unchecked")
     public void filter(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, c.v as dept, " +
                     "(select super from himawari.auth where user_id = u.id) as super " +
                     "from public.user as u left join public.common as c on c.id = u.dept_id " +
@@ -61,17 +60,13 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
                     "or position(? in u.username) > 0 " +
                     "or position(? in c.v) > 0 " +
                     "order by id desc limit 200";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            ps.setString(1, body.get("filter_string").toString());
-            ps.setString(2, body.get("filter_string").toString());
-            ps.setString(3, body.get("filter_string").toString());
-            ResultSet rs = ps.executeQuery();
-
-            resp.put("content", DBUtil.getList(rs));
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapListHandler(),
+                    body.get("filter_string").toString(),
+                    body.get("filter_string").toString(),
+                    body.get("filter_string").toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -84,23 +79,29 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
     @SuppressWarnings("unchecked")
     public void save(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Double d = Double.parseDouble(body.get("dept_id").toString());
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into public.user " +
                     "(username, password, name, dept_id, remark) " +
                     "values (?, ?, ?, ?, ?) " +
                     "returning id";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            Double _id = Double.parseDouble(body.get("dept_id").toString());
+//            QueryRunner qr = new QueryRunner();
+//            resp.put("content", qr.query(cnx, sql, new MapHandler(),
+//                    body.get("username").toString(),
+//                    body.get("password").toString(),
+//                    body.get("name").toString(),
+//                    _id.intValue(),
+//                    body.get("remark").toString()));
+            PreparedStatement ps = cnx.prepareStatement(sql);
             ps.setString(1, body.get("username").toString());
             ps.setString(2, body.get("password").toString());
             ps.setString(3, body.get("name").toString());
-            ps.setInt(4, d.intValue());
+            ps.setInt(4, _id.intValue());
             ps.setString(5, body.get("remark").toString());
             ResultSet rs = ps.executeQuery();
             Map<String, Object> map = DBUtil.getMap(rs);
@@ -108,15 +109,14 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
             sql = "insert into himawari.auth " +
                     "(user_id, super) " +
                     "values (?, ?)";
-            ps = conn.prepareStatement(sql);
+            Double _auth_super = Double.parseDouble(body.get("auth_super").toString());
+            ps = cnx.prepareStatement(sql);
             ps.clearParameters();
             ps.setInt(1, Integer.parseInt(map.get("id").toString()));
-            Double auth_super = Double.parseDouble(body.get("auth_super").toString());
-            ps.setInt(2, auth_super.intValue());
+            ps.setInt(2, _auth_super.intValue());
             ps.execute();
-            conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -129,23 +129,20 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
     @SuppressWarnings("unchecked")
     public void get(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, " +
                     "(select super from himawari.auth where user_id = u.id) as super, " +
                     "(select v from public.common where id = u.dept_id) as dept " +
                     "from public.user as u " +
                     "where id = ? limit 1";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, Integer.parseInt(body.get("id").toString()));
-            ResultSet rs = ps.executeQuery();
-            resp.put("content", DBUtil.getMap(rs));
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapHandler(),
+                    Integer.parseInt(body.get("id").toString())));
         } catch (Exception e) {
             e.printStackTrace();
             resp.put("message", "gRPC服务器错误");
@@ -160,36 +157,32 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
     @SuppressWarnings("unchecked")
     public void update(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Double id = Double.parseDouble((body.get("id").toString()));
-            Double dept_id = Double.parseDouble(body.get("dept_id").toString());
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update public.user " +
                     "set name = ?, username = ?, dept_id = ?, " +
                     "remark = ? " +
                     "where id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, body.get("name").toString());
-            ps.setString(2, body.get("username").toString());
-            ps.setInt(3, dept_id.intValue());
-            ps.setString(4, body.get("remark").toString());
-            ps.setInt(5, id.intValue());
-            ps.execute();
+            Double _id = Double.parseDouble((body.get("id").toString()));
+            Double _dept_id = Double.parseDouble(body.get("dept_id").toString());
+            QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql,
+                    body.get("name").toString(),
+                    body.get("username").toString(),
+                    _dept_id.intValue(),
+                    body.get("remark").toString(),
+                    _id.intValue());
             sql = "update himawari.auth set super = ? where user_id = ?";
-            ps = conn.prepareStatement(sql);
-            ps.clearParameters();
-            Double auth_super = Double.parseDouble(body.get("auth_super").toString());
-            ps.setInt(1, auth_super.intValue());
-            ps.setInt(2, id.intValue());
-            ps.execute();
-            conn.close();
+            Double _auth_super = Double.parseDouble(body.get("auth_super").toString());
+            qr.update(cnx, sql,
+                _auth_super.intValue(),
+                _id.intValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -202,24 +195,26 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
     @SuppressWarnings("unchecked")
     public void remove(UserRequest req, StreamObserver<UserReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Double id = Double.parseDouble((body.get("id").toString()));
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "delete from public.user where id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id.intValue());
-            ps.execute();
+            Double _id = Double.parseDouble((body.get("id").toString()));
+            QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql, _id.intValue());
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setInt(1, id.intValue());
+//            ps.execute();
             sql = "delete from himawari.auth where user_id = ?";
-            ps = conn.prepareStatement(sql);
-            ps.clearParameters();
-            ps.setInt(1, id.intValue());
-            ps.execute();
-            conn.close();
+            qr.update(cnx, sql, _id.intValue());
+//            ps = conn.prepareStatement(sql);
+//            ps.clearParameters();
+//            ps.setInt(1, id.intValue());
+//            ps.execute();
+//            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
             resp.put("message", "gRPC服务器错误");

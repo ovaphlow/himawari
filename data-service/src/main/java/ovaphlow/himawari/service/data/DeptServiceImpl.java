@@ -1,13 +1,15 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,19 +24,17 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select c.*, " +
                     "(select count(*) from public.user where dept_id = c.id) as qty_user " +
                     "from public.common as c " +
-                    "where k = '部门'";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            resp.put("content", DBUtil.getList(rs));
-            conn.close();
+                    "where k = '部门' " +
+                    "order by id desc " +
+                    "limit 100";
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -47,26 +47,22 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
     @SuppressWarnings("unchecked")
     public void save(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into public.common " +
                     "(master_id, k, v, remark) " +
                     "values (0, '部门', ?, ?) " +
                     "returning id";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, body.get("v").toString());
-            ps.setString(2, body.get("remark").toString());
-            ResultSet rs = ps.executeQuery();
-
-            resp.put("content", DBUtil.getMap(rs));
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapHandler(),
+                    body.get("v").toString(),
+                    body.get("remark").toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -79,22 +75,18 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
     @SuppressWarnings("unchecked")
     public void get(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from public.common where id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, Integer.parseInt(body.get("id").toString()));
-            ResultSet rs = ps.executeQuery();
-
-            resp.put("content", DBUtil.getMap(rs));
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            resp.put("content", qr.query(cnx, sql, new MapHandler(),
+                    Integer.parseInt(body.get("id").toString())));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -107,24 +99,21 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
     @SuppressWarnings("unchecked")
     public void update(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Double d = Double.parseDouble(body.get("id").toString());
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update public.common " +
                     "set v = ?, remark = ? " +
                     "where id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, body.get("v").toString());
-            ps.setString(2, body.get("remark").toString());
-            ps.setInt(3, d.intValue());
-            ps.execute();
-
-            conn.close();
+            Double _id = Double.parseDouble(body.get("id").toString());
+            QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql,
+                    body.get("v").toString(),
+                    body.get("remark").toString(),
+                    _id.intValue());
         } catch (Exception e) {
             e.printStackTrace();
             resp.put("message", "gRPC服务器错误");
@@ -139,19 +128,15 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
     @SuppressWarnings("unchecked")
     public void remove(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
-        try {
-            Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-            Connection conn = DBUtil.getConn();
+        try (Connection cnx = DBUtil.getConnection()) {
             String sql = "delete from public.common where id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, Integer.parseInt(body.get("id").toString()));
-            ps.execute();
-
-            conn.close();
+            QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql, Integer.parseInt(body.get("id").toString()));
         } catch (Exception e) {
             e.printStackTrace();
             resp.put("message", "gRPC服务器错误");

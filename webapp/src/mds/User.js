@@ -173,7 +173,7 @@ function Detail(props) {
         setUsername(res.content.username)
         setName(res.content.name)
         setRemark(res.content.remark)
-        setAuthSuper(res.content.auth_super)
+        setAuthSuper(res.content.super || '0')
       })(id)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

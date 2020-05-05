@@ -1,4 +1,4 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -30,7 +30,7 @@ public class DBUtil {
         ds = new HikariDataSource(config);
     }
 
-    public static Connection getConn() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
 

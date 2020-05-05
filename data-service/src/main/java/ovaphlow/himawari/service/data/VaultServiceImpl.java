@@ -1,4 +1,4 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
@@ -23,7 +23,7 @@ public class VaultServiceImpl extends VaultGrpc.VaultImplBase {
         resp.put("content", "");
 
         try {
-            Connection conn = DBUtil.getConn();
+            Connection conn = DBUtil.getConnection();
             String sql = "select * from himawari.vault order by id desc";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -48,7 +48,7 @@ public class VaultServiceImpl extends VaultGrpc.VaultImplBase {
         resp.put("content", "");
 
         try {
-            Connection conn = DBUtil.getConn();
+            Connection conn = DBUtil.getConnection();
             String sql = "insert into himawari.vault " +
                     "(name, phone, addr) " +
                     "values (?, ?, ?) " +
@@ -80,7 +80,7 @@ public class VaultServiceImpl extends VaultGrpc.VaultImplBase {
         resp.put("content", "");
 
         try {
-            Connection conn = DBUtil.getConn();
+            Connection conn = DBUtil.getConnection();
             String sql = "select * from himawari.vault where id = ? limit 1";
             PreparedStatement ps = conn.prepareStatement(sql);
             Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
@@ -108,7 +108,7 @@ public class VaultServiceImpl extends VaultGrpc.VaultImplBase {
         resp.put("content", "");
 
         try {
-            Connection conn = DBUtil.getConn();
+            Connection conn = DBUtil.getConnection();
             String sql = "update himawari.vault " +
                     "set name = ?, phone = ?, addr = ? " +
                     "where id = ?";
@@ -140,7 +140,7 @@ public class VaultServiceImpl extends VaultGrpc.VaultImplBase {
         resp.put("content", "");
 
         try {
-            Connection conn = DBUtil.getConn();
+            Connection conn = DBUtil.getConnection();
             String sql = "delete from himawari.vault where id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             Map<String, Object> body = gson.fromJson(req.getData(), Map.class);

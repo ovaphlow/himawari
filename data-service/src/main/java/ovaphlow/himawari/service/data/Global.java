@@ -1,4 +1,4 @@
-package ovaphlow.himawari;
+package ovaphlow.himawari.service.data;
 
 public class Global {
     private static int PORT = 5001;
