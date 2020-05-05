@@ -115,7 +115,7 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
                     body.get("remark").toString(),
                     _id.intValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -138,7 +138,7 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql, Integer.parseInt(body.get("id").toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 

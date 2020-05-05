@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,31 +88,21 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
                     "values (?, ?, ?, ?, ?) " +
                     "returning id";
             Double _id = Double.parseDouble(body.get("dept_id").toString());
-//            QueryRunner qr = new QueryRunner();
-//            resp.put("content", qr.query(cnx, sql, new MapHandler(),
-//                    body.get("username").toString(),
-//                    body.get("password").toString(),
-//                    body.get("name").toString(),
-//                    _id.intValue(),
-//                    body.get("remark").toString()));
-            PreparedStatement ps = cnx.prepareStatement(sql);
-            ps.setString(1, body.get("username").toString());
-            ps.setString(2, body.get("password").toString());
-            ps.setString(3, body.get("name").toString());
-            ps.setInt(4, _id.intValue());
-            ps.setString(5, body.get("remark").toString());
-            ResultSet rs = ps.executeQuery();
-            Map<String, Object> map = DBUtil.getMap(rs);
-            resp.put("content", map);
+            QueryRunner qr = new QueryRunner();
+            Map<String, Object> result = qr.query(cnx, sql, new MapHandler(),
+                    body.get("username").toString(),
+                    body.get("password").toString(),
+                    body.get("name").toString(),
+                    _id.intValue(),
+                    body.get("remark").toString());
+            resp.put("content", result);
             sql = "insert into himawari.auth " +
                     "(user_id, super) " +
                     "values (?, ?)";
             Double _auth_super = Double.parseDouble(body.get("auth_super").toString());
-            ps = cnx.prepareStatement(sql);
-            ps.clearParameters();
-            ps.setInt(1, Integer.parseInt(map.get("id").toString()));
-            ps.setInt(2, _auth_super.intValue());
-            ps.execute();
+            qr.update(cnx, sql,
+                    Integer.parseInt(result.get("id").toString()),
+                    _auth_super.intValue());
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
@@ -144,7 +132,7 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     Integer.parseInt(body.get("id").toString())));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -216,7 +204,7 @@ public class UserServiceImpl extends UserGrpc.UserImplBase {
 //            ps.execute();
 //            conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
