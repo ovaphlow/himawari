@@ -146,7 +146,6 @@ function Detail(props) {
         setName(res.content.name)
         setValue(res.content.value)
         setRemark(res.content.remark)
-        console.info(res)
       })(id)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
