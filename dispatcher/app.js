@@ -28,20 +28,28 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 })
 
-const archiveRouter = require('./routes/archive')
-app.use(archiveRouter.routes())
-app.use(archiveRouter.allowedMethods())
+;(() => {
+  const router = require('./routes/archive')
+  app.use(router.routes())
+  app.use(router.allowedMethods())
+})()
 
-const deptRouter = require('./routes/dept')
-app.use(deptRouter.routes())
-app.use(deptRouter.allowedMethods())
+;(() => {
+  const router = require('./routes/common')
+  app.use(router.routes())
+  app.use(router.allowedMethods())
+})()
 
-const userRouter = require('./routes/user')
-app.use(userRouter.routes())
-app.use(userRouter.allowedMethods())
+;(() => {
+  const router = require('./routes/user')
+  app.use(router.routes())
+  app.use(router.allowedMethods())
+})()
 
-const vaultRouter = require('./routes/vault')
-app.use(vaultRouter.routes())
-app.use(vaultRouter.allowedMethods())
+;(() => {
+  const router = require('./routes/vault')
+  app.use(router.routes())
+  app.use(router.allowedMethods())
+})
 
 module.exports = app

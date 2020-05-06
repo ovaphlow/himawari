@@ -20,7 +20,7 @@ export function DeptPicker(props) {
 
   useEffect(() => {
     ;(async () => {
-      const response = await window.fetch(`/api/common/dept/`)
+      const response = await window.fetch(`/api/common/?category=部门`)
       const res = await response.json()
       setList(res.content)
     })()
@@ -62,7 +62,7 @@ function List() {
 
   useEffect(() => {
     ;(async () => {
-      const response = await window.fetch(`/api/common/dept/`)
+      const response = await window.fetch(`/api/common/?category=部门`)
       const res = await response.json()
       setList(res.content)
     })()
@@ -92,7 +92,7 @@ function List() {
                   <th className="text-right">序号</th>
                   <th>名称</th>
                   <th>用户数量</th>
-                  <th>操作记录</th>
+                  <th className="text-right">操作记录</th>
                 </tr>
               </thead>
 
@@ -109,9 +109,9 @@ function List() {
                           {it.id}
                         </span>
                       </td>
-                      <td>{it.v}</td>
+                      <td>{it.name}</td>
                       <td>{it.qty_user}</td>
-                      <td>
+                      <td className="text-right">
                         <a href={`#数据管理/操作记录/部门/${it.id}`}>
                           <i className="fa fa-fw fa-history"></i>
                         </a>
@@ -130,32 +130,42 @@ function List() {
 
 function Detail(props) {
   const { id } = useParams()
-  const [v, setV] = useState('')
+  const [master_id, setMasterID] = useState(0)
+  const [category, setCategory] = useState('部门')
+  const [name, setName] = useState('')
+  const [value, setValue] = useState('')
   const [remark, setRemark] = useState('')
 
   useEffect(() => {
     if (props.category === '编辑') {
       ;(async id => {
-        const response = await window.fetch(`/api/common/dept/${id}`)
+        const response = await window.fetch(`/api/common/${id}`)
         const res = await response.json()
-        setV(res.content.v)
+        setMasterID(res.content.master_id)
+        setCategory(res.content.category)
+        setName(res.content.name)
+        setValue(res.content.value)
         setRemark(res.content.remark)
+        console.info(res)
       })(id)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSave = async () => {
-    if (!!!v) {
+    if (!!!name) {
       window.alert('请完整填写所需信息')
       return
     }
     const data = {
-      v: v,
+      master_id: master_id,
+      category: category,
+      name: name,
+      value: value,
       remark: remark
     }
     if (props.category === '新增') {
-      const response = await window.fetch(`/api/common/dept/`, {
+      const response = await window.fetch(`/api/common/`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data)
@@ -167,7 +177,7 @@ function Detail(props) {
       }
       window.history.go(-1)
     } else if (props.category === '编辑') {
-      const response = await window.fetch(`/api/common/dept/${id}`, {
+      const response = await window.fetch(`/api/common/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data)
@@ -183,7 +193,7 @@ function Detail(props) {
 
   const handleRemove = async () => {
     if (!!!window.confirm('确定要删除当前数据？')) return
-    const response = await window.fetch(`/api/common/dept/${id}`, {
+    const response = await window.fetch(`/api/common/${id}`, {
       method: 'DELETE'
     })
     const res = await response.json()
@@ -215,9 +225,9 @@ function Detail(props) {
             <div className="row">
               <div className="form-group col-4">
                 <label>名称</label>
-                <input type="text" name="name" value={v || ''} autoComplete="name"
+                <input type="text" value={name || ''}
                   className="form-control"
-                  onChange={event => setV(event.target.value)}
+                  onChange={event => setName(event.target.value)}
                 />
               </div>
             </div>

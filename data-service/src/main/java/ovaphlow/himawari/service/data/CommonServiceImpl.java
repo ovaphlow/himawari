@@ -9,43 +9,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
-    Logger logger = LoggerFactory.getLogger(DeptServiceImpl.class);
+public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
     @Override
     @SuppressWarnings("unchecked")
-    public void list(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
+    public void list(CommonRequest req, StreamObserver<CommonReply> responseObserver) {
         Gson gson = new Gson();
+        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select c.*, " +
-                    "(select count(*) from public.user where dept_id = c.id) as qty_user " +
-                    "from public.common as c " +
-                    "where k = '部门' " +
-                    "order by id desc " +
-                    "limit 100";
+            String sql = "select * from public.common " +
+                    "where master_id = 0 and category = ? " +
+                    "order by id desc";
             QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
+            resp.put("content", qr.query(cnx, sql, new MapListHandler(),
+                    body.get("category").toString()));
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        DeptReply reply = DeptReply.newBuilder().setData(gson.toJson(resp)).build();
+        CommonReply reply = CommonReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void save(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
+    public void save(CommonRequest req, StreamObserver<CommonReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -54,26 +52,30 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into public.common " +
-                    "(master_id, k, v, remark) " +
-                    "values (0, '部门', ?, ?) " +
+                    "(master_id, category, name, value, remark) " +
+                    "values (?, ?, ?, ?, ?) " +
                     "returning id";
+            Double master_id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    body.get("v").toString(),
-                    body.get("remark").toString()));
+                    master_id.intValue(),
+                    body.get("category").toString(),
+                    body.get("name").toString(),
+                    body.get("value").toString(),
+                    body.get("value").toString()));
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        DeptReply reply = DeptReply.newBuilder().setData(gson.toJson(resp)).build();
+        CommonReply reply = CommonReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void get(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
+    public void get(CommonRequest req, StreamObserver<CommonReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -81,23 +83,24 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from public.common where id = ?";
+            String sql = "select * from public.common where id = ? limit 1";
+            Double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    Integer.parseInt(body.get("id").toString())));
+                    id.intValue()));
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        DeptReply reply = DeptReply.newBuilder().setData(gson.toJson(resp)).build();
+        CommonReply reply = CommonReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void update(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
+    public void update(CommonRequest req, StreamObserver<CommonReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -106,27 +109,31 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update public.common " +
-                    "set v = ?, remark = ? " +
+                    "set master_id = ?, category = ?, name = ?, value = ?, remark = ? " +
                     "where id = ?";
-            Double _id = Double.parseDouble(body.get("id").toString());
+            Double id = Double.parseDouble(body.get("id").toString());
+            Double master_id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
-                    body.get("v").toString(),
+                    master_id.intValue(),
+                    body.get("category").toString(),
+                    body.get("name").toString(),
+                    body.get("value").toString(),
                     body.get("remark").toString(),
-                    _id.intValue());
+                    id.intValue());
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        DeptReply reply = DeptReply.newBuilder().setData(gson.toJson(resp)).build();
+        CommonReply reply = CommonReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void remove(DeptRequest req, StreamObserver<DeptReply> responseObserver) {
+    public void remove(CommonRequest req, StreamObserver<CommonReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -135,14 +142,15 @@ public class DeptServiceImpl extends DeptGrpc.DeptImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "delete from public.common where id = ?";
+            Double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, Integer.parseInt(body.get("id").toString()));
+            qr.update(cnx, sql, id.intValue());
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        DeptReply reply = DeptReply.newBuilder().setData(gson.toJson(resp)).build();
+        CommonReply reply = CommonReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
