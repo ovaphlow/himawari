@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar'
 export default function ListIsolate() {
   const [data, setData] = useState([])
   const [filter_sn, setFilterSN] = useState('')
-  const [filter_identity, setFilterIdentity] = useState('')
+  const [filter_id_card, setFilterIdCard] = useState('')
   const [filter_name, setFilterName] = useState('')
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function ListIsolate() {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         sn: filter_sn,
-        identity: filter_identity,
+        id_card: filter_id_card,
         name: filter_name
       })
     })
@@ -57,9 +57,9 @@ export default function ListIsolate() {
 
               <div className="form-group col">
                 <label>身份证</label>
-                <input type="text" name="identity" value={filter_identity || ''}
+                <input type="text" name="id_card" value={filter_id_card || ''}
                   className="form-control"
-                  onChange={event => setFilterIdentity(event.target.value)}
+                  onChange={event => setFilterIdCard(event.target.value)}
                 />
               </div>
 
@@ -117,7 +117,7 @@ export default function ListIsolate() {
                       {it.sn}
                     </td>
                     <td>{it.sn_alt}</td>
-                    <td>{it.identity}</td>
+                    <td>{it.id_card}</td>
                     <td>{it.name}</td>
                     <td>{it.gender}</td>
                     <td>{it.birthday}</td>

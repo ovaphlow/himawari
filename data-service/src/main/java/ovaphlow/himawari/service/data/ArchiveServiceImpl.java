@@ -8,10 +8,7 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.desktop.QuitEvent;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +16,6 @@ import java.util.Map;
 public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveServiceImpl.class);
 
-    /**
-     * 20200424 调整写法
-     * @param req
-     * @param responseObserver
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void search(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
@@ -35,7 +27,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive " +
-                    "where sn = ? or identity = ? or position(? in sn_alt) > 0" +
+                    "where sn = ? or id_card = ? or position(? in sn_alt) > 0" +
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             List<Map<String, Object>> result = qr.query(cnx, sql, new MapListHandler(),
@@ -74,13 +66,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive " +
                     "where position(? in sn) > 0 " +
-                    "and position(? in identity) > 0 " +
+                    "and position(? in id_card) > 0 " +
                     "and position(? in name) > 0 " +
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("sn").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString()));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -102,14 +94,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, sn, sn_alt, identity " +
+            String sql = "select id, sn, sn_alt, id_card " +
                     "from himawari.archive " +
-                    "where sn = ? or identity = ? " +
+                    "where sn = ? or id_card = ? " +
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("sn").toString(),
-                    body.get("identity").toString()));
+                    body.get("id_card").toString()));
         } catch (Exception e) {
             logger.error("{}", e);
             resp.put("message", "gRPC服务器错误");
@@ -130,15 +122,15 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, sn, sn_alt, identity " +
+            String sql = "select id, sn, sn_alt, id_card " +
                     "from himawari.archive " +
-                    "where (sn = ? or identity = ?) and id != ? " +
+                    "where (sn = ? or id_card = ?) and id != ? " +
                     "limit 2";
             Double _id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("sn").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     _id.intValue()));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -183,12 +175,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive " +
-                    "(sn, sn_alt, identity, name, birthday, " +
-                    "cangongshijian, zhicheng, gongling, yutuixiuriqi, tuixiuriqi, vault_id, " +
-                    "remark, phone, gender) " +
+                    "(sn, sn_alt, id_card, name, bday, " +
+                    "vault_id, " +
+                    "remark, tel, gender) " +
                     "values " +
                     "(?, ?, ?, ?, ?, " +
-                    "?, ?, ?, ?, ?, ?, " +
+                    "?, " +
                     "?, ?, ?) " +
                     "returning id";
             Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
@@ -196,17 +188,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     body.get("sn").toString(),
                     body.get("sn_alt").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("birthday").toString(),
-                    body.get("cangongshijian").toString(),
-                    body.get("zhicheng").toString(),
-                    body.get("gongling").toString(),
-                    body.get("yutuixiuriqi").toString(),
-                    body.get("tuixiuriqi").toString(),
+                    body.get("bday").toString(),
                     _vault_id.intValue(),
                     body.get("remark").toString(),
-                    body.get("phone").toString(),
+                    body.get("tel").toString(),
                     body.get("gender").toString()));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -254,10 +241,9 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive " +
                     "set sn = ?, sn_alt = ?, " +
-                    "identity = ?, name = ?, birthday = ?, " +
-                    "cangongshijian = ?, zhicheng = ?, gongling = ?, " +
-                    "yutuixiuriqi = ?, tuixiuriqi = ?, vault_id = ?, " +
-                    "remark = ?, phone = ?, gender = ? " +
+                    "id_card = ?, name = ?, bday = ?, " +
+                    "vault_id = ?, " +
+                    "remark = ?, tel = ?, gender = ? " +
                     "where id = ?";
             Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
             Double _id = Double.parseDouble(body.get("id").toString());
@@ -265,17 +251,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             qr.update(cnx, sql,
                     body.get("sn").toString(),
                     body.get("sn_alt").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("birthday").toString(),
-                    body.get("cangongshijian").toString(),
-                    body.get("zhicheng").toString(),
-                    body.get("gongling").toString(),
-                    body.get("yutuixiuriqi").toString(),
-                    body.get("tuixiuriqi").toString(),
+                    body.get("bday").toString(),
                     _vault_id.intValue(),
                     body.get("remark").toString(),
-                    body.get("phone").toString(),
+                    body.get("tel").toString(),
                     body.get("gender").toString(),
                     _id.intValue());
         } catch (Exception e) {
@@ -322,12 +303,10 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive " +
-                    "(sn, sn_alt, identity, name, birthday, " +
-                    "cangongshijian, zhicheng, gongling, yutuixiuriqi, tuixiuriqi, " +
-                    "remark, vault_id, phone, gender) " +
+                    "(sn, sn_alt, id_card, name, bday, " +
+                    "remark, vault_id, tel, gender) " +
                     "values " +
                     "(?, ?, ?, ?, ?, " +
-                    "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?) " +
                     "returning id";
             Double _vault_id = Double.parseDouble((body.get("vault_id").toString()));
@@ -336,17 +315,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     body.get("sn").toString(),
                     body.get("sn_alt").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("birthday").toString(),
-                    body.get("cangongshijian").toString(),
-                    body.get("zhicheng").toString(),
-                    body.get("gongling").toString(),
-                    body.get("yutuixiuriqi").toString(),
-                    body.get("tuixiuriqi").toString(),
+                    body.get("bday").toString(),
                     body.get("remark").toString(),
                     _vault_id.intValue(),
-                    body.get("phone").toString(),
+                    body.get("tel").toString(),
                     body.get("gender").toString()));
             sql = "delete from himawari.archive_isolate where id = ?";
             qr.update(cnx, sql, _id.intValue());
@@ -371,12 +345,10 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive_isolate " +
-                    "(original_id, sn, sn_alt, identity, name, birthday, " +
-                    "cangongshijian, zhicheng, gongling, yutuixiuriqi, tuixiuriqi, " +
+                    "(original_id, sn, sn_alt, id_card, name, bday, " +
                     "remark, vault_id, reason, gender) " +
                     "values " +
                     "(?, ?, ?, ?, ?, ?, " +
-                    "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?) " +
                     "returning id";
             Double _vault_id = Double.parseDouble((body.get("vault_id").toString()));
@@ -385,14 +357,9 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     body.get("sn").toString(),
                     body.get("sn_alt").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("birthday").toString(),
-                    body.get("cangongshijian").toString(),
-                    body.get("zhicheng").toString(),
-                    body.get("gongling").toString(),
-                    body.get("yutuixiuriqi").toString(),
-                    body.get("tuixiuriqi").toString(),
+                    body.get("bday").toString(),
                     body.get("remark").toString(),
                     _vault_id.intValue(),
                     body.get("reason").toString(),
@@ -555,11 +522,9 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive_isolate " +
-                    "set sn = ?, sn_alt = ?, identity = ?, name = ?, birthday = ?, " +
-                    "cangongshijian = ?, zhicheng = ?, gongling = ?, " +
-                    "yutuixiuriqi = ?, tuixiuriqi = ?, " +
+                    "set sn = ?, sn_alt = ?, id_card = ?, name = ?, bday = ?, " +
                     "remark = ?, vault_id = ?, " +
-                    "reason = ?, phone = ?, gender = ? " +
+                    "reason = ?, tel = ?, gender = ? " +
                     "where id = ?";
             Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
             Double _id = Double.parseDouble(body.get("id").toString());
@@ -567,18 +532,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             qr.update(cnx, sql,
                     body.get("sn").toString(),
                     body.get("sn_alt").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("birthday").toString(),
-                    body.get("cangongshijian").toString(),
-                    body.get("zhicheng").toString(),
-                    body.get("gongling").toString(),
-                    body.get("yutuixiuriqi").toString(),
-                    body.get("tuixiuriqi").toString(),
+                    body.get("bday").toString(),
                     body.get("remark").toString(),
                     _vault_id.intValue(),
                     body.get("reason").toString(),
-                    body.get("phone").toString(),
+                    body.get("tel").toString(),
                     body.get("gender").toString(),
                     _id.intValue());
         } catch (Exception e) {
@@ -627,13 +587,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive_isolate " +
                     "where position(? in sn) > 0 " +
-                    "and position(? in identity) > 0 " +
+                    "and position(? in id_card) > 0 " +
                     "and position(? in name) > 0 " +
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("sn").toString(),
-                    body.get("identity").toString(),
+                    body.get("id_card").toString(),
                     body.get("name").toString()));
         } catch (Exception e) {
             logger.error("{}", e);

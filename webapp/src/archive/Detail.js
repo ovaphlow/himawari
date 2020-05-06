@@ -11,16 +11,11 @@ export default function Detail(props) {
   const [opt, setOpt] = useState('')
   const [sn, setSN] = useState('')
   const [sn_alt, setSNAlt] = useState('')
-  const [identity, setIdentity] = useState('')
+  const [id_card, setIdCard] = useState('')
   const [name, setName] = useState('')
-  const [birthday, setBirthday] = useState('')
+  const [bday, setBday] = useState('')
   const [gender, setGender] = useState('')
-  const [cangongshijian, setCangongshijian] = useState('')
-  const [zhicheng, setZhicheng] = useState('')
-  const [gongling, setGongling] = useState('')
-  const [yutuixiuriqi, setYutuixiuriqi] = useState('')
-  const [tuixiuriqi, setTuixiuriqi] = useState('')
-  const [phone, setPhone] = useState('')
+  const [tel, setTel] = useState('')
   const [remark, setRemark] = useState('')
   const [vault_id, setVaultID] = useState(0)
   const [reason, setReason] = useState('')
@@ -35,16 +30,11 @@ export default function Detail(props) {
           const res = await response.json()
           setSN(res.content.sn)
           setSNAlt(res.content.sn_alt)
-          setIdentity(res.content.identity)
+          setIdCard(res.content.id_card)
           setName(res.content.name)
-          setBirthday(res.content.birthday)
+          setBday(res.content.bday)
           setGender(res.content.gender)
-          setCangongshijian(res.content.cangongshijian)
-          setZhicheng(res.content.zhicheng)
-          setGongling(res.content.gongling)
-          setYutuixiuriqi(res.content.yutuixiuriqi)
-          setTuixiuriqi(res.content.tuixiuriqi)
-          setPhone(res.content.phone)
+          setTel(res.content.tel)
           setRemark(res.content.remark)
           setVaultID(res.content.vault_id)
           setReason(res.content.reason)
@@ -57,16 +47,11 @@ export default function Detail(props) {
         const res = await response.json()
         setSN(res.content.sn)
         setSNAlt(res.content.sn_alt)
-        setIdentity(res.content.identity)
+        setIdCard(res.content.id_card)
         setName(res.content.name)
-        setBirthday(res.content.birthday)
+        setBday(res.content.bday)
         setGender(res.content.gender)
-        setCangongshijian(res.content.cangongshijian)
-        setZhicheng(res.content.zhicheng)
-        setGongling(res.content.gongling)
-        setYutuixiuriqi(res.content.yutuixiuriqi)
-        setTuixiuriqi(res.content.tuixiuriqi)
-        setPhone(res.content.phone)
+        setTel(res.content.tel)
         setRemark(res.content.remark)
         setVaultID(res.content.vault_id)
       })(id)
@@ -74,17 +59,17 @@ export default function Detail(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleIdentityBlur = () => {
-    let b = `${identity.slice(6, 10)}-${identity.slice(10, 12)}-${identity.slice(12, 14)}`
-    setBirthday(b)
+  const handleIdCardBlur = () => {
+    let b = `${id_card.slice(6, 10)}-${id_card.slice(10, 12)}-${id_card.slice(12, 14)}`
+    setBday(b)
   }
 
   const handleSave = async () => {
-    if (!!!sn || !!!identity || !!!name) {
+    if (!!!sn || !!!id_card || !!!name) {
       window.alert('请完整填写所需信息')
       return
     }
-    if (identity.length !== 18) {
+    if (id_card.length !== 18) {
       window.alert('身份证长度错误')
       return
     }
@@ -92,16 +77,11 @@ export default function Detail(props) {
     const data = {
       sn: sn,
       sn_alt: sn_alt,
-      identity: identity,
+      id_card: id_card,
       name: name,
-      birthday: birthday,
+      bday: bday,
       gender: gender,
-      cangongshijian: cangongshijian,
-      zhicheng: zhicheng,
-      gongling: gongling,
-      yutuixiuriqi: yutuixiuriqi,
-      tuixiuriqi: tuixiuriqi,
-      phone: phone,
+      tel: tel,
       remark: remark,
       vault_id: vault_id
     }
@@ -176,11 +156,11 @@ export default function Detail(props) {
   }
 
   const handleSaveAndCapture = async () => {
-    if (!!!sn || !!!identity || !!!name) {
+    if (!!!sn || !!!id_card || !!!name) {
       window.alert('请完整填写所需信息')
       return
     }
-    if (identity.length !== 18) {
+    if (id_card.length !== 18) {
       window.alert('身份证长度错误')
       return
     }
@@ -188,16 +168,11 @@ export default function Detail(props) {
     const data = {
       sn: sn,
       sn_alt: sn_alt,
-      identity: identity,
+      id_card: id_card,
       name: name,
-      birthday: birthday,
+      bday: bday,
       gender: gender,
-      cangongshijian: cangongshijian,
-      zhicheng: zhicheng,
-      gongling: gongling,
-      yutuixiuriqi: yutuixiuriqi,
-      tuixiuriqi: tuixiuriqi,
-      phone: phone,
+      tel: tel,
       remark: remark,
       vault_id: vault_id
     }
@@ -252,7 +227,7 @@ export default function Detail(props) {
   }
 
   const handleTransferIn = async () => {
-    if (!!!sn || !!!identity || !!!name) {
+    if (!!!sn || !!!id_card || !!!name) {
       window.alert('请完整填写所需信息')
       return
     }
@@ -261,16 +236,11 @@ export default function Detail(props) {
     const data = {
       sn: sn,
       sn_alt: sn_alt,
-      identity: identity,
+      id_card: id_card,
       name: name,
-      birthday: birthday,
+      bday: bday,
       gender: gender,
-      cangongshijian: cangongshijian,
-      zhicheng: zhicheng,
-      gongling: gongling,
-      yutuixiuriqi: yutuixiuriqi,
-      tuixiuriqi: tuixiuriqi,
-      phone: phone,
+      tel: tel,
       remark: remark,
       vault_id: vault_id
     }
@@ -348,10 +318,10 @@ export default function Detail(props) {
             <div className="row">
               <div className="form-group col">
                 <label>身份证</label>
-                <input type="text" name="identity" value={identity || ''}
+                <input type="text" name="id_card" value={id_card || ''}
                   className="form-control"
-                  onChange={event => setIdentity(event.target.value)}
-                  onBlur={handleIdentityBlur}
+                  onChange={event => setIdCard(event.target.value)}
+                  onBlur={handleIdCardBlur}
                 />
               </div>
 
@@ -365,9 +335,9 @@ export default function Detail(props) {
 
               <div className="form-group col">
                 <label>出生日期</label>
-                <input type="text" value={birthday || ''}
+                <input type="text" value={bday || ''}
                   className="form-control"
-                  onChange={event => setBirthday(event.target.value)}
+                  onChange={event => setBday(event.target.value)}
                 />
               </div>
 
@@ -384,63 +354,21 @@ export default function Detail(props) {
             </div>
 
             <div className="row">
-              <div className="form-group col">
-                <label>参加工作时间</label>
-                <input type="text" value={cangongshijian || ''}
-                  className="form-control"
-                  onChange={event => setCangongshijian(event.target.value)}
-                />
-              </div>
-
-              <div className="form-group col">
-                <label>职称</label>
-                <input type="text" name="zhicheng" value={zhicheng || ''}
-                  className="form-control"
-                  onChange={event => setZhicheng(event.target.value)}
-                />
-              </div>
-
-              <div className="form-group col">
-                <label>工龄</label>
-                <input type="text" value={gongling || ''}
-                  className="form-control"
-                  onChange={event => setGongling(event.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="form-group col">
-                <label>预退休日期</label>
-                <input type="text" value={yutuixiuriqi || ''}
-                  className="form-control"
-                  onChange={event => setYutuixiuriqi(event.target.value)}
-                />
-              </div>
-
-              <div className="form-group col">
-                <label>退休日期</label>
-                <input type="text" value={tuixiuriqi || ''}
-                  className="form-control"
-                  onChange={event => setTuixiuriqi(event.target.value)}
-                />
-              </div>
-
-              <div className="form-group col">
+              <div className="form-group col-3">
                 <label>联系电话</label>
-                <input type="text" value={phone || ''}
+                <input type="text" value={tel || ''}
                   className="form-control"
-                  onChange={event => setPhone(event.target.value)}
+                  onChange={event => setTel(event.target.value)}
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>备注</label>
-              <input type="text" name="remark" value={remark || ''}
-                className="form-control"
-                onChange={event => setRemark(event.target.value)}
-              />
+              <div className="form-group col">
+                <label>备注</label>
+                <input type="text" name="remark" value={remark || ''}
+                  className="form-control"
+                  onChange={event => setRemark(event.target.value)}
+                />
+              </div>
             </div>
             
             {opt === '中转区' && (
