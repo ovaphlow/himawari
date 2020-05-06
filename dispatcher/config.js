@@ -16,16 +16,4 @@ const config = {
   }
 }
 
-const prodConfig = {
-  env: 'production',
-  app: {
-    port: 5000,
-    numChildProcesses: os.cpus().length
-  },
-  grpcServer: {
-    host: '127.0.0.1',
-    port: 5001
-  }
-}
-
 module.exports = config
