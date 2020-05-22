@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
-import Title from '../components/Title'
-import Navbar from '../components/Navbar'
-import Filter from './Filter'
-import Detail from './Detail'
-import Capture from './Capture'
-import PictureList from './PictureList'
-import Picture from './Picture'
-import TransferOut from './TransferOut'
-import ListIsolate from './ListIsolate'
-import ImportData from './ImportData'
+import Title from '../component/Title';
+import Navbar from '../component/Navbar';
+import Filter from './Filter';
+import Detail from './Detail';
+import Capture from './Capture';
+import PictureList from './PictureList';
+import Picture from './Picture';
+import TransferOut from './TransferOut';
+import ListIsolate from './ListIsolate';
+import ImportData from './ImportData';
 
 export default function Index() {
   useEffect(() => {
-    console.info('权限验证')
-  }, [])
+    window.console.info('权限验证');
+  }, []);
 
   return (
     <Router>
@@ -39,5 +39,5 @@ export default function Index() {
         </div>
       </>
     </Router>
-  )
+  );
 }

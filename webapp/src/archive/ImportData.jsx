@@ -1,33 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import Sidebar from './components/Sidebar'
-import VaultPicker from '../mds/components/VaultPicker'
+import Sidebar from './component/Sidebar';
+import VaultPicker from '../mds/component/VaultPicker';
 
 export default function ImportData() {
-  const [data, setData] = useState({vault_id: 0})
+  const [data, setData] = useState({ vault_id: 0 });
 
-  const handleChange = e => {
-    const { value, name } = e.target
-    setData(prev => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleUpload = async () => {
-    let formData = new FormData()
-    let el = document.querySelector('#customFileLangHTML')
+    const formData = new FormData();
+    const el = document.querySelector('#customFileLangHTML');
 
-    formData.append('vault_id', data.vault_id)
-    formData.append('file', el.files[0])
+    formData.append('vault_id', data.vault_id);
+    formData.append('file', el.files[0]);
 
-    const response = await fetch(`/api/archive/import-data`, {
+    const response = await fetch('/api/archive/import-data', {
       method: 'POST',
-      body: formData
-    })
-    const res = await response.json()
+      body: formData,
+    });
+    const res = await response.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
     }
-  }
+  };
 
   return (
     <div className="row mt-3">
@@ -65,7 +64,7 @@ export default function ImportData() {
           <div className="card-footer">
             <div className="btn-group pull-right">
               <button type="button" className="btn btn-primary" onClick={handleUpload}>
-                <i className="fa fa-fw fa-check"></i>
+                <i className="fa fa-fw fa-check" />
                 确定
               </button>
             </div>
@@ -73,5 +72,5 @@ export default function ImportData() {
         </div>
       </div>
     </div>
-  )
+  );
 }

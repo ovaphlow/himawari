@@ -1,11 +1,11 @@
-import React from 'react'
-import { HashRouter, Switch, Route } from 'react-router-dom'
+import React from 'react';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 
-import Home from './Home'
-import Archive from './archive'
-import Mds from './mds'
-import TouchScreen from './touch-screen/Home'
-import APIAccessJournal from './api-access-journal/Home'
+import Home from './Home';
+import Archive from './archive';
+import Mds from './mds';
+import TouchScreen from './touch-screen/Home';
+import APIAccessJournal from './api-access-journal/Home';
 
 export default function App() {
   return (
@@ -18,5 +18,5 @@ export default function App() {
         <Route path="/API调用"><APIAccessJournal /></Route>
       </Switch>
     </HashRouter>
-  )
+  );
 }

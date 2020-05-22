@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import Sidebar from './components/Sidebar'
+import Sidebar from './component/Sidebar';
 
 export default function ListIsolate() {
-  const [data, setData] = useState([])
-  const [filter_sn, setFilterSN] = useState('')
-  const [filter_id_card, setFilterIdCard] = useState('')
-  const [filter_name, setFilterName] = useState('')
+  const [data, setData] = useState([]);
+  const [filter_sn, setFilterSN] = useState('');
+  const [filter_id_card, setFilterIdCard] = useState('');
+  const [filter_name, setFilterName] = useState('');
 
   useEffect(() => {
-    ;(async () => {
-      const response = await fetch(`/api/archive/isolate/`)
-      const res = await response.json()
-      setData(res.content)
-    })()
-  }, [])
+    (async () => {
+      const response = await fetch('/api/archive/isolate/');
+      const res = await response.json();
+      setData(res.content);
+    })();
+  }, []);
 
   const handleFilter = async () => {
-    setData([])
-    const response = await fetch(`/api/archive/isolate/filter`, {
+    setData([]);
+    const response = await fetch('/api/archive/isolate/filter', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         sn: filter_sn,
         id_card: filter_id_card,
-        name: filter_name
-      })
-    })
-    const res = await response.json()
+        name: filter_name,
+      }),
+    });
+    const res = await response.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
+      return;
     }
-    setData(res.content)
-  }
+    setData(res.content);
+  };
 
   return (
     <div className="row mt-3">
@@ -50,40 +50,52 @@ export default function ListIsolate() {
             <div className="row">
               <div className="form-group col">
                 <label>档案号</label>
-                <input type="text" name="sn" value={filter_sn || ''}
+                <input
+                  type="text"
+                  name="sn"
+                  value={filter_sn || ''}
                   className="form-control"
-                  onChange={event => setFilterSN(event.target.value)} />
+                  onChange={(event) => setFilterSN(event.target.value)}
+                />
               </div>
 
               <div className="form-group col">
                 <label>身份证</label>
-                <input type="text" name="id_card" value={filter_id_card || ''}
+                <input
+                  type="text"
+                  name="id_card"
+                  value={filter_id_card || ''}
                   className="form-control"
-                  onChange={event => setFilterIdCard(event.target.value)}
+                  onChange={(event) => setFilterIdCard(event.target.value)}
                 />
               </div>
 
               <div className="form-group col">
                 <label>姓名</label>
-                <input type="text" name="name" value={filter_name || ''}
+                <input
+                  type="text"
+                  name="name"
+                  value={filter_name || ''}
                   className="form-control"
-                  onChange={event => setFilterName(event.target.value)}
+                  onChange={(event) => setFilterName(event.target.value)}
                 />
               </div>
             </div>
 
             <div className="btn-group">
-              <button type="button" className="btn btn-outline-secondary"
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
                 onClick={() => window.location.reload(true)}
               >
-                <i className="fa fa-fw fa-refresh"></i>
+                <i className="fa fa-fw fa-refresh" />
                 重置
               </button>
             </div>
 
             <div className="btn-group pull-right">
               <button type="button" className="btn btn-success" onClick={handleFilter}>
-                <i className="fa fa-fw fa-search"></i>
+                <i className="fa fa-fw fa-search" />
                 查询
               </button>
             </div>
@@ -104,11 +116,11 @@ export default function ListIsolate() {
               </thead>
 
               <tbody>
-                {data.map(it => (
+                {data.map((it) => (
                   <tr key={it.id}>
                     <td>
                       <a href={`#档案/${it.id}?opt=中转区`}>
-                        <i className="fa fa-fw fa-edit"></i>
+                        <i className="fa fa-fw fa-edit" />
                       </a>
 
                       <span className="pull-right">{it.id}</span>
@@ -128,8 +140,8 @@ export default function ListIsolate() {
           </div>
         </div>
 
-        <div className="m-3"></div>
+        <div className="m-3" />
       </div>
     </div>
-  )
+  );
 }

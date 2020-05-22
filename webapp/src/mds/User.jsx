@@ -1,68 +1,70 @@
-import React, { useEffect, useState } from 'react'
-import { HashRouter as Router, Switch, Route, useParams } from 'react-router-dom'
-import md5 from 'blueimp-md5'
+import React, { useEffect, useState } from 'react';
+import {
+  HashRouter as Router, Switch, Route, useParams,
+} from 'react-router-dom';
+import md5 from 'blueimp-md5';
 
-import Sidebar from './components/Sidebar'
-import { DeptPicker } from './Dept'
+import Sidebar from './component/Sidebar';
+import { DeptPicker } from './Dept';
 
 export default function UserRouter() {
   return (
     <Router>
       <Switch>
         <Route exact path="/数据管理/用户"><List /></Route>
-        <Route exact path="/数据管理/用户/新增"><Detail category="新增" /></Route>
-        <Route path="/数据管理/用户/:id"><Detail category="编辑" /></Route>
+        <Route exact path="/数据管理/用户/新增"><Detail cat="新增" /></Route>
+        <Route path="/数据管理/用户/:id"><Detail cat="编辑" /></Route>
       </Switch>
     </Router>
-  )
+  );
 }
 
 const Toolbar = () => (
   <>
     <div className="btn-group">
       <a href="#数据管理/用户/新增" className="btn btn-success btn-sm">
-        <i className="fa fa-fw fa-plus"></i>
+        <i className="fa fa-fw fa-plus" />
         新增
       </a>
     </div>
 
     <div className="btn-group pull-right">
       <a href="#数据管理/用户" className="btn btn-secondary btn-sm">
-        <i className="fa fa-fw fa-list"></i>
+        <i className="fa fa-fw fa-list" />
         列表
       </a>
     </div>
   </>
-)
+);
 
 function List() {
-  const [list, setList] = useState([])
-  const [filter_string, setFilterString] = useState('')
+  const [list, setList] = useState([]);
+  const [filter_string, setFilterString] = useState('');
 
   useEffect(() => {
-    ;(async () => {
-      const response = await window.fetch(`/api/user/`)
-      const res = await response.json()
-      setList(res.content)
-    })()
-  }, [])
+    (async () => {
+      const response = await window.fetch('/api/user/');
+      const res = await response.json();
+      setList(res.content);
+    })();
+  }, []);
 
   const handleFilter = async () => {
-    setList([])
+    setList([]);
     let res = await window.fetch('/api/user/', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        filter_string: filter_string
-      })
-    })
-    res = await res.json()
+        filter_string,
+      }),
+    });
+    res = await res.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
+      return;
     }
-    setList(res.content)
-  }
+    setList(res.content);
+  };
 
   return (
     <div className="row mt-3">
@@ -72,7 +74,7 @@ function List() {
 
       <div className="col-9 col-lg-10">
         <h3 className="text-muted">
-          <i className="fa fa-fw fa-users"></i>
+          <i className="fa fa-fw fa-users" />
           用户
         </h3>
 
@@ -86,28 +88,35 @@ function List() {
               <div className="input-group-prepend">
                 <span className="input-group-text">姓名/用户名/部门</span>
               </div>
-              <input type="search" name="filter_string" value={filter_string || ''}
+              <input
+                type="search"
+                name="filter_string"
+                value={filter_string || ''}
                 className="form-control"
-                onChange={event => setFilterString(event.target.value)}
+                onChange={(event) => setFilterString(event.target.value)}
               />
             </div>
 
-            <div className="clearfix"></div>
+            <div className="clearfix" />
 
             <div className="btn-group">
-              <button type="button" className="btn btn-outline-secondary btn-sm"
+              <button
+                type="button"
+                className="btn btn-outline-secondary btn-sm"
                 onClick={() => window.location.reload(true)}
               >
-                <i className="fa fa-fw fa-refresh"></i>
+                <i className="fa fa-fw fa-refresh" />
                 重置
               </button>
             </div>
 
             <div className="btn-group pull-right">
-              <button type="button" className="btn btn-outline-primary btn-sm"
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-sm"
                 onClick={handleFilter}
               >
-                <i className="fa fa-fw fa-search"></i>
+                <i className="fa fa-fw fa-search" />
                 查询
               </button>
             </div>
@@ -127,11 +136,11 @@ function List() {
               </thead>
 
               <tbody>
-                {list.map(it => (
+                {list.map((it) => (
                   <tr key={it.id}>
                     <td>
                       <a href={`#数据管理/用户/${it.id}`}>
-                        <i className="fa fa-fw fa-edit"></i>
+                        <i className="fa fa-fw fa-edit" />
                       </a>
 
                       <span className="pull-right">{it.id}</span>
@@ -142,7 +151,7 @@ function List() {
                     <td>{it.super === 1 ? '是' : '否'}</td>
                     <td>
                       <a href={`#数据管理/操作记录/用户/${it.id}`}>
-                        <i className="fa fa-fw fa-history"></i>
+                        <i className="fa fa-fw fa-history" />
                       </a>
                     </td>
                   </tr>
@@ -153,85 +162,84 @@ function List() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function Detail(props) {
-  const { id } = useParams()
-  const [dept_id, setDeptID] = useState(0)
-  const [username, setUsername] = useState('')
-  const [name, setName] = useState('')
-  const [remark, setRemark] = useState('')
-  const [auth_super, setAuthSuper] = useState(0)
+  const { cat } = props;
+  const { id } = useParams();
+  const [dept_id, setDeptID] = useState(0);
+  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [remark, setRemark] = useState('');
+  const [auth_super, setAuthSuper] = useState(0);
 
   useEffect(() => {
-    if (props.category === '编辑') {
-      ;(async id => {
-        const response = await window.fetch(`/api/user/${id}`)
-        const res = await response.json()
-        setDeptID(res.content.dept_id)
-        setUsername(res.content.username)
-        setName(res.content.name)
-        setRemark(res.content.remark)
-        setAuthSuper(res.content.super || '0')
-      })(id)
+    if (cat === '编辑') {
+      (async () => {
+        const response = await window.fetch(`/api/user/${id}`);
+        const res = await response.json();
+        setDeptID(res.content.dept_id);
+        setUsername(res.content.username);
+        setName(res.content.name);
+        setRemark(res.content.remark);
+        setAuthSuper(res.content.super || '0');
+      })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const handleSave = async () => {
-    if (!!!name || !!!username) {
-      window.alert('请完整填写所需信息')
-      return
+    if (!name || !username) {
+      window.alert('请完整填写所需信息');
+      return;
     }
     const data = {
-      dept_id: dept_id,
-      username: username,
-      name: name,
-      remark: remark,
-      auth_super: auth_super
-    }
+      dept_id,
+      username,
+      name,
+      remark,
+      auth_super,
+    };
     if (props.category === '新增') {
-      const response = await window.fetch(`/api/user/`, {
+      const response = await window.fetch('/api/user/', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(Object.assign({
-          password: md5('1234')
-        }, data))
-      })
-      const res = await response.json()
+        body: JSON.stringify({ password: md5('1234'), ...data }),
+      });
+      const res = await response.json();
       if (res.message) {
-        window.alert(res.message)
-        return
+        window.alert(res.message);
+        return;
       }
-      window.history.go(-1)
+      window.history.go(-1);
     } else if (props.category === '编辑') {
       const response = await window.fetch(`/api/user/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      const res = await response.json()
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
       if (res.message) {
-        window.alert(res.message)
-        return
+        window.alert(res.message);
+        return;
       }
-      window.history.go(-1)
+      window.history.go(-1);
     }
-  }
+  };
 
   const handleRemove = async () => {
-    if (!!!window.confirm('确定要删除当前数据？')) return
+    if (!window.confirm('确定要删除当前数据？')) return;
     const response = await window.fetch(`/api/user/${id}`, {
-      method: 'DELETE'
-    })
-    const res = await response.json()
+      method: 'DELETE',
+    });
+    const res = await response.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
+      return;
     }
-    window.history.go(-1)
-  }
+    window.history.go(-1);
+  };
 
   return (
     <div className="row mt-3">
@@ -241,8 +249,9 @@ function Detail(props) {
 
       <div className="col-9 col-lg-10">
         <h3 className="text-muted">
-          <i className="fa fa-fw fa-users"></i>
-          {props.category}用户
+          <i className="fa fa-fw fa-users" />
+          {cat}
+          用户
         </h3>
 
         <hr />
@@ -254,9 +263,13 @@ function Detail(props) {
             <div className="row">
               <div className="form-group col-4">
                 <label>姓名</label>
-                <input type="text" name="name" value={name || ''} autoComplete="name"
+                <input
+                  type="text"
+                  name="name"
+                  value={name || ''}
+                  autoComplete="name"
                   className="form-control"
-                  onChange={event => setName(event.target.value)}
+                  onChange={(event) => setName(event.target.value)}
                 />
               </div>
             </div>
@@ -264,15 +277,21 @@ function Detail(props) {
             <div className="row">
               <div className="form-group col">
                 <label>用户名</label>
-                <input type="text" name="username" value={username || ''} autoComplete="username"
+                <input
+                  type="text"
+                  name="username"
+                  value={username || ''}
+                  autoComplete="username"
                   className="form-control"
-                  onChange={event => setUsername(event.target.value)}
+                  onChange={(event) => setUsername(event.target.value)}
                 />
               </div>
 
               <div className="col">
-                <DeptPicker name="dept_id" value={dept_id || '0'}
-                  onChange={event => setDeptID(event.target.value)}
+                <DeptPicker
+                  name="dept_id"
+                  value={dept_id || '0'}
+                  onChange={(event) => setDeptID(event.target.value)}
                 />
               </div>
             </div>
@@ -280,8 +299,11 @@ function Detail(props) {
             <div className="row">
               <div className="form-group col-3 col-lg-2">
                 <label>权限：管理员</label>
-                <select name="auth_super" value={auth_super || '0'} className="form-control"
-                  onChange={event => setAuthSuper(event.target.value)}
+                <select
+                  name="auth_super"
+                  value={auth_super || '0'}
+                  className="form-control"
+                  onChange={(event) => setAuthSuper(event.target.value)}
                 >
                   <option value="0">否</option>
                   <option value="1">是</option>
@@ -291,16 +313,21 @@ function Detail(props) {
 
             <div className="form-group">
               <label>备注</label>
-              <input type="text" name="remark" value={remark || ''}
+              <input
+                type="text"
+                name="remark"
+                value={remark || ''}
                 className="form-control"
-                onChange={event => setRemark(event.target.value)}
+                onChange={(event) => setRemark(event.target.value)}
               />
             </div>
           </div>
 
           <div className="card-footer">
             <div className="btn-group">
-              <button type="button" className="btn btn-outline-secondary"
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
                 onClick={() => window.history.go(-1)}
               >
                 返回
@@ -308,17 +335,19 @@ function Detail(props) {
             </div>
 
             <div className="btn-group pull-right">
-              {props.category === '编辑' && (
-                <button type="button" className="btn btn-outline-danger"
+              {cat === '编辑' && (
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
                   onClick={handleRemove}
                 >
-                  <i className="fa fa-fw fa-trash-o"></i>
+                  <i className="fa fa-fw fa-trash-o" />
                   删除
                 </button>
               )}
 
               <button type="button" className="btn btn-primary" onClick={handleSave}>
-                <i className="fa fa-fw fa-check"></i>
+                <i className="fa fa-fw fa-check" />
                 保存
               </button>
             </div>
@@ -326,5 +355,5 @@ function Detail(props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

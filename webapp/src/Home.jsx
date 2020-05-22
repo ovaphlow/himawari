@@ -1,24 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import Title from './components/Title'
-import Navbar from './components/Navbar'
+import Title from './component/Title';
+import Navbar from './component/Navbar';
 
 export default function Home() {
-  const [keyword, setKeyword] = useState('')
+  const [keyword, setKeyword] = useState('');
 
   const handleSearch = async () => {
-    const response = await window.fetch(`/api/archive/search`, {
+    const response = await window.fetch('/api/archive/search', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ keyword: keyword })
-    })
-    const res = await response.json()
+      body: JSON.stringify({ keyword }),
+    });
+    const res = await response.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
+      return;
     }
-    window.location = `#档案/${res.content.id}`
-  }
+    window.location = `#档案/${res.content.id}`;
+  };
 
   return (
     <>
@@ -31,19 +31,21 @@ export default function Home() {
           <div className="col-8 offset-2 text-center">
             <div className="form-group">
               <label className="lead">输入档案号或身份证</label>
-              <input type="search" value={keyword || ''}
+              <input
+                type="search"
+                value={keyword || ''}
                 className="form-control form-control-lg text-center"
-                onChange={event => setKeyword(event.target.value)}
+                onChange={(event) => setKeyword(event.target.value)}
               />
             </div>
 
             <button type="button" className="btn btn-primary" onClick={handleSearch}>
-              <i className="fa fa-fw fa-search"></i>
+              <i className="fa fa-fw fa-search" />
               查询
             </button>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

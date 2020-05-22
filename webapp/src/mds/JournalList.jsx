@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
-import Sidebar from './components/Sidebar'
+import Sidebar from './component/Sidebar';
 
 export default function JournalList() {
-  const [list, setList] = useState([])
+  const [list, setList] = useState([]);
 
   useEffect(() => {
-    setList([])
-  }, [])
+    setList([]);
+  }, []);
 
   return (
     <div className="row mt-3">
@@ -17,7 +17,7 @@ export default function JournalList() {
 
       <div className="col-9 col-lg-10">
         <h3 className="text-muted">
-          <i className="fa fa-fw fa-history"></i>
+          <i className="fa fa-fw fa-history" />
           操作记录
         </h3>
 
@@ -42,9 +42,8 @@ export default function JournalList() {
               </thead>
 
               <tbody>
-                {list.map(it => (
-                  <tr key={it.id}>
-                  </tr>
+                {list.map((it) => (
+                  <tr key={it.id} />
                 ))}
               </tbody>
             </table>
@@ -52,5 +51,5 @@ export default function JournalList() {
         </div>
       </div>
     </div>
-  )
+  );
 }

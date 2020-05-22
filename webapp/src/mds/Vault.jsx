@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { HashRouter as Router, Switch, Route, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import {
+  HashRouter as Router, Switch, Route, useParams,
+} from 'react-router-dom';
 
-import Sidebar from './components/Sidebar'
+import Sidebar from './component/Sidebar';
 
 export default function VaultRouter() {
   return (
@@ -12,37 +14,37 @@ export default function VaultRouter() {
         <Route path="/数据管理/档案库/:id"><Detail category="编辑" /></Route>
       </Switch>
     </Router>
-  )
+  );
 }
 
 const Toolbar = () => (
   <>
     <div className="btn-group">
       <a href="#数据管理/档案库/新增" className="btn btn-success btn-sm">
-        <i className="fa fa-fw fa-plus"></i>
+        <i className="fa fa-fw fa-plus" />
         新增
       </a>
     </div>
 
     <div className="btn-group pull-right">
       <a href="#数据管理/档案库" className="btn btn-secondary btn-sm">
-        <i className="fa fa-fw fa-list"></i>
+        <i className="fa fa-fw fa-list" />
         列表
       </a>
     </div>
   </>
-)
+);
 
 function List() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    ;(async () => {
-      const response = await window.fetch(`/api/vault/`)
-      const res = await response.json()
-      setData(res.content)
-    })()
-  }, [])
+    (async () => {
+      const response = await window.fetch('/api/vault/');
+      const res = await response.json();
+      setData(res.content);
+    })();
+  }, []);
 
   return (
     <div className="row mt-3">
@@ -52,7 +54,7 @@ function List() {
 
       <div className="col-9 col-lg-10">
         <h3 className="text-muted">
-          <i className="fa fa-fw fa-map-marker"></i>
+          <i className="fa fa-fw fa-map-marker" />
           档案库
         </h3>
 
@@ -74,11 +76,11 @@ function List() {
 
               <tbody>
                 {
-                  data.map(it => (
+                  data.map((it) => (
                     <tr key={it.id}>
                       <td>
                         <a href={`#数据管理/档案库/${it.id}`}>
-                          <i className="fa fa-fw fa-edit"></i>
+                          <i className="fa fa-fw fa-edit" />
                         </a>
 
                         <span className="pull-right">{it.id}</span>
@@ -95,77 +97,78 @@ function List() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function Detail(props) {
-  const { id } = useParams()
-  const [name, setName] = useState('')
-  const [addr, setAddr] = useState('')
-  const [phone, setPhone] = useState('')
+  const { cat } = props;
+  const { id } = useParams();
+  const [name, setName] = useState('');
+  const [addr, setAddr] = useState('');
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
-    if (props.category === '编辑') {
-      ;(async id => {
-        const response = await window.fetch(`/api/vault/${id}`)
-        const res = await response.json()
-        setName(res.content.name)
-        setAddr(res.content.addr)
-        setPhone(res.content.phone)
-      })(id)
+    if (cat === '编辑') {
+      (async () => {
+        const response = await window.fetch(`/api/vault/${id}`);
+        const res = await response.json();
+        setName(res.content.name);
+        setAddr(res.content.addr);
+        setPhone(res.content.phone);
+      })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const handleSave = async () => {
-    if (!!!name || !!!phone || !!!addr) {
-      window.alert('请完整填写所需信息')
-      return
+    if (!name || !phone || !addr) {
+      window.alert('请完整填写所需信息');
+      return;
     }
     const data = {
-      name: name,
-      addr: addr,
-      phone: phone
-    }
+      name,
+      addr,
+      phone,
+    };
     if (props.category === '新增') {
-      const response = await window.fetch(`/api/vault/`, {
+      const response = await window.fetch('/api/vault/', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      const res = await response.json()
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
       if (res.message) {
-        window.alert(res.message)
-        return
+        window.alert(res.message);
+        return;
       }
-      window.history.go(-1)
+      window.history.go(-1);
     } else if (props.category === '编辑') {
       const response = await window.fetch(`/api/vault/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      const res = await response.json()
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
       if (res.message) {
-        window.alert(res.message)
-        return
+        window.alert(res.message);
+        return;
       }
-      window.history.go(-1)
+      window.history.go(-1);
     }
-  }
+  };
 
   const handleRemove = async () => {
-    if (!!!window.confirm('确定要删除当前数据？')) return
+    if (!window.confirm('确定要删除当前数据？')) return;
     const response = await window.fetch(`/api/vault/${id}`, {
-      method: 'DELETE'
-    })
-    const res = await response.json()
+      method: 'DELETE',
+    });
+    const res = await response.json();
     if (res.message) {
-      window.alert(res.message)
-      return
+      window.alert(res.message);
+      return;
     }
-    window.history.go(-1)
-  }
+    window.history.go(-1);
+  };
 
   return (
     <div className="row mt-3">
@@ -175,8 +178,9 @@ function Detail(props) {
 
       <div className="col-9 col-lg-10">
         <h3 className="text-muted">
-          <i className="fa fa-fw fa-map-marker"></i>
-          {props.category}档案库
+          <i className="fa fa-fw fa-map-marker" />
+          {cat}
+          档案库
         </h3>
 
         <hr />
@@ -189,9 +193,11 @@ function Detail(props) {
               <div className="col-4">
                 <div className="form-group">
                   <label>名称</label>
-                  <input type="text" value={name || ''}
+                  <input
+                    type="text"
+                    value={name || ''}
                     className="form-control"
-                    onChange={event => setName(event.target.value)}
+                    onChange={(event) => setName(event.target.value)}
                   />
                 </div>
               </div>
@@ -199,9 +205,12 @@ function Detail(props) {
               <div className="col-4 offset-4">
                 <div className="form-group">
                   <label>电话</label>
-                  <input type="tel" value={phone || ''} autoComplete="tel"
+                  <input
+                    type="tel"
+                    value={phone || ''}
+                    autoComplete="tel"
                     className="form-control"
-                    onChange={event => setPhone(event.target.value)}
+                    onChange={(event) => setPhone(event.target.value)}
                   />
                 </div>
               </div>
@@ -209,16 +218,21 @@ function Detail(props) {
 
             <div className="form-group">
               <label>地址</label>
-              <input type="text" value={addr || ''} autoComplete="address-level4"
+              <input
+                type="text"
+                value={addr || ''}
+                autoComplete="address-level4"
                 className="form-control"
-                onChange={event => setAddr(event.target.value)}
+                onChange={(event) => setAddr(event.target.value)}
               />
             </div>
           </div>
 
           <div className="card-footer">
             <div className="btn-group">
-              <button type="button" className="btn btn-outline-secondary"
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
                 onClick={() => window.history.go(-1)}
               >
                 返回
@@ -226,17 +240,19 @@ function Detail(props) {
             </div>
 
             <div className="btn-group pull-right">
-              {props.category === '编辑' && (
-                <button type="button" className="btn btn-outline-danger"
+              {cat === '编辑' && (
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
                   onClick={handleRemove}
                 >
-                  <i className="fa fa-fw fa-trash-o"></i>
+                  <i className="fa fa-fw fa-trash-o" />
                   删除
                 </button>
               )}
 
               <button type="button" className="btn btn-primary" onClick={handleSave}>
-                <i className="fa fa-fw fa-check"></i>
+                <i className="fa fa-fw fa-check" />
                 保存
               </button>
             </div>
@@ -244,5 +260,5 @@ function Detail(props) {
         </div>
       </div>
     </div>
-  )
+  );
 }
