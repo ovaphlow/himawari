@@ -5,7 +5,7 @@ const os = require('os');
 const app = require('./app');
 const logger = require('./logger');
 
-const port = 5000;
+const port = 8910;
 
 if (cluster.isMaster) {
   logger.log(`${new Date()} 主进程 PID:${process.pid}`);
