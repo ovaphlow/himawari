@@ -1,7 +1,7 @@
 package ovaphlow.himawari.service.data;
 
 public class Global {
-    private static int PORT = 5001;
+    private static int PORT = 8902;
     private static String DB_URL = "192.168.1.246:5432/ovaphlow";
     private static String DB_USERNAME = "hengda";
     private static String DB_PASSWORD = "srd@HD.1123";
