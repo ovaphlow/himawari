@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "blueimp-md5": "^2.16.0",
     "bootstrap": "^4.5.0",
     "font-awesome": "^4.7.0",
@@ -43,5 +44,4 @@
       "last 1 safari version"
     ]
   }
-
 }

@@ -364,7 +364,7 @@ router.get('/:id', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await grpcFetch(ctx.params);
+    ctx.response.body = await grpcFetch(parseInt(ctx.params.id, 10), ctx.request.query.uuid);
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };

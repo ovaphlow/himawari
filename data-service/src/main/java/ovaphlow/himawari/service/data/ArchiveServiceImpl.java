@@ -27,7 +27,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive " +
-                    "where sn = ? or id_card = ? or position(? in sn_alt) > 0" +
+                    "where sn = ? or id_card = ? or position(? in sn_repeal) > 0" +
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             List<Map<String, Object>> result = qr.query(cnx, sql, new MapListHandler(),
@@ -45,7 +45,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                 resp.put("content", body.get("keyword").toString());
             }
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -75,7 +75,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     body.get("id_card").toString(),
                     body.get("name").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -94,7 +94,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, sn, sn_alt, id_card " +
+            String sql = "select id, sn, sn_repeal, id_card " +
                     "from himawari.archive " +
                     "where sn = ? or id_card = ? " +
                     "limit 2";
@@ -103,7 +103,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     body.get("sn").toString(),
                     body.get("id_card").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -122,18 +122,18 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, sn, sn_alt, id_card " +
+            String sql = "select id, sn, sn_repeal, id_card " +
                     "from himawari.archive " +
                     "where (sn = ? or id_card = ?) and id != ? " +
                     "limit 2";
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("sn").toString(),
                     body.get("id_card").toString(),
-                    _id.intValue()));
+                    (int) id));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -143,7 +143,6 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void list(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();
@@ -155,7 +154,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -175,28 +174,19 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive " +
-                    "(sn, sn_alt, id_card, name, bday, " +
-                    "vault_id, " +
-                    "remark, tel, gender) " +
+                    "(uuid, sn, id_card, name, doc) " +
                     "values " +
-                    "(?, ?, ?, ?, ?, " +
-                    "?, " +
-                    "?, ?, ?) " +
+                    "(?, ?, ?, ?, ?::json) " +
                     "returning id";
-            Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
+                    body.get("uuid").toString(),
                     body.get("sn").toString(),
-                    body.get("sn_alt").toString(),
                     body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("bday").toString(),
-                    _vault_id.intValue(),
-                    body.get("remark").toString(),
-                    body.get("tel").toString(),
-                    body.get("gender").toString()));
+                    body.get("doc").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -206,24 +196,25 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void get(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void get(ArchiveGetRequest req, StreamObserver<ArchiveReply> responseObserver) {
+        logger.info("{}", req.getId());
+        logger.info("{}", req.getUuid());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from himawari.archive where id = ? limit 1";
+            String sql = "select * from himawari.archive where id = ? and uuid = ? limit 1";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    Integer.parseInt(body.get("id").toString())));
+                    req.getId(),
+                    req.getUuid()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -240,27 +231,19 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive " +
-                    "set sn = ?, sn_alt = ?, " +
-                    "id_card = ?, name = ?, bday = ?, " +
-                    "vault_id = ?, " +
-                    "remark = ?, tel = ?, gender = ? " +
-                    "where id = ?";
-            Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
-            Double _id = Double.parseDouble(body.get("id").toString());
+                    "set sn = ?, id_card = ?, name = ?, doc = ?::json " +
+                    "where id = ? and uuid = ?";
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
                     body.get("sn").toString(),
-                    body.get("sn_alt").toString(),
                     body.get("id_card").toString(),
                     body.get("name").toString(),
-                    body.get("bday").toString(),
-                    _vault_id.intValue(),
-                    body.get("remark").toString(),
-                    body.get("tel").toString(),
-                    body.get("gender").toString(),
-                    _id.intValue());
+                    body.get("doc").toString(),
+                    (int) id,
+                    body.get("uuid").toString());
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -283,7 +266,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql, Integer.parseInt(body.get("id").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -303,29 +286,29 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive " +
-                    "(sn, sn_alt, id_card, name, bday, " +
+                    "(sn, sn_repeal, id_card, name, bday, " +
                     "remark, vault_id, tel, gender) " +
                     "values " +
                     "(?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?) " +
                     "returning id";
-            Double _vault_id = Double.parseDouble((body.get("vault_id").toString()));
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double vault_id = Double.parseDouble((body.get("vault_id").toString()));
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     body.get("sn").toString(),
-                    body.get("sn_alt").toString(),
+                    body.get("sn_repeal").toString(),
                     body.get("id_card").toString(),
                     body.get("name").toString(),
                     body.get("bday").toString(),
                     body.get("remark").toString(),
-                    _vault_id.intValue(),
+                    (int) vault_id,
                     body.get("tel").toString(),
                     body.get("gender").toString()));
             sql = "delete from himawari.archive_isolate where id = ?";
-            qr.update(cnx, sql, _id.intValue());
+            qr.update(cnx, sql, (int) id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -345,29 +328,29 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive_isolate " +
-                    "(original_id, sn, sn_alt, id_card, name, bday, " +
+                    "(original_id, sn, sn_repeal, id_card, name, bday, " +
                     "remark, vault_id, reason, gender) " +
                     "values " +
                     "(?, ?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?) " +
                     "returning id";
-            Double _vault_id = Double.parseDouble((body.get("vault_id").toString()));
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double vault_id = Double.parseDouble((body.get("vault_id").toString()));
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     body.get("sn").toString(),
-                    body.get("sn_alt").toString(),
+                    body.get("sn_repeal").toString(),
                     body.get("id_card").toString(),
                     body.get("name").toString(),
                     body.get("bday").toString(),
                     body.get("remark").toString(),
-                    _vault_id.intValue(),
+                    (int) vault_id,
                     body.get("reason").toString(),
                     body.get("gender").toString()));
             sql = "delete from himawari.archive where id = ?";
-            qr.update(cnx, sql, _id.intValue());
+            qr.update(cnx, sql, (int) id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -388,12 +371,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         try (Connection cnx = DBUtil.getConnection()) {
 //            String sql = "select id, master_id, content from himawari.picture where master_id = ?";
             String sql = "select id, master_id from himawari.picture where master_id = ?";
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    _id.intValue()));
+                    (int) id));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -416,13 +399,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "(master_id, content) " +
                     "values (?, ?) " +
                     "returning id";
-            Double _id = Double.parseDouble(body.get("master_id").toString());
+            double id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    _id.intValue(),
+                    (int) id,
                     body.get("content").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -446,16 +429,16 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "(select id from himawari.picture where id > ? order by id limit 1) as next_id " +
                     "from himawari.picture " +
                     "where id = ? and master_id = ?";
-            Double _id = Double.parseDouble(body.get("id").toString());
-            Double _master_id = Double.parseDouble(body.get("master_id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
+            double master_id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    _id.intValue(),
-                    _id.intValue(),
-                    _id.intValue(),
-                    _master_id.intValue()));
+                    (int) id,
+                    (int) id,
+                    (int) id,
+                    (int) master_id));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -465,7 +448,6 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void listIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();
@@ -477,7 +459,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -497,12 +479,12 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive_isolate where id = ? limit 1";
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    _id.intValue()));
+                    (int) id));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -522,27 +504,27 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive_isolate " +
-                    "set sn = ?, sn_alt = ?, id_card = ?, name = ?, bday = ?, " +
+                    "set sn = ?, sn_repeal = ?, id_card = ?, name = ?, bday = ?, " +
                     "remark = ?, vault_id = ?, " +
                     "reason = ?, tel = ?, gender = ? " +
                     "where id = ?";
-            Double _vault_id = Double.parseDouble(body.get("vault_id").toString());
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double vault_id = Double.parseDouble(body.get("vault_id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
                     body.get("sn").toString(),
-                    body.get("sn_alt").toString(),
+                    body.get("sn_repeal").toString(),
                     body.get("id_card").toString(),
                     body.get("name").toString(),
                     body.get("bday").toString(),
                     body.get("remark").toString(),
-                    _vault_id.intValue(),
+                    (int) vault_id,
                     body.get("reason").toString(),
                     body.get("tel").toString(),
                     body.get("gender").toString(),
-                    _id.intValue());
+                    (int) id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -562,11 +544,11 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "delete from himawari.archive_isolate where id = ?";
-            Double _id = Double.parseDouble(body.get("id").toString());
+            double _id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, _id.intValue());
+            qr.update(cnx, sql, (int) _id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -596,7 +578,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     body.get("id_card").toString(),
                     body.get("name").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 

@@ -14,7 +14,7 @@ service Archive {
 
     rpc list (ArchiveRequest) returns (ArchiveReply) {}
     rpc save (ArchiveRequest) returns (ArchiveReply) {}
-    rpc get (ArchiveRequest) returns (ArchiveReply) {}
+    rpc get (ArchiveGetRequest) returns (ArchiveReply) {}
     rpc update (ArchiveRequest) returns (ArchiveReply) {}
     rpc remove (ArchiveRequest) returns (ArchiveReply) {}
 
@@ -35,3 +35,8 @@ service Archive {
 message ArchiveRequest { string data = 1; }
 
 message ArchiveReply { string data = 1; }
+
+message ArchiveGetRequest {
+    int32 id = 1;
+    string uuid = 2;
+}

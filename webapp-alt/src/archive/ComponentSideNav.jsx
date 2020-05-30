@@ -1,42 +1,32 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function Sidebar(props) {
-  const { category } = props;
+export default function ComponentSideNav({ archive_id }) {
   return (
-    <div className="list-group">
-      <h6 className="text-muted text-center mt-2">选择功能</h6>
-
-      <a
-        href="#/转入"
-        className={`list-group-item list-group-item-action ${category === 'transfer-in' ? 'active' : ''}`}
-      >
-        <i className="fa fa-fw fa-plus" />
-        转入档案
+    <div className="list-group pull-right ml-3 mt-1">
+      <a href={`#/${archive_id}/转出`} className="list-group-item list-group-item-action">
+        <i className="fa fa-fw fa-mail-forward" />
+        转出
       </a>
 
-      <a
-        href="#/"
-        className={`list-group-item list-group-item-action ${category === 'filter' ? 'active' : ''}`}
-      >
-        <i className="fa fa-fw fa-search" />
-        查询档案
+      <a href={`#/${archive_id}/扫描`} className="list-group-item list-group-item-action">
+        <i className="fa fa-fw fa-camera" />
+        扫描
       </a>
 
-      <a
-        href="#/中转区"
-        className={`list-group-item list-group-item-action ${category === 'isolate' ? 'active' : ''}`}
-      >
-        <i className="fa fa-fw fa-folder-open-o" />
-        档案中转区
+      <a href={`#/${archive_id}/图像`} className="list-group-item list-group-item-action">
+        <i className="fa fa-fw fa-image" />
+        查看档案图像
       </a>
 
-      <a
-        href="#/导入"
-        className={`list-group-item list-group-item-action ${category === 'import' ? 'active' : ''}`}
-      >
-        <i className="fa fa-fw fa-upload" />
-        导入档案
+      <a href={`#/${archive_id}`} className="list-group-item list-group-item-action">
+        <i className="fa fa-fw fa-archive" />
+        档案信息
       </a>
     </div>
   );
 }
+
+ComponentSideNav.propTypes = {
+  archive_id: PropTypes.string.isRequired,
+};

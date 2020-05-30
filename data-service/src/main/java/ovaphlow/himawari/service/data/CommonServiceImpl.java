@@ -32,7 +32,7 @@ public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     body.get("category").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -55,16 +55,16 @@ public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
                     "(master_id, category, name, value, remark) " +
                     "values (?, ?, ?, ?, ?) " +
                     "returning id";
-            Double master_id = Double.parseDouble(body.get("master_id").toString());
+            double master_id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    master_id.intValue(),
+                    (int) master_id,
                     body.get("category").toString(),
                     body.get("name").toString(),
                     body.get("value").toString(),
                     body.get("value").toString()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -84,12 +84,12 @@ public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from public.common where id = ? limit 1";
-            Double id = Double.parseDouble(body.get("id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    id.intValue()));
+                    (int) id));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -111,18 +111,18 @@ public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
             String sql = "update public.common " +
                     "set master_id = ?, category = ?, name = ?, value = ?, remark = ? " +
                     "where id = ?";
-            Double id = Double.parseDouble(body.get("id").toString());
-            Double master_id = Double.parseDouble(body.get("master_id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
+            double master_id = Double.parseDouble(body.get("master_id").toString());
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
-                    master_id.intValue(),
+                    (int) master_id,
                     body.get("category").toString(),
                     body.get("name").toString(),
                     body.get("value").toString(),
                     body.get("remark").toString(),
-                    id.intValue());
+                    (int) id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
@@ -142,11 +142,11 @@ public class CommonServiceImpl extends CommonGrpc.CommonImplBase {
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "delete from public.common where id = ?";
-            Double id = Double.parseDouble(body.get("id").toString());
+            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, id.intValue());
+            qr.update(cnx, sql, (int) id);
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
