@@ -18,9 +18,8 @@ public class Application {
         server = ServerBuilder.forPort(Global.getPORT())
                 .maxInboundMessageSize(1024 * 1024 * 256)
                 .addService(new ArchiveServiceImpl())
-                .addService(new CommonServiceImpl())
                 .addService(new UserServiceImpl())
-                .addService(new VaultServiceImpl())
+                .addService(new SettingServiceImpl())
                 .build()
                 .start();
         logger.info("服务启动于端口 " + Global.getPORT());
@@ -54,7 +53,7 @@ public class Application {
         final Options options = new Options();
         options.addOption(new Option("h", "help", false, "HELP"));
         options.addOption(new Option("p","port", true, "服务使用的端口"));
-        options.addOption(new Option("L", "db_url", true, "数据库连接地址(IP:PORT/NAME)"));;
+        options.addOption(new Option("L", "db_url", true, "数据库连接地址(IP:PORT/NAME)"));
         options.addOption(new Option("U", "db_username", true, "数据库用户"));
         options.addOption(new Option("P", "db_password", true, "数据库密码"));
         options.addOption(new Option("S", "db_pool_size", true, "数据库连接池容量"));

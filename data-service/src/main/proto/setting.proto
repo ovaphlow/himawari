@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+option java_package = "ovaphlow.himawari.service.data";
+option java_outer_classname = "SettingProto";
+
 package himawari;
 
 service Setting {
@@ -43,4 +46,6 @@ message RemoveRequest {
     string uuid = 2;
 }
 
-message SettingReply { string data = 1; }
+message SettingReply {
+    string data = 1;
+}

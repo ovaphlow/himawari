@@ -16,6 +16,10 @@ code {
     monospace;
 }
 
+.container {
+  margin-top: 1rem;
+}
+
 .text-small {
   font-size: 0.75rem;
 }

@@ -5,12 +5,12 @@ import { v5 as uuidv5 } from 'uuid';
 
 import ComponentToolbar from './ComponentToolbar';
 
-export default function VaultDetail({ cat }) {
+export default function DeptDetail({ cat }) {
   const { id } = useParams();
   const location = useLocation();
   const [name, setName] = useState('');
   const [addr, setAddr] = useState('');
-  const [phone, setPhone] = useState('');
+  const [tel, setTel] = useState('');
 
   useEffect(() => {
     if (cat === '编辑') {
@@ -19,25 +19,25 @@ export default function VaultDetail({ cat }) {
         const res = await response.json();
         setName(res.content.name);
         setAddr(JSON.parse(res.content.doc.value).addr);
-        setPhone(JSON.parse(res.content.doc.value).phone);
+        setTel(JSON.parse(res.content.doc.value).tel);
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSave = async () => {
-    if (!name || !phone || !addr) {
+    if (!name || !tel || !addr) {
       window.alert('请完整填写所需信息');
       return;
     }
 
     const data = {
-      uuid: uuidv5(`档案库-${name}`, uuidv5.DNS),
+      uuid: uuidv5(`部门-${name}`, uuidv5.DNS),
       master_id: 0,
-      category: '档案库',
+      category: '部门',
       name,
       value: '',
-      doc: JSON.stringify({ addr, phone }),
+      doc: JSON.stringify({ addr, tel }),
     };
 
     if (cat === '新增') {
@@ -83,8 +83,8 @@ export default function VaultDetail({ cat }) {
   return (
     <div className="container">
       <h1>
-        <i className="fa fa-fw fa-map-marker" />
-        档案库
+        <i className="fa fa-fw fa-sitemap" />
+        部门
         <span className="pull-right">
           <ComponentToolbar />
         </span>
@@ -95,7 +95,7 @@ export default function VaultDetail({ cat }) {
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-dark">
           <li className="breadcrumb-item">
-            <a href="#/档案库">档案库</a>
+            <a href="#/部门">部门</a>
           </li>
 
           <li className="breadcrumb-item active" aria-current="page">
@@ -124,16 +124,16 @@ export default function VaultDetail({ cat }) {
                 <label>电话</label>
                 <input
                   type="tel"
-                  value={phone || ''}
+                  value={tel}
                   className="form-control"
-                  onChange={(event) => setPhone(event.target.value)}
+                  onChange={(event) => setTel(event.target.value)}
                 />
               </div>
             </div>
           </div>
 
           <div className="form-group">
-            <label>地址</label>
+            <label>位置</label>
             <input
               type="text"
               value={addr || ''}
@@ -177,6 +177,6 @@ export default function VaultDetail({ cat }) {
   );
 }
 
-VaultDetail.propTypes = {
+DeptDetail.propTypes = {
   cat: PropTypes.string.isRequired,
 };

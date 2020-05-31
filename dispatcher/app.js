@@ -6,9 +6,8 @@ const staticCache = require('koa-static-cache');
 
 const logger = require('./logger');
 const routerArchive = require('./route/archive');
-const routerCommon = require('./route/common');
 const routerUser = require('./route/user');
-const routerVault = require('./route/vault');
+const routerSetting = require('./route/setting');
 
 const app = new Koa();
 
@@ -44,18 +43,13 @@ app.on('error', (err, ctx) => {
 })();
 
 (() => {
-  app.use(routerCommon.routes());
-  app.use(routerCommon.allowedMethods());
-})();
-
-(() => {
   app.use(routerUser.routes());
   app.use(routerUser.allowedMethods());
 })();
 
 (() => {
-  app.use(routerVault.routes());
-  app.use(routerVault.allowedMethods());
+  app.use(routerSetting.routes());
+  app.use(routerSetting.allowedMethods());
 })();
 
 module.exports = app;
