@@ -157,7 +157,7 @@ export default function Detail({ cat }) {
         window.alert(res.message);
         return;
       }
-      window.location.reload(true);
+      window.history.go(-1);
     }
   };
 
@@ -205,7 +205,7 @@ export default function Detail({ cat }) {
       window.alert(res.message);
       return;
     }
-    window.location = `#档案/${res.content}/扫描`;
+    window.location = `#/${res.content}/扫描`;
   };
 
   const handleRemove = async () => {
@@ -282,16 +282,22 @@ export default function Detail({ cat }) {
 
   return (
     <div className="container">
-      <h3>{`${cat} 档案`}</h3>
+      <h1>
+        档案
+        <span className="pull-right">
+          <ComponentToolbar />
+        </span>
+      </h1>
+
       <hr />
 
-      <ComponentToolbar />
-
-      {cat === '编辑' && (
-        <ComponentSideNav archive_id={id} />
-      )}
-
       <div className="card bg-dark shadow">
+        <div className="card-header">
+          {cat === '编辑' && (
+            <ComponentSideNav archive_id={id} />
+          )}
+        </div>
+
         <div className="card-body">
           <div className="row">
             <div className="form-group col-3">

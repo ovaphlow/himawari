@@ -31,11 +31,14 @@ export default function Filter() {
 
   return (
     <div className="container">
-      <h3>查询档案</h3>
+      <h1>
+        查询档案
+        <span className="pull-right">
+          <ComponentToolbar />
+        </span>
+      </h1>
 
       <hr />
-
-      <ComponentToolbar />
 
       <div className="card bg-dark shadow">
         <div className="card-header">
@@ -78,9 +81,8 @@ export default function Filter() {
               <tr>
                 <th className="text-right">序号</th>
                 <th>档案号</th>
-                <th>附加档案号</th>
-                <th>身份证</th>
                 <th>姓名</th>
+                <th>身份证</th>
                 <th>性别</th>
                 <th>出生日期</th>
               </tr>
@@ -95,10 +97,13 @@ export default function Filter() {
                     </a>
                     <span className="pull-right">{it.id}</span>
                   </td>
-                  <td>{it.sn}</td>
-                  <td>{JSON.parse(it.sn_repeal.value).join(', ')}</td>
-                  <td>{it.id_card}</td>
+                  <td>
+                    {it.sn}
+                    <br />
+                    {JSON.parse(it.sn_repeal.value).join(', ')}
+                  </td>
                   <td>{it.name}</td>
+                  <td>{it.id_card}</td>
                   <td>{JSON.parse(it.doc.value).gender}</td>
                   <td>{JSON.parse(it.doc.value).bday}</td>
                 </tr>

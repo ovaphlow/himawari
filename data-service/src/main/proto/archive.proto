@@ -1,42 +1,54 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+//option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.data";
 option java_outer_classname = "ArchiveProto";
 
 package archive;
 
 service Archive {
-    rpc search (ArchiveRequest) returns (ArchiveReply) {}
-    rpc filter (ArchiveRequest) returns (ArchiveReply) {}
-    rpc checkValid (ArchiveRequest) returns (ArchiveReply) {}
-    rpc checkValidWithId (ArchiveRequest) returns (ArchiveReply) {}
+    rpc Search (SearchRequest) returns (Reply) {}
+    rpc Filter (FilterRequest) returns (Reply) {}
+    rpc CheckValid (ArchiveRequest) returns (Reply) {}
+    rpc CheckValidWithId (ArchiveRequest) returns (Reply) {}
 
-    rpc list (ArchiveRequest) returns (ArchiveReply) {}
-    rpc save (ArchiveRequest) returns (ArchiveReply) {}
-    rpc get (ArchiveGetRequest) returns (ArchiveReply) {}
-    rpc update (ArchiveRequest) returns (ArchiveReply) {}
-    rpc remove (ArchiveRequest) returns (ArchiveReply) {}
+    rpc List (ArchiveRequest) returns (Reply) {}
+    rpc Save (SaveRequest) returns (Reply) {}
+    rpc Get (GetRequest) returns (Reply) {}
+    rpc update (ArchiveRequest) returns (Reply) {}
+    rpc remove (ArchiveRequest) returns (Reply) {}
 
-    rpc transferOut (ArchiveRequest) returns (ArchiveReply) {}
-    rpc transferIn (ArchiveRequest) returns (ArchiveReply) {}
+    rpc transferOut (ArchiveRequest) returns (Reply) {}
+    rpc transferIn (ArchiveRequest) returns (Reply) {}
 
-    rpc listPicture (ArchiveRequest) returns (ArchiveReply) {}
-    rpc saveBase64 (ArchiveRequest) returns (ArchiveReply) {}
-    rpc getPicture (ArchiveRequest) returns (ArchiveReply) {}
+    rpc listPicture (ArchiveRequest) returns (Reply) {}
+    rpc saveBase64 (ArchiveRequest) returns (Reply) {}
+    rpc getPicture (ArchiveRequest) returns (Reply) {}
 
-    rpc listIsolate (ArchiveRequest) returns (ArchiveReply) {}
-    rpc getIsolate (ArchiveRequest) returns (ArchiveReply) {}
-    rpc updateIsolate (ArchiveRequest) returns (ArchiveReply) {}
-    rpc removeIsolate (ArchiveRequest) returns (ArchiveReply) {}
-    rpc filterIsolate (ArchiveRequest) returns (ArchiveReply) {}
+    rpc listIsolate (ArchiveRequest) returns (Reply) {}
+    rpc getIsolate (ArchiveRequest) returns (Reply) {}
+    rpc updateIsolate (ArchiveRequest) returns (Reply) {}
+    rpc removeIsolate (ArchiveRequest) returns (Reply) {}
+    rpc filterIsolate (ArchiveRequest) returns (Reply) {}
 }
 
 message ArchiveRequest { string data = 1; }
 
-message ArchiveReply { string data = 1; }
+message SearchRequest { string filter = 1; }
 
-message ArchiveGetRequest {
+message FilterRequest { string filter = 1; }
+
+message SaveRequest {
+    string uuid = 1;
+    string sn = 2;
+    string id_card = 3;
+    string name = 4;
+    string doc = 5;
+}
+
+message GetRequest {
     int32 id = 1;
     string uuid = 2;
 }
+
+message Reply { string data = 1; }

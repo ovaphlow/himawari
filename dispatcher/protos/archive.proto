@@ -9,7 +9,7 @@ service Archive {
     rpc checkValidWithId (ArchiveRequest) returns (ArchiveReply) {}
 
     rpc list (ArchiveRequest) returns (ArchiveReply) {}
-    rpc save (ArchiveRequest) returns (ArchiveReply) {}
+    rpc save (SaveRequest) returns (ArchiveReply) {}
     rpc get (ArchiveGetRequest) returns (ArchiveReply) {}
     rpc update (ArchiveRequest) returns (ArchiveReply) {}
     rpc remove (ArchiveRequest) returns (ArchiveReply) {}
@@ -30,9 +30,17 @@ service Archive {
 
 message ArchiveRequest { string data = 1; }
 
+message SaveRequest {
+    string uuid = 1;
+    string sn = 2;
+    string id_card = 3;
+    string name = 4;
+    string doc = 5;
+}
+
 message ArchiveReply { string data = 1; }
 
 message ArchiveGetRequest {
-    int32 id = 1;
+    uint32 id = 1;
     string uuid = 2;
 }

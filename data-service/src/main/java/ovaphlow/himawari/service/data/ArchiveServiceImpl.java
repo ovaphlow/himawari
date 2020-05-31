@@ -17,10 +17,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveServiceImpl.class);
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void search(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void search(ArchiveProto.SearchRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -31,34 +28,31 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             List<Map<String, Object>> result = qr.query(cnx, sql, new MapListHandler(),
-                    body.get("keyword").toString(),
-                    body.get("keyword").toString(),
-                    body.get("keyword").toString());
+                    req.getFilter());
             if (result.size() == 0) {
                 resp.put("message", "未找到指定档案号/身份证的档案");
-                resp.put("content", body.get("keyword").toString());
+                resp.put("content", req.getFilter());
             } else if (result.size() == 1) {
                 resp.put("message", "");
                 resp.put("content", result.get(0));
             } else {
                 resp.put("message", "您查询的档案号/身份证不是唯一数据，请联系系统管理员。");
-                resp.put("content", body.get("keyword").toString());
+                resp.put("content", req.getFilter());
             }
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void filter(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void filter(ArchiveProto.FilterRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -71,22 +65,20 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    body.get("sn").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString()));
+                    req.getFilter(), req.getFilter(), req.getFilter()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void checkValid(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void checkValid(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -107,14 +99,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void checkValidWithId(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void checkValidWithId(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -137,13 +129,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void list(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void list(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -158,16 +150,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void save(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void save(ArchiveProto.SaveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -179,24 +168,21 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "(?, ?, ?, ?, ?::json) " +
                     "returning id";
             QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    body.get("uuid").toString(),
-                    body.get("sn").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString(),
-                    body.get("doc").toString()));
+            resp.put("content", qr.query(cnx, sql, new MapHandler()
+                    ));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get(ArchiveGetRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void get(ArchiveProto.GetRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         logger.info("{}", req.getId());
         logger.info("{}", req.getUuid());
         Map<String, Object> resp = new HashMap<>();
@@ -215,14 +201,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
         }
 
         Gson gson = new Gson();
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void update(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void update(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -247,14 +233,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void remove(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void remove(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -270,14 +256,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void transferIn(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void transferIn(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -312,14 +298,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void transferOut(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void transferOut(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -354,14 +340,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void listPicture(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void listPicture(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -380,14 +366,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void saveBase64(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void saveBase64(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -409,14 +395,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getPicture(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void getPicture(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -442,13 +428,13 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void listIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void listIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -463,14 +449,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void getIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -488,14 +474,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void updateIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void updateIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -528,14 +514,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void removeIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void removeIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -552,14 +538,14 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void filterIsolate(ArchiveRequest req, StreamObserver<ArchiveReply> responseObserver) {
+    public void filterIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
         Map<String, Object> resp = new HashMap<>();
@@ -582,7 +568,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             resp.put("message", "gRPC服务器错误");
         }
 
-        ArchiveReply reply = ArchiveReply.newBuilder().setData(gson.toJson(resp)).build();
+        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

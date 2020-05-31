@@ -12,11 +12,11 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
+public class SettingServiceImpl extends SettingServiceGrpc.SettingServiceImplBase {
     private static final Logger logger = LoggerFactory.getLogger(SettingServiceImpl.class);
 
     @Override
-    public void list(SettingProto.ListRequest req, StreamObserver<SettingProto.SettingReply> responseObserver) {
+    public void list(SettingProto.ListRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -32,13 +32,13 @@ public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
         }
 
         Gson gson = new Gson();
-        SettingProto.SettingReply reply = SettingProto.SettingReply.newBuilder().setData(gson.toJson(resp)).build();
+        SettingProto.Reply reply = SettingProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void save(SettingProto.SaveRequest req, StreamObserver<SettingProto.SettingReply> responseObserver) {
+    public void save(SettingProto.SaveRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -58,13 +58,13 @@ public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
         }
 
         Gson gson = new Gson();
-        SettingProto.SettingReply reply = SettingProto.SettingReply.newBuilder().setData(gson.toJson(resp)).build();
+        SettingProto.Reply reply = SettingProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get(SettingProto.GetRequest req, StreamObserver<SettingProto.SettingReply> responseObserver) {
+    public void get(SettingProto.GetRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
         logger.info("{} {}", req.getId(), req.getUuid());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -81,20 +81,20 @@ public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
         }
 
         Gson gson = new Gson();
-        SettingProto.SettingReply reply = SettingProto.SettingReply.newBuilder().setData(gson.toJson(resp)).build();
+        SettingProto.Reply reply = SettingProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void update(SettingProto.UpdateRequest req, StreamObserver<SettingProto.SettingReply> responseObserver) {
+    public void update(SettingProto.UpdateRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.setting " +
-                    "set uuid = ?, master_id = ?, category = ?, name = ?, value = ?, doc = ?::jsonb " +
+                    "set uuid = ?, master_id = ?, category = ?, name = ?, value = ?, doc = ?::json " +
                     "where id = ?";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.update(cnx, sql,
@@ -106,13 +106,13 @@ public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
         }
 
         Gson gson = new Gson();
-        SettingProto.SettingReply reply = SettingProto.SettingReply.newBuilder().setData(gson.toJson(resp)).build();
+        SettingProto.Reply reply = SettingProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void remove(SettingProto.RemoveRequest req, StreamObserver<SettingProto.SettingReply> responseObserver) {
+    public void remove(SettingProto.RemoveRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -127,7 +127,7 @@ public class SettingServiceImpl extends SettingGrpc.SettingImplBase {
         }
 
         Gson gson = new Gson();
-        SettingProto.SettingReply reply = SettingProto.SettingReply.newBuilder().setData(gson.toJson(resp)).build();
+        SettingProto.Reply reply = SettingProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
