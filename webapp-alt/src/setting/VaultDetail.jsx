@@ -1,0 +1,164 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+export default function Detail({ cat }) {
+  const { id } = useParams();
+  const [name, setName] = useState('');
+  const [addr, setAddr] = useState('');
+  const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    if (cat === '编辑') {
+      (async () => {
+        const response = await window.fetch(`/api/vault/${id}`);
+        const res = await response.json();
+        setName(res.content.name);
+        setAddr(res.content.addr);
+        setPhone(res.content.phone);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSave = async () => {
+    if (!name || !phone || !addr) {
+      window.alert('请完整填写所需信息');
+      return;
+    }
+
+    const data = { name, addr, phone };
+
+    if (cat === '新增') {
+      const response = await window.fetch('/api/vault/', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
+      if (res.message) {
+        window.alert(res.message);
+        return;
+      }
+      window.history.go(-1);
+    } else if (cat === '编辑') {
+      const response = await window.fetch(`/api/vault/${id}`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
+      if (res.message) {
+        window.alert(res.message);
+        return;
+      }
+      window.history.go(-1);
+    }
+  };
+
+  const handleRemove = async () => {
+    if (!window.confirm('确定要删除当前数据？')) return;
+    const response = await window.fetch(`/api/vault/${id}`, {
+      method: 'DELETE',
+    });
+    const res = await response.json();
+    if (res.message) {
+      window.alert(res.message);
+      return;
+    }
+    window.history.go(-1);
+  };
+
+  return (
+    <div className="row mt-3">
+      <div className="col-3 col-lg-2">
+        <Sidebar />
+      </div>
+
+      <div className="col-9 col-lg-10">
+        <h3 className="text-muted">
+          <i className="fa fa-fw fa-map-marker" />
+          档案库
+        </h3>
+
+        <hr />
+
+        <Toolbar />
+
+        <div className="card shadow mt-2">
+          <div className="card-body">
+            <div className="row">
+              <div className="col-4">
+                <div className="form-group">
+                  <label>名称</label>
+                  <input
+                    type="text"
+                    value={name || ''}
+                    className="form-control"
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col-4 offset-4">
+                <div className="form-group">
+                  <label>电话</label>
+                  <input
+                    type="tel"
+                    value={phone || ''}
+                    className="form-control"
+                    onChange={(event) => setPhone(event.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>地址</label>
+              <input
+                type="text"
+                value={addr || ''}
+                className="form-control"
+                onChange={(event) => setAddr(event.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="card-footer">
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => window.history.go(-1)}
+              >
+                返回
+              </button>
+            </div>
+
+            <div className="btn-group pull-right">
+              {cat === '编辑' && (
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
+                  onClick={handleRemove}
+                >
+                  <i className="fa fa-fw fa-trash-o" />
+                  删除
+                </button>
+              )}
+
+              <button type="button" className="btn btn-primary" onClick={handleSave}>
+                <i className="fa fa-fw fa-check" />
+                保存
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Detail.propTypes = {
+  cat: PropTypes.string.isRequired,
+};

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package himawari;
+
+service Setting {
+    rpc List (DeptRequest) returns (DeptReply) {}
+    rpc Save (DeptRequest) returns (DeptReply) {}
+    rpc Get (DeptRequest) returns (DeptReply) {}
+    rpc Update (DeptRequest) returns (DeptReply) {}
+    rpc Remove (DeptRequest) returns (DeptReply) {}
+}
+
+message DeptReply { string data = 1; }

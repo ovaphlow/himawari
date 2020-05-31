@@ -51,10 +51,10 @@ export default function ComponentNavbar({ category }) {
         </ul>
 
         <ul className="navbar-nav pull-right">
-          <li className={`nav-item ${category === 'mds' ? 'active' : ''}`}>
-            <a className="nav-link" href="setting.html">
+          <li className={`nav-item ${category === '系统设定' ? 'active' : ''}`}>
+            <a className="nav-link" href="setting.html#/档案库">
               <i className="fa fa-fw fa-cogs" />
-              数据管理
+              系统设定
             </a>
           </li>
         </ul>
