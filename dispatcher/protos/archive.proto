@@ -34,6 +34,10 @@ message SearchRequest { string filter = 1; }
 
 message FilterRequest { string filter = 1; }
 
+message CheckValidRequest { string sn = 1; string id_card = 2; }
+
+message CheckValidWithIdRequest { uint32 id = 1; string sn = 2; string id_card = 3; }
+
 message SaveRequest {
     string uuid = 1;
     string sn = 2;

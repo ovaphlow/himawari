@@ -9,8 +9,8 @@ package archive;
 service ArchiveService {
     rpc Search (SearchRequest) returns (Reply) {}
     rpc Filter (FilterRequest) returns (Reply) {}
-    rpc CheckValid (ArchiveRequest) returns (Reply) {}
-    rpc CheckValidWithId (ArchiveRequest) returns (Reply) {}
+    rpc CheckValid (CheckValidRequest) returns (Reply) {}
+    rpc CheckValidWithId (CheckValidWithIdRequest) returns (Reply) {}
 
     rpc List (ArchiveRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
@@ -37,6 +37,10 @@ message ArchiveRequest { string data = 1; }
 message SearchRequest { string filter = 1; }
 
 message FilterRequest { string filter = 1; }
+
+message CheckValidRequest { string sn = 1; string id_card = 2; }
+
+message CheckValidWithIdRequest { uint32 id = 1; string sn = 2; string id_card = 3; }
 
 message SaveRequest {
     string uuid = 1;

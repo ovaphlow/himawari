@@ -65,7 +65,6 @@ public class SettingServiceImpl extends SettingServiceGrpc.SettingServiceImplBas
 
     @Override
     public void get(SettingProto.GetRequest req, StreamObserver<SettingProto.Reply> responseObserver) {
-        logger.info("{} {}", req.getId(), req.getUuid());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");

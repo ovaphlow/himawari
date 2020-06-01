@@ -106,7 +106,7 @@ router.put('/search', async (ctx) => {
    */
 router.put('/filter', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -116,7 +116,7 @@ router.put('/filter', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await grpcFetch(ctx.request.body);
+    ctx.response.body = await grpcFetch({ filter: ctx.request.body.filter });
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
@@ -125,7 +125,7 @@ router.put('/filter', async (ctx) => {
 
 router.put('/check-valid', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.checkValid({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.checkValid(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -144,7 +144,7 @@ router.put('/check-valid', async (ctx) => {
 
 router.put('/check-valid-with-id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.checkValidWithId({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.checkValidWithId(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

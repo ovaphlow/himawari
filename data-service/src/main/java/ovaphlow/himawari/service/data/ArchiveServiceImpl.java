@@ -52,7 +52,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     public void filter(ArchiveProto.FilterRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -60,8 +59,8 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive " +
                     "where position(? in sn) > 0 " +
-                    "and position(? in id_card) > 0 " +
-                    "and position(? in name) > 0 " +
+                    "or position(? in id_card) > 0 " +
+                    "or position(? in name) > 0 " +
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
@@ -71,6 +70,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -78,9 +78,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     @SuppressWarnings("unchecked")
-    public void checkValid(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void checkValid(ArchiveProto.CheckValidRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -92,13 +90,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    body.get("sn").toString(),
-                    body.get("id_card").toString()));
+                    req.getSn(), req.getIdCard()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -106,9 +104,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     @SuppressWarnings("unchecked")
-    public void checkValidWithId(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void checkValidWithId(ArchiveProto.CheckValidWithIdRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -118,17 +114,15 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
                     "from himawari.archive " +
                     "where (sn = ? or id_card = ?) and id != ? " +
                     "limit 2";
-            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    body.get("sn").toString(),
-                    body.get("id_card").toString(),
-                    (int) id));
+                    req.getSn(), req.getIdCard(), req.getId()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
