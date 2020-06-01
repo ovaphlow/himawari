@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
+public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveServiceImpl.class);
 
     @Override
@@ -168,8 +168,8 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
                     "(?, ?, ?, ?, ?::json) " +
                     "returning id";
             QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapHandler()
-                    ));
+            resp.put("content", qr.query(cnx, sql, new MapHandler(),
+                    req.getUuid(), req.getSn(), req.getIdCard(), req.getName(), req.getDoc()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
@@ -193,8 +193,7 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
             String sql = "select * from himawari.archive where id = ? and uuid = ? limit 1";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    req.getId(),
-                    req.getUuid()));
+                    req.getId(), req.getUuid()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
@@ -207,32 +206,24 @@ public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void update(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void update(ArchiveProto.UpdateRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive " +
-                    "set sn = ?, id_card = ?, name = ?, doc = ?::json " +
-                    "where id = ? and uuid = ?";
-            double id = Double.parseDouble(body.get("id").toString());
+                    "set uuid = ?, sn = ?, id_card = ?, name = ?, doc = ?::json " +
+                    "where id = ?";
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
-                    body.get("sn").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString(),
-                    body.get("doc").toString(),
-                    (int) id,
-                    body.get("uuid").toString());
+                    req.getUuid(), req.getSn(), req.getIdCard(), req.getName(), req.getDoc(), req.getId());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();

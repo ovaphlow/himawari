@@ -17,7 +17,7 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../protos/archive.p
   oneofs: true,
 });
 const proto = grpc.loadPackageDefinition(packageDefinition).archive;
-const grpcClient = new proto.Archive(
+const grpcClient = new proto.ArchiveService(
   `${gRPC.host}:${gRPC.port}`,
   grpc.credentials.createInsecure(), {
     'grpc.max_receive_message_length': gRPC.option['grpc.max_receive_message_length'],
@@ -354,7 +354,7 @@ router.get('/:master_id/picture/:id', async (ctx) => {
 
 router.get('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.get({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.get(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -364,7 +364,7 @@ router.get('/:id', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await grpcFetch(parseInt(ctx.params.id, 10), ctx.request.query.uuid);
+    ctx.response.body = await grpcFetch({ id: parseInt(ctx.params.id, 10), uuid: ctx.request.query.uuid });
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
@@ -373,7 +373,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.update({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.update(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -433,7 +433,7 @@ router.get('/', async (ctx) => {
 
 router.post('/', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.save(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -443,6 +443,7 @@ router.post('/', async (ctx) => {
     });
   });
   try {
+    logger.info(ctx.request.body);
     ctx.response.body = await grpcFetch(ctx.request.body);
   } catch (err) {
     logger.error(err);

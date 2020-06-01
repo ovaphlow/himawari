@@ -6,7 +6,7 @@ option java_outer_classname = "ArchiveProto";
 
 package archive;
 
-service Archive {
+service ArchiveService {
     rpc Search (SearchRequest) returns (Reply) {}
     rpc Filter (FilterRequest) returns (Reply) {}
     rpc CheckValid (ArchiveRequest) returns (Reply) {}
@@ -15,15 +15,15 @@ service Archive {
     rpc List (ArchiveRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
-    rpc update (ArchiveRequest) returns (Reply) {}
-    rpc remove (ArchiveRequest) returns (Reply) {}
+    rpc Update (UpdateRequest) returns (Reply) {}
+    rpc Remove (ArchiveRequest) returns (Reply) {}
 
-    rpc transferOut (ArchiveRequest) returns (Reply) {}
-    rpc transferIn (ArchiveRequest) returns (Reply) {}
+    rpc TransferOut (ArchiveRequest) returns (Reply) {}
+    rpc TransferIn (ArchiveRequest) returns (Reply) {}
 
-    rpc listPicture (ArchiveRequest) returns (Reply) {}
-    rpc saveBase64 (ArchiveRequest) returns (Reply) {}
-    rpc getPicture (ArchiveRequest) returns (Reply) {}
+    rpc ListPicture (ArchiveRequest) returns (Reply) {}
+    rpc SaveBase64 (ArchiveRequest) returns (Reply) {}
+    rpc GetPicture (ArchiveRequest) returns (Reply) {}
 
     rpc listIsolate (ArchiveRequest) returns (Reply) {}
     rpc getIsolate (ArchiveRequest) returns (Reply) {}
@@ -47,8 +47,17 @@ message SaveRequest {
 }
 
 message GetRequest {
-    int32 id = 1;
+    uint32 id = 1;
     string uuid = 2;
+}
+
+message UpdateRequest {
+    uint32 id = 1;
+    string uuid = 2;
+    string sn = 3;
+    string id_card = 4;
+    string name = 5;
+    string doc = 6;
 }
 
 message Reply { string data = 1; }

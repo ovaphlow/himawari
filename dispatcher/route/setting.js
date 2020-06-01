@@ -12,8 +12,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../protos/setting.p
   defaults: true,
   oneofs: true,
 });
-const proto = grpc.loadPackageDefinition(packageDefinition).himawari;
-const grpcClient = new proto.Setting(
+const proto = grpc.loadPackageDefinition(packageDefinition).setting;
+const grpcClient = new proto.SettingService(
   `${gRPC.host}:${gRPC.port}`,
   grpc.credentials.createInsecure(),
 );

@@ -19,7 +19,7 @@ export default function Detail({ cat }) {
   const [gender, setGender] = useState('');
   const [tel, setTel] = useState('');
   const [remark, setRemark] = useState('');
-  const [vault_id, setVaultID] = useState('0');
+  const [vault_id, setVaultID] = useState(0);
   const [reason, setReason] = useState('');
 
   useEffect(() => {
@@ -48,7 +48,6 @@ export default function Detail({ cat }) {
       (async () => {
         const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
         const res = await response.json();
-        window.console.info(res);
         setSN(res.content.sn);
         setSNRepeal(res.content.sn_alt);
         setIdCard(res.content.id_card);
@@ -90,7 +89,7 @@ export default function Detail({ cat }) {
         gender,
         tel,
         remark,
-        vault_id,
+        vault_id: parseInt(vault_id, 10),
       }),
     };
 
@@ -159,53 +158,6 @@ export default function Detail({ cat }) {
       }
       window.history.go(-1);
     }
-  };
-
-  const handleSaveAndCapture = async () => {
-    if (!sn || !id_card || !name) {
-      window.alert('请完整填写所需信息');
-      return;
-    }
-    if (id_card.length !== 18) {
-      window.alert('身份证长度错误');
-      return;
-    }
-
-    const data = {
-      sn,
-      id_card,
-      name,
-      doc: {
-        bday,
-        gender,
-        tel,
-        remark,
-        vault_id,
-      },
-    };
-
-    let response = await fetch('/api/archive/check-valid', {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    let res = await response.json();
-    if (res.content.length > 0) {
-      window.alert('档案号或身份证与现有档案冲突');
-      return;
-    }
-
-    response = await window.fetch('/api/archive/', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    res = await response.json();
-    if (res.message) {
-      window.alert(res.message);
-      return;
-    }
-    window.location = `#/${res.content}/扫描`;
   };
 
   const handleRemove = async () => {
@@ -422,13 +374,6 @@ export default function Detail({ cat }) {
           </div>
 
           <div className="btn-group pull-right">
-            {cat === '转入' && (
-              <button type="button" className="btn btn-success" onClick={handleSaveAndCapture}>
-                <i className="fa fa-fw fa-camera" />
-                保存并扫描档案
-              </button>
-            )}
-
             {cat === '编辑' && (
               <button type="button" className="btn btn-danger" onClick={handleRemove}>
                 <i className="fa fa-fw fa-trash-o" />
