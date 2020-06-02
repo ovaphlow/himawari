@@ -8,6 +8,8 @@ service ArchiveIsolatedService {
     rpc Get (GetRequest) returns (Reply) {}
     rpc Update (UpdateRequest) returns (Reply) {}
     rpc Remove (RemoveRequest) returns (Reply) {}
+
+    rpc TransferIn (TransferInRequest) returns (Reply) {}
 }
 
 message FilterRequest { string filter = 1; }
@@ -34,5 +36,14 @@ message UpdateRequest {
 }
 
 message RemoveRequest { uint32 id = 1; string uuid = 2; }
+
+message TransferInRequest {
+    string uuid = 1;
+    string sn = 2;
+    string sn_repeal = 3;
+    string id_card = 4;
+    string name = 5;
+    string doc = 6;
+}
 
 message Reply { string data = 1; }

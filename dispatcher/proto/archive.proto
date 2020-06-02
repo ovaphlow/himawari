@@ -14,7 +14,6 @@ service ArchiveService {
     rpc Update (UpdateRequest) returns (Reply) {}
     rpc Remove (ArchiveRequest) returns (Reply) {}
 
-    rpc TransferOut (ArchiveRequest) returns (Reply) {}
     rpc TransferIn (ArchiveRequest) returns (Reply) {}
 
     rpc ListPicture (ArchiveRequest) returns (Reply) {}

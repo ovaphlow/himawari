@@ -161,25 +161,6 @@ router.put('/check-valid-with-id', async (ctx) => {
   }
 });
 
-router.post('/transfer-out', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.transferOut({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.request.body);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
 router.post('/transfer-in', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
     grpcClient.transferIn({ data: JSON.stringify(body) }, (err, response) => {

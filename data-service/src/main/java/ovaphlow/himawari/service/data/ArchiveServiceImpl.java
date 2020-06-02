@@ -286,48 +286,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     @SuppressWarnings("unchecked")
-    public void transferOut(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "insert into himawari.archive_isolated " +
-                    "(original_id, sn, sn_repeal, id_card, name, bday, " +
-                    "remark, vault_id, reason, gender) " +
-                    "values " +
-                    "(?, ?, ?, ?, ?, ?, " +
-                    "?, ?, ?, ?) " +
-                    "returning id";
-            double vault_id = Double.parseDouble((body.get("vault_id").toString()));
-            double id = Double.parseDouble(body.get("id").toString());
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    body.get("sn").toString(),
-                    body.get("sn_repeal").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString(),
-                    body.get("bday").toString(),
-                    body.get("remark").toString(),
-                    (int) vault_id,
-                    body.get("reason").toString(),
-                    body.get("gender").toString()));
-            sql = "delete from himawari.archive where id = ?";
-            qr.update(cnx, sql, (int) id);
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public void listPicture(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Gson gson = new Gson();
         Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
