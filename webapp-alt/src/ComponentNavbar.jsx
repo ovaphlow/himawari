@@ -30,14 +30,14 @@ export default function ComponentNavbar({ category }) {
 
           <li className={`nav-item ${category === '档案' ? 'active' : ''}`}>
             <a className="nav-link" href="archive.html">
-              <i className="fa fa-fw fa-file-archive-o" />
+              <i className="fa fa-fw fa-book" />
               档案管理
             </a>
           </li>
 
           <li className={`nav-item ${category === '档案中转库' ? 'active' : ''}`}>
             <a className="nav-link" href="archive-isolated.html">
-              <i className="fa fa-fw fa-file-archive-o" />
+              <i className="fa fa-fw fa-file-archive-o"></i>
               档案中转库
             </a>
           </li>
