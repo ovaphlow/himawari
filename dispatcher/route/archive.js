@@ -9,7 +9,7 @@ const upload = multer();
 const gRPC = require('../config/gRPC');
 const logger = require('../logger');
 
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../protos/archive.proto`, {
+const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive.proto`, {
   keepCase: true,
   longs: String,
   enums: String,
@@ -199,101 +199,6 @@ router.post('/transfer-in', async (ctx) => {
   }
 });
 
-router.get('/isolate/', async (ctx) => {
-  const grpcFetch = () => new Promise((resolve, reject) => {
-    grpcClient.listIsolate({ data: '' }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch();
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.put('/isolate/filter', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filterIsolate({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.request.body);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.get('/isolate/:id', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.getIsolate({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.params);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.put('/isolate/:id', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.updateIsolate({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(Object.assign(ctx.params, ctx.request.body));
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.delete('/isolate/:id', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.removeIsolate({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.params);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
 router.post('/:id/base64', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
     grpcClient.saveBase64({ data: JSON.stringify(body) }, (err, response) => {
@@ -364,7 +269,10 @@ router.get('/:id', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await grpcFetch({ id: parseInt(ctx.params.id, 10), uuid: ctx.request.query.uuid });
+    ctx.response.body = await grpcFetch({
+      id: parseInt(ctx.params.id, 10),
+      uuid: ctx.request.query.uuid,
+    });
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };

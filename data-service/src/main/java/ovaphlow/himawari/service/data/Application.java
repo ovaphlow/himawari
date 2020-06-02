@@ -18,6 +18,7 @@ public class Application {
         server = ServerBuilder.forPort(Global.getPORT())
                 .maxInboundMessageSize(1024 * 1024 * 256)
                 .addService(new ArchiveServiceImpl())
+                .addService(new ArchiveIsolatedServiceImpl())
                 .addService(new UserServiceImpl())
                 .addService(new SettingServiceImpl())
                 .build()

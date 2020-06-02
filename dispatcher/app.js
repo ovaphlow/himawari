@@ -6,6 +6,7 @@ const staticCache = require('koa-static-cache');
 
 const logger = require('./logger');
 const routerArchive = require('./route/archive');
+const routerArchiveIsolated = require('./route/archive-isolated');
 const routerUser = require('./route/user');
 const routerSetting = require('./route/setting');
 
@@ -40,6 +41,11 @@ app.on('error', (err, ctx) => {
 (() => {
   app.use(routerArchive.routes());
   app.use(routerArchive.allowedMethods());
+})();
+
+(() => {
+  app.use(routerArchiveIsolated.routes());
+  app.use(routerArchiveIsolated.allowedMethods());
 })();
 
 (() => {

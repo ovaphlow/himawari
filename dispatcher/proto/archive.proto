@@ -20,12 +20,6 @@ service ArchiveService {
     rpc ListPicture (ArchiveRequest) returns (Reply) {}
     rpc SaveBase64 (ArchiveRequest) returns (Reply) {}
     rpc GetPicture (ArchiveRequest) returns (Reply) {}
-
-    rpc listIsolate (ArchiveRequest) returns (Reply) {}
-    rpc getIsolate (ArchiveRequest) returns (Reply) {}
-    rpc updateIsolate (ArchiveRequest) returns (Reply) {}
-    rpc removeIsolate (ArchiveRequest) returns (Reply) {}
-    rpc filterIsolate (ArchiveRequest) returns (Reply) {}
 }
 
 message ArchiveRequest { string data = 1; }

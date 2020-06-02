@@ -5,7 +5,7 @@ const Router = require('@koa/router');
 const gRPC = require('../config/gRPC');
 const logger = require('../logger');
 
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../protos/setting.proto`, {
+const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/setting.proto`, {
   keepCase: true,
   longs: String,
   enums: String,

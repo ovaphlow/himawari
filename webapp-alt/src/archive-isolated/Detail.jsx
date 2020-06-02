@@ -3,43 +3,18 @@ import { useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
 
-import ComponentToolbar from './ComponentToolbar';
-import ComponentSideNav from './ComponentSideNav';
-import ComponentVaultPicker from '../ComponentVaultPicker';
-
 export default function Detail({ cat }) {
   const { id } = useParams();
   const location = useLocation();
-  const [sn, setSN] = useState('');
-  const [sn_repeal, setSNRepeal] = useState('');
+  const [sn, setSn] = useState('');
+  const [sn_repeal, setSnRepeal] = useState('');
   const [id_card, setIdCard] = useState('');
   const [name, setName] = useState('');
   const [bday, setBday] = useState('');
   const [gender, setGender] = useState('');
   const [tel, setTel] = useState('');
   const [remark, setRemark] = useState('');
-  const [vault_id, setVaultID] = useState(0);
-
-  useEffect(() => {
-    if (cat === '编辑') {
-      (async () => {
-        const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
-        const res = await response.json();
-        setSN(res.content.sn);
-        setSNRepeal(res.content.sn_alt);
-        setIdCard(res.content.id_card);
-        setName(res.content.name);
-        const doc = JSON.parse(res.content.doc.value);
-        setBday(doc.bday);
-        setGender(doc.gender);
-        setTel(doc.tel);
-        setRemark(doc.remark);
-        setVaultID(doc.vault_id);
-        setReason(doc.reason);
-      })();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [reason, setReason] = useState('');
 
   const handleIdCardBlur = () => {
     const b = `${id_card.slice(6, 10)}-${id_card.slice(10, 12)}-${id_card.slice(12, 14)}`;
@@ -57,8 +32,9 @@ export default function Detail({ cat }) {
     }
 
     const data = {
-      uuid: uuidv5(`${sn}-${id_card}`, uuidv5.DNS),
+      uuid: uuidv5(`${id_card}`, uuidv5.DNS),
       sn,
+      sn_repeal: sn_repeal || '[]',
       id_card,
       name,
       doc: JSON.stringify({
@@ -66,66 +42,87 @@ export default function Detail({ cat }) {
         gender,
         tel,
         remark,
-        vault_id: parseInt(vault_id, 10),
+        reason,
       }),
     };
 
-    if (cat === '转入') {
-      let res = await fetch('/api/archive/check-valid', {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      res = await res.json();
-      if (res.content.length > 0) {
-        window.alert('档案号或身份证与现有档案冲突');
-        return;
-      }
-
-      res = await window.fetch('/api/archive/', {
+    if (cat === '新增') {
+      const response = await fetch(`/api/archive-isolated/`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
       });
-      res = await res.json();
+      const res = await response.json();
       if (res.message) {
         window.alert(res.message);
         return;
       }
-      window.history.go(-1);
+      window.location = '#/';
     } else if (cat === '编辑') {
-      let response = await window.fetch('/api/archive/check-valid-with-id', {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ id, ...data }),
-      });
-      let res = await response.json();
-      if (res.message) {
-        window.alert(res.message);
-        return;
-      }
-      if (res.content.length > 0) {
-        window.alert('档案号或身份证与现有档案冲突');
-        return;
-      }
-
-      response = await window.fetch(`/api/archive/${id}`, {
+     const response = await fetch(`/api/archive-isolated/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
       });
-      res = await response.json();
+      const res = await response.json();
       if (res.message) {
         window.alert(res.message);
         return;
       }
-      window.history.go(-1);
+      window.location = '#/';
     }
+  }
+
+  const handleTransferIn = async () => {
+    if (!sn || !id_card || !name) {
+      window.alert('请完整填写所需信息');
+      return;
+    }
+    if (!window.confirm('确定要将当前数据转入档案库？')) return;
+
+    const data = {
+      sn,
+      sn_repeal,
+      id_card,
+      name,
+      doc: {
+        bday,
+        gender,
+        tel,
+        remark,
+      },
+    };
+
+    let response = await fetch('/api/archive/check-valid', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    let res = await response.json();
+    if (res.message) {
+      window.alert(res.message);
+      return;
+    }
+    if (res.content.length > 0) {
+      window.alert('当前数据中的档案号或身份证与档案库中已有的档案相冲突');
+      return;
+    }
+    response = await fetch('/api/archive/transfer-in', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id, ...data }),
+    });
+    res = await response.json();
+    if (res.message) {
+      window.alert(res.message);
+      return;
+    }
+    window.location = '#/';
   };
 
   const handleRemove = async () => {
     if (!window.confirm('确定要删除当前数据？')) return;
-    const response = await window.fetch(`/api/archive/${id}`, {
+    const response = await fetch(`/api/archive-isolated/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`, {
       method: 'DELETE',
     });
     const res = await response.json();
@@ -133,27 +130,48 @@ export default function Detail({ cat }) {
       window.alert(res.message);
       return;
     }
-    window.history.go(-1);
+    window.location = '#/';
   };
+
+  useEffect(() => {
+    if (cat === '编辑') {
+      (async () => {
+        const response = await window.fetch(`/api/archive-isolated/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`)
+        const res = await response.json();
+        setSn(res.content.sn);
+        setSnRepeal(JSON.parse(res.content.sn_repeal.value).join(','));
+        setIdCard(res.content.id_card);
+        setName(res.content.name);
+        const doc = JSON.parse(res.content.doc.value);
+        setBday(doc.bday);
+        setGender(doc.gender);
+        setTel(doc.tel);
+        setRemark(doc.remark);
+        setReason(doc.reason);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container">
-      <h1>
-        档案
-        <span className="pull-right">
-          <ComponentToolbar />
-        </span>
-      </h1>
+      <h1>档案中转库</h1>
 
       <hr />
 
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          {cat === '编辑' && (
-            <ComponentSideNav archive_id={id} />
-          )}
-        </div>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-dark">
+          <li className="breadcrumb-item">
+            <a href="#/">档案中转库</a>
+          </li>
 
+          <li className="breadcrumb-item active" aria-current="page">
+            {cat}
+          </li>
+        </ol>
+      </nav>
+
+      <div className="card bg-dark shadow">
         <div className="card-body">
           <div className="row">
             <div className="form-group col-3">
@@ -162,7 +180,7 @@ export default function Detail({ cat }) {
                 type="text"
                 value={sn || ''}
                 className="form-control"
-                onChange={(event) => setSN(event.target.value)}
+                onChange={(event) => setSn(event.target.value)}
               />
             </div>
 
@@ -172,15 +190,7 @@ export default function Detail({ cat }) {
                 type="text"
                 value={sn_repeal || ''}
                 className="form-control"
-                onChange={(event) => setSNRepeal(event.target.value)}
-              />
-            </div>
-
-            <div className="col-3">
-              <ComponentVaultPicker
-                name="vault_id"
-                value={vault_id}
-                onChange={(event) => setVaultID(event.target.value)}
+                onChange={(event) => setSnRepeal(event.target.value)}
               />
             </div>
           </div>
@@ -253,17 +263,15 @@ export default function Detail({ cat }) {
             </div>
           </div>
 
-          {opt === '中转区' && (
-            <div className="form-group">
-              <label>转出原因</label>
-              <input
-                type="text"
-                value={reason || ''}
-                className="form-control"
-                onChange={(event) => setReason(event.target.value)}
-              />
-            </div>
-          )}
+          <div className="form-group">
+            <label>转出原因</label>
+            <input
+              type="text"
+              value={reason || ''}
+              className="form-control"
+              onChange={(event) => setReason(event.target.value)}
+            />
+          </div>
         </div>
 
         <div className="card-footer">
@@ -285,7 +293,7 @@ export default function Detail({ cat }) {
               </button>
             )}
 
-            {cat === '编辑' && opt === '中转区' && (
+            {cat === '编辑' && (
               <button
                 type="button"
                 className="btn btn-info"
@@ -304,9 +312,9 @@ export default function Detail({ cat }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 Detail.propTypes = {
   cat: PropTypes.string.isRequired,
-};
+}

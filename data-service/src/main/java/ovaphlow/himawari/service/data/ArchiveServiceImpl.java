@@ -77,7 +77,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void checkValid(ArchiveProto.CheckValidRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -103,7 +102,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void checkValidWithId(ArchiveProto.CheckValidWithIdRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -274,7 +272,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
                     (int) vault_id,
                     body.get("tel").toString(),
                     body.get("gender").toString()));
-            sql = "delete from himawari.archive_isolate where id = ?";
+            sql = "delete from himawari.archive_isolated where id = ? and uuid = ?";
             qr.update(cnx, sql, (int) id);
         } catch (Exception e) {
             logger.error("", e);
@@ -296,7 +294,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "insert into himawari.archive_isolate " +
+            String sql = "insert into himawari.archive_isolated " +
                     "(original_id, sn, sn_repeal, id_card, name, bday, " +
                     "remark, vault_id, reason, gender) " +
                     "values " +
@@ -406,146 +404,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
                     (int) id,
                     (int) id,
                     (int) master_id));
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void listIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from himawari.archive_isolate order by id desc limit 2000";
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void getIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from himawari.archive_isolate where id = ? limit 1";
-            double id = Double.parseDouble(body.get("id").toString());
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    (int) id));
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void updateIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "update himawari.archive_isolate " +
-                    "set sn = ?, sn_repeal = ?, id_card = ?, name = ?, bday = ?, " +
-                    "remark = ?, vault_id = ?, " +
-                    "reason = ?, tel = ?, gender = ? " +
-                    "where id = ?";
-            double vault_id = Double.parseDouble(body.get("vault_id").toString());
-            double id = Double.parseDouble(body.get("id").toString());
-            QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql,
-                    body.get("sn").toString(),
-                    body.get("sn_repeal").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString(),
-                    body.get("bday").toString(),
-                    body.get("remark").toString(),
-                    (int) vault_id,
-                    body.get("reason").toString(),
-                    body.get("tel").toString(),
-                    body.get("gender").toString(),
-                    (int) id);
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void removeIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "delete from himawari.archive_isolate where id = ?";
-            double _id = Double.parseDouble(body.get("id").toString());
-            QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, (int) _id);
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void filterIsolate(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from himawari.archive_isolate " +
-                    "where position(? in sn) > 0 " +
-                    "and position(? in id_card) > 0 " +
-                    "and position(? in name) > 0 " +
-                    "limit 2000";
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    body.get("sn").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");

@@ -35,6 +35,13 @@ export default function ComponentNavbar({ category }) {
             </a>
           </li>
 
+          <li className={`nav-item ${category === '档案中转库' ? 'active' : ''}`}>
+            <a className="nav-link" href="archive-isolated.html">
+              <i className="fa fa-fw fa-file-archive-o" />
+              档案中转库
+            </a>
+          </li>
+
           <li className={`nav-item ${category === '触摸屏' ? 'active' : ''}`}>
             <a className="nav-link" href="touch-screen.html">
               <i className="fa fa-fw fa-hand-pointer-o" />

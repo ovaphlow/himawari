@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react';
-
-import ComponentToolbar from './ComponentToolbar';
+import React, { useState } from 'react';
 
 export default function Filter() {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const response = await window.fetch('/api/archive/');
-      const res = await response.json();
-      setList(res.content);
-    })();
-  }, []);
-
   const handleFilter = async () => {
     setList([]);
-    const response = await window.fetch('/api/archive/filter', {
+    const response = await window.fetch('/api/archive-isolated/', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ filter }),
@@ -32,13 +22,24 @@ export default function Filter() {
   return (
     <div className="container">
       <h1>
-        查询档案
+        档案中转库
         <span className="pull-right">
-          <ComponentToolbar />
+          <a href="#/新增" className="btn btn-sm btn-outline-success">
+            <i className="fa fa-fw fa-plus" />
+            新增
+          </a>
         </span>
       </h1>
 
       <hr />
+
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-dark">
+          <li className="breadcrumb-item active">
+            档案中转库
+          </li>
+        </ol>
+      </nav>
 
       <div className="card bg-dark shadow">
         <div className="card-header">
