@@ -17,7 +17,7 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
       <label>档案所在地</label>
       <select
         name={name || 'vault_id'}
-        value={value}
+        value={value.toString()}
         className="form-control"
         onChange={onChange}
       >

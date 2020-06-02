@@ -177,8 +177,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     public void get(ArchiveProto.GetRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        logger.info("{}", req.getId());
-        logger.info("{}", req.getUuid());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
