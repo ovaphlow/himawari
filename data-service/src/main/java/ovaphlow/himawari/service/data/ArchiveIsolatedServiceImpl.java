@@ -136,12 +136,6 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
 
     @Override
     public void transferIn(ArchiveIsolatedProto.TransferInRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
-        logger.info("{}", req.getId());
-        logger.info("{}", req.getUuid());
-        logger.info("{}", req.getSnRepeal());
-        logger.info("{}", req.getIdCard());
-        logger.info("{}", req.getName());
-        logger.info("{}", req.getDoc());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
