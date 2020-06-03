@@ -5,6 +5,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 import ComponentNavbar from '../ComponentNavbar';
 import Filter from './Filter';
 import Detail from './Detail';
+import TransferOut from './TransferOut';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,7 +22,8 @@ function Index() {
       <Switch>
         <Route exact path="/"><Filter /></Route>
         <Route exact path="/转入"><Detail cat="转入" /></Route>
-        <Route path="/:id"><Detail cat="编辑" /></Route>
+        <Route exact path="/:id"><Detail cat="编辑" /></Route>
+        <Route path="/:id/转出"><TransferOut /></Route>
       </Switch>
     </HashRouter>
   );

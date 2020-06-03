@@ -38,8 +38,8 @@ message UpdateRequest {
 message RemoveRequest { uint32 id = 1; string uuid = 2; }
 
 message TransferInRequest {
-    string uuid = 1;
-    string sn = 2;
+    uint32 id = 1;
+    string uuid = 2;
     string sn_repeal = 3;
     string id_card = 4;
     string name = 5;

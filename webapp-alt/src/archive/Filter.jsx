@@ -6,17 +6,9 @@ export default function Filter() {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const response = await window.fetch('/api/archive/');
-      const res = await response.json();
-      setList(res.content);
-    })();
-  }, []);
-
   const handleFilter = async () => {
     setList([]);
-    const response = await window.fetch('/api/archive/filter', {
+    const response = await window.fetch('/api/archive/', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ filter }),

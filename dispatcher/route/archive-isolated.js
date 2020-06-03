@@ -31,6 +31,25 @@ const router = new Router({
 
 module.exports = router;
 
+router.post('/transfer-in', async (ctx) => {
+  const fetch = (body) => new Promise((resolve, reject) => {
+    grpcClient.transferIn(body, (err, response) => {
+      if (err) {
+        logger.error(err);
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(response.data));
+    });
+  });
+  try {
+    ctx.response.body = await fetch(ctx.request.body);
+  } catch (err) {
+    logger.error(err);
+    ctx.response.body = { message: '服务器错误' };
+  }
+})
+
 router.get('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
     grpcClient.get(body, (err, response) => {

@@ -134,4 +134,37 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void transferIn(ArchiveIsolatedProto.TransferInRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+        logger.info("{}", req.getId());
+        logger.info("{}", req.getUuid());
+        logger.info("{}", req.getSnRepeal());
+        logger.info("{}", req.getIdCard());
+        logger.info("{}", req.getName());
+        logger.info("{}", req.getDoc());
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("message", "");
+        resp.put("content", "");
+
+        try (Connection cnx = DBUtil.getConnection()) {
+            String sql = "insert into " +
+                    "himawari.archive_isolated (uuid, sn_repeal, id_card, name, doc) " +
+                    "values (?, ?::json, ?, ?, ?::json) " +
+                    "returning id";
+            QueryRunner qr = new QueryRunner();
+            Map<String, Object> result = qr.query(cnx, sql, new MapHandler(),
+                    req.getUuid(), req.getSnRepeal(), req.getIdCard(), req.getName(), req.getDoc());
+            sql = "delete from himawari.archive where id = ? and uuid = ?";
+            qr.update(cnx, sql, req.getId(), req.getUuid());
+            resp.put("content", result);
+        } catch (Exception e) {
+            logger.error("", e);
+            resp.put("message", "gRPC服务器错误");
+        }
+
+        Gson gson = new Gson();
+        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+    }
 }

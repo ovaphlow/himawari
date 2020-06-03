@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
 
 import ComponentToolbar from './ComponentToolbar';
-import ComponentSideNav from './ComponentSideNav';
+import ComponentAction from './ComponentAction';
 import ComponentVaultPicker from '../ComponentVaultPicker';
 
 export default function Detail({ cat }) {
@@ -35,7 +35,6 @@ export default function Detail({ cat }) {
         setTel(doc.tel);
         setRemark(doc.remark);
         setVaultID(doc.vault_id);
-        setReason(doc.reason);
       })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,7 +149,7 @@ export default function Detail({ cat }) {
       <div className="card bg-dark shadow">
         <div className="card-header">
           {cat === '编辑' && (
-            <ComponentSideNav archive_id={id} />
+            <ComponentAction archive_id={id} archive_uuid={new URLSearchParams(location.search).get('uuid')} />
           )}
         </div>
 
@@ -252,18 +251,6 @@ export default function Detail({ cat }) {
               />
             </div>
           </div>
-
-          {opt === '中转区' && (
-            <div className="form-group">
-              <label>转出原因</label>
-              <input
-                type="text"
-                value={reason || ''}
-                className="form-control"
-                onChange={(event) => setReason(event.target.value)}
-              />
-            </div>
-          )}
         </div>
 
         <div className="card-footer">
@@ -282,17 +269,6 @@ export default function Detail({ cat }) {
               <button type="button" className="btn btn-danger" onClick={handleRemove}>
                 <i className="fa fa-fw fa-trash-o" />
                 删除
-              </button>
-            )}
-
-            {cat === '编辑' && opt === '中转区' && (
-              <button
-                type="button"
-                className="btn btn-info"
-                onClick={handleTransferIn}
-              >
-                <i className="fa fa-fw fa-download" />
-                转入档案库
               </button>
             )}
 

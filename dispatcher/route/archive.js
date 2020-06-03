@@ -100,29 +100,6 @@ router.put('/search', async (ctx) => {
   }
 });
 
-/**
-   * 查询档案，返回结果最多2000条
-   * 参数：档案号或身份证或姓名
-   */
-router.put('/filter', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter(body, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch({ filter: ctx.request.body.filter });
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
 router.put('/check-valid', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
     grpcClient.checkValid(body, (err, response) => {
@@ -301,9 +278,13 @@ router.delete('/:id', async (ctx) => {
   }
 });
 
-router.get('/', async (ctx) => {
-  const grpcFetch = () => new Promise((resolve, reject) => {
-    grpcClient.list({ data: '' }, (err, response) => {
+/**
+   * 查询档案，返回结果最多2000条
+   * 参数：档案号或身份证或姓名
+   */
+router.put('/', async (ctx) => {
+  const grpcFetch = (body) => new Promise((resolve, reject) => {
+    grpcClient.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -313,7 +294,7 @@ router.get('/', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await grpcFetch(ctx.request.body);
+    ctx.response.body = await grpcFetch({ filter: ctx.request.body.filter });
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
