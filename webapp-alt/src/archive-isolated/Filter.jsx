@@ -99,8 +99,6 @@ export default function Filter() {
                     <span className="pull-right">{it.id}</span>
                   </td>
                   <td>
-                    {it.sn}
-                    <br />
                     {JSON.parse(it.sn_repeal.value).join(', ')}
                   </td>
                   <td>{it.name}</td>

@@ -20,7 +20,6 @@ message FilterRequest { string filter = 1; }
 
 message SaveRequest {
     string uuid = 1;
-    string sn = 2;
     string sn_repeal = 3;
     string id_card = 4;
     string name = 5;
@@ -32,7 +31,6 @@ message GetRequest { uint32 id = 1; string uuid = 2; }
 message UpdateRequest {
     uint32 id = 1;
     string uuid = 2;
-    string sn = 3;
     string sn_repeal = 4;
     string id_card = 5;
     string name = 6;

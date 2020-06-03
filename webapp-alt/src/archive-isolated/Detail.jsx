@@ -6,7 +6,6 @@ import { v5 as uuidv5 } from 'uuid';
 export default function Detail({ cat }) {
   const { id } = useParams();
   const location = useLocation();
-  const [sn, setSn] = useState('');
   const [sn_repeal, setSnRepeal] = useState('');
   const [id_card, setIdCard] = useState('');
   const [name, setName] = useState('');
@@ -47,7 +46,7 @@ export default function Detail({ cat }) {
     };
 
     if (cat === '新增') {
-      const response = await fetch(`/api/archive-isolated/`, {
+      const response = await fetch('/api/archive-isolated/', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
@@ -59,7 +58,7 @@ export default function Detail({ cat }) {
       }
       window.location = '#/';
     } else if (cat === '编辑') {
-     const response = await fetch(`/api/archive-isolated/${id}`, {
+      const response = await fetch(`/api/archive-isolated/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
@@ -71,17 +70,16 @@ export default function Detail({ cat }) {
       }
       window.location = '#/';
     }
-  }
+  };
 
   const handleTransferIn = async () => {
-    if (!sn || !id_card || !name) {
+    if (!id_card || !name) {
       window.alert('请完整填写所需信息');
       return;
     }
     if (!window.confirm('确定要将当前数据转入档案库？')) return;
 
     const data = {
-      sn,
       sn_repeal,
       id_card,
       name,
@@ -107,7 +105,7 @@ export default function Detail({ cat }) {
       window.alert('当前数据中的档案号或身份证与档案库中已有的档案相冲突');
       return;
     }
-    response = await fetch('/api/archive/transfer-in', {
+    response = await fetch('/api/archive/transfer-in/', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ id, ...data }),
@@ -136,9 +134,8 @@ export default function Detail({ cat }) {
   useEffect(() => {
     if (cat === '编辑') {
       (async () => {
-        const response = await window.fetch(`/api/archive-isolated/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`)
+        const response = await window.fetch(`/api/archive-isolated/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
         const res = await response.json();
-        setSn(res.content.sn);
         setSnRepeal(JSON.parse(res.content.sn_repeal.value).join(','));
         setIdCard(res.content.id_card);
         setName(res.content.name);
@@ -173,26 +170,14 @@ export default function Detail({ cat }) {
 
       <div className="card bg-dark shadow">
         <div className="card-body">
-          <div className="row">
-            <div className="form-group col-3">
-              <label>档案号</label>
-              <input
-                type="text"
-                value={sn || ''}
-                className="form-control"
-                onChange={(event) => setSn(event.target.value)}
-              />
-            </div>
-
-            <div className="form-group col">
-              <label>附加档案号</label>
-              <input
-                type="text"
-                value={sn_repeal || ''}
-                className="form-control"
-                onChange={(event) => setSnRepeal(event.target.value)}
-              />
-            </div>
+          <div className="form-group">
+            <label>附加档案号</label>
+            <input
+              type="text"
+              value={sn_repeal || ''}
+              className="form-control"
+              onChange={(event) => setSnRepeal(event.target.value)}
+            />
           </div>
 
           <div className="row">
@@ -297,7 +282,7 @@ export default function Detail({ cat }) {
               <button
                 type="button"
                 className="btn btn-info"
-                onClick={handleTransferIn}
+                onClick={() => window.location = `#/${id}/转入?uuid=${new URLSearchParams(location.search).get('uuid')}`}
               >
                 <i className="fa fa-fw fa-download" />
                 转入档案库
@@ -312,9 +297,9 @@ export default function Detail({ cat }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 Detail.propTypes = {
   cat: PropTypes.string.isRequired,
-}
+};

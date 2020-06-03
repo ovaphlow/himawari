@@ -23,13 +23,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive_isolated " +
-                    "where position(? in sn) > 0 " +
-                    "or position(? in id_card) > 0 " +
+                    "where position(? in id_card) > 0 " +
                     "or position(? in name) > 0 " +
+//                    "or position(? in sn_r) > 0 " +
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    req.getFilter(), req.getFilter(), req.getFilter()));
+                    req.getFilter(), req.getFilter()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
@@ -49,12 +49,12 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into " +
-                    "himawari.archive_isolated (uuid, sn, sn_repeal, id_card, name, doc) " +
-                    "values (?, ?, ?::json, ?, ?, ?::json) " +
+                    "himawari.archive_isolated (uuid, sn_repeal, id_card, name, doc) " +
+                    "values (?, ?::json, ?, ?, ?::json) " +
                     "returning id";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    req.getUuid(), req.getSn(), req.getSnRepeal(), req.getIdCard(), req.getName(), req.getDoc()));
+                    req.getUuid(), req.getSnRepeal(), req.getIdCard(), req.getName(), req.getDoc()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");

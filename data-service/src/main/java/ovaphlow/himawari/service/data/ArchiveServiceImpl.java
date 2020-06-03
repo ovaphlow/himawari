@@ -220,65 +220,49 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void remove(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void remove(ArchiveProto.RemoveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "delete from himawari.archive where id = ?";
+            String sql = "delete from himawari.archive where id = ? and uuid = ?";
             QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, Integer.parseInt(body.get("id").toString()));
+            qr.update(cnx, sql, req.getId(), req.getUuid());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void transferIn(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void transferIn(ArchiveProto.TransferInRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "insert into himawari.archive " +
-                    "(sn, sn_repeal, id_card, name, bday, " +
-                    "remark, vault_id, tel, gender) " +
+                    "(uuid, sn, sn_repeal, id_card, name, doc) " +
                     "values " +
-                    "(?, ?, ?, ?, ?, " +
-                    "?, ?, ?, ?) " +
+                    "(?, ?, ?::json, ?, ?, ?::json) " +
                     "returning id";
-            double vault_id = Double.parseDouble((body.get("vault_id").toString()));
-            double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    body.get("sn").toString(),
-                    body.get("sn_repeal").toString(),
-                    body.get("id_card").toString(),
-                    body.get("name").toString(),
-                    body.get("bday").toString(),
-                    body.get("remark").toString(),
-                    (int) vault_id,
-                    body.get("tel").toString(),
-                    body.get("gender").toString()));
+                    req.getUuid(), req.getSn(), req.getSnRepeal(), req.getIdCard(), req.getName(), req.getDoc()));
             sql = "delete from himawari.archive_isolated where id = ? and uuid = ?";
-            qr.update(cnx, sql, (int) id);
+            qr.update(cnx, sql, req.getId(), req.getUuid());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
+        Gson gson = new Gson();
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -294,7 +278,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-//            String sql = "select id, master_id, content from himawari.picture where master_id = ?";
             String sql = "select id, master_id from himawari.picture where master_id = ?";
             double id = Double.parseDouble(body.get("id").toString());
             QueryRunner qr = new QueryRunner();

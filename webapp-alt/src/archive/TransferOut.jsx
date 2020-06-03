@@ -13,22 +13,22 @@ export default function TransferOut() {
     const uuid = new URLSearchParams(location.search).get('uuid');
     let response = await window.fetch(`/api/archive/${id}?uuid=${uuid}`);
     let res = await response.json();
-    let data = { ...res.content };
-    let array = JSON.parse(res.content.sn_repeal.value);
+    const data = { ...res.content };
+    const array = JSON.parse(res.content.sn_repeal.value);
     array.push(res.content.sn);
     data.sn_repeal = JSON.stringify(array);
     delete data.sn;
-    let doc = JSON.parse(res.content.doc.value);
+    const doc = JSON.parse(res.content.doc.value);
     doc.reason = reason;
     data.doc = JSON.stringify(doc);
-    response = await window.fetch(`/api/archive-isolated/transfer-in/`, {
+    response = await window.fetch('/api/archive-isolated/transfer-in/', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(data),
-    })
+    });
     res = await response.json();
-    window.location = '#/'
-  }
+    window.location = '#/';
+  };
 
   return (
     <div className="container">
