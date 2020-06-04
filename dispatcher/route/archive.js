@@ -140,7 +140,7 @@ router.put('/check-valid-with-id', async (ctx) => {
 
 router.post('/transfer-in/', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.transferIn({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.transferIn(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

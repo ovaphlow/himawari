@@ -21,7 +21,7 @@ export default function Detail({ cat }) {
   };
 
   const handleSave = async () => {
-    if (!sn || !id_card || !name) {
+    if (!id_card || !name) {
       window.alert('请完整填写所需信息');
       return;
     }
@@ -32,7 +32,6 @@ export default function Detail({ cat }) {
 
     const data = {
       uuid: uuidv5(`${id_card}`, uuidv5.DNS),
-      sn,
       sn_repeal: sn_repeal || '[]',
       id_card,
       name,
@@ -108,7 +107,7 @@ export default function Detail({ cat }) {
     response = await fetch('/api/archive/transfer-in/', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ id, ...data }),
+      body: JSON.stringify(data),
     });
     res = await response.json();
     if (res.message) {
@@ -282,7 +281,7 @@ export default function Detail({ cat }) {
               <button
                 type="button"
                 className="btn btn-info"
-                onClick={() => window.location = `#/${id}/转入?uuid=${new URLSearchParams(location.search).get('uuid')}`}
+                onClick={() => { window.location = `#/${id}/转入?uuid=${new URLSearchParams(location.search).get('uuid')}`; }}
               >
                 <i className="fa fa-fw fa-download" />
                 转入档案库

@@ -78,6 +78,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
     @Override
     public void checkValid(ArchiveProto.CheckValidRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+        logger.info("{} {}", req.getSn(), req.getIdCard());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");

@@ -7,7 +7,53 @@ export default function TransferIn() {
   const [sn, setSn] = useState('');
 
   const handleTransferIn = async () => {
-    //
+    if (!sn) {
+      window.alert('请完整填写所需信息');
+      return;
+    }
+
+    if (!window.confirm('确定要将当前数据转入档案库？')) return;
+
+    const uuid = new URLSearchParams(location.search).get('uuid');
+
+    let response = await window.fetch(`/api/archive-isolated/${id}?uuid=${uuid}`);
+    let res = await response.json();
+
+    const data = {
+      id: parseInt(id, 10),
+      uuid,
+      sn,
+      sn_repeal: res.content.sn_repeal.value,
+      id_card: res.content.id_card,
+      name: res.content.name,
+      doc: res.content.doc.value,
+    };
+
+    response = await fetch('/api/archive/check-valid', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    res = await response.json();
+    if (res.message) {
+      window.alert(res.message);
+      return;
+    }
+    if (res.content.length > 0) {
+      window.alert('当前数据中的档案号或身份证与档案库中已有的档案相冲突');
+      return;
+    }
+    response = await fetch('/api/archive/transfer-in/', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    res = await response.json();
+    if (res.message) {
+      window.alert(res.message);
+      return;
+    }
+    window.location = '#/';
   };
 
   return (

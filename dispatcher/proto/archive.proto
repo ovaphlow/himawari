@@ -5,8 +5,8 @@ package archive;
 service ArchiveService {
     rpc Search (SearchRequest) returns (Reply) {}
     rpc Filter (FilterRequest) returns (Reply) {}
-    rpc CheckValid (ArchiveRequest) returns (Reply) {}
-    rpc CheckValidWithId (ArchiveRequest) returns (Reply) {}
+    rpc CheckValid (CheckValidRequest) returns (Reply) {}
+    rpc CheckValidWithId (CheckValidWithIdRequest) returns (Reply) {}
 
     rpc List (ArchiveRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}

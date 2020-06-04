@@ -92,7 +92,7 @@ export default function Filter() {
                   <td>
                     {it.sn}
                     <br />
-                    {JSON.parse(it.sn_repeal.value).join(', ')}
+                    <span className="text-muted">{JSON.parse(it.sn_repeal.value).join(', ')}</span>
                   </td>
                   <td>{it.name}</td>
                   <td>{it.id_card}</td>
