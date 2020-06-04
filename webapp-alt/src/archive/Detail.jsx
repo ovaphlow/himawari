@@ -3,7 +3,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
 
-import ComponentToolbar from './ComponentToolbar';
 import ComponentAction from './ComponentAction';
 import ComponentVaultPicker from '../ComponentVaultPicker';
 
@@ -137,14 +136,21 @@ export default function Detail({ cat }) {
 
   return (
     <div className="container">
-      <h1>
-        档案
-        <span className="pull-right">
-          <ComponentToolbar />
-        </span>
-      </h1>
+      <h1>档案</h1>
 
       <hr />
+
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-dark">
+          <li className="breadcrumb-item">
+            <a href="#/">档案</a>
+          </li>
+
+          <li className="breadcrumb-item active" aria-current="page">
+            {sn} {name}
+          </li>
+        </ol>
+      </nav>
 
       <div className="card bg-dark shadow">
         <div className="card-header">

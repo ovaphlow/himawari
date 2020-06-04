@@ -15,10 +15,6 @@ service ArchiveService {
     rpc Remove (RemoveRequest) returns (Reply) {}
 
     rpc TransferIn (TransferInRequest) returns (Reply) {}
-
-    rpc ListPicture (ArchiveRequest) returns (Reply) {}
-    rpc SaveBase64 (ArchiveRequest) returns (Reply) {}
-    rpc GetPicture (ArchiveRequest) returns (Reply) {}
 }
 
 message ArchiveRequest { string data = 1; }

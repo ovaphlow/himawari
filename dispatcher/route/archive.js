@@ -157,64 +157,6 @@ router.post('/transfer-in/', async (ctx) => {
   }
 });
 
-router.post('/:id/base64', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.saveBase64({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.request.body.master_id = ctx.params.id;
-    ctx.response.body = await grpcFetch(ctx.request.body);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.get('/:id/picture/', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.listPicture({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.params);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
-router.get('/:master_id/picture/:id', async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.getPicture({ data: JSON.stringify(body) }, (err, response) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-        return;
-      }
-      resolve(JSON.parse(response.data));
-    });
-  });
-  try {
-    ctx.response.body = await grpcFetch(ctx.params);
-  } catch (err) {
-    logger.error(err);
-    ctx.response.body = { message: '服务器错误' };
-  }
-});
-
 router.get('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
     grpcClient.get(body, (err, response) => {
