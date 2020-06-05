@@ -43,7 +43,7 @@ app.use(async (ctx, next) => {
   if (ctx.request.url === '/' && ctx.request.method === 'GET') {
     ctx.redirect('/index.html');
   } else {
-    next();
+    await next();
   }
 });
 
