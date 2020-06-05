@@ -6,7 +6,7 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
 
   useEffect(() => {
     (async () => {
-      const response = await window.fetch(`/api/setting/?cat=档案库`);
+      const response = await window.fetch('/api/setting/?cat=档案库');
       const res = await response.json();
       setData(res.content);
     })();
@@ -34,4 +34,4 @@ ComponentVaultPicker.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
-}
+};

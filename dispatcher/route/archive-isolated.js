@@ -48,7 +48,7 @@ router.post('/transfer-in', async (ctx) => {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
   }
-})
+});
 
 router.get('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {

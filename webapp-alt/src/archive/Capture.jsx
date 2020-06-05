@@ -74,7 +74,7 @@ export default function Capture() {
       const res = await response.json();
       setSn(res.content.sn);
       setName(res.content.name);
-    })()
+    })();
   }, []);
 
   return (
@@ -91,7 +91,9 @@ export default function Capture() {
 
           <li className="breadcrumb-item">
             <a href={`#/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`}>
-              {sn} {name}
+              {sn}
+              {' '}
+              {name}
             </a>
           </li>
 
@@ -162,5 +164,5 @@ export default function Capture() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -79,8 +79,8 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
 });
 
 /**
-   * 查询指定档案号或身份证的单个档案
-   */
+ * 查询指定档案号或身份证的单个档案
+ */
 router.put('/search', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
     grpcClient.search(body, (err, response) => {
@@ -215,7 +215,7 @@ router.delete('/:id', async (ctx) => {
   try {
     ctx.response.body = await grpcFetch({
       id: parseInt(ctx.params.id, 10),
-      uuid: ctx.request.query.uuid
+      uuid: ctx.request.query.uuid,
     });
   } catch (err) {
     logger.error(err);

@@ -147,7 +147,9 @@ export default function Detail({ cat }) {
           </li>
 
           <li className="breadcrumb-item active" aria-current="page">
-            {sn} {name}
+            {sn}
+            {' '}
+            {name}
           </li>
         </ol>
       </nav>

@@ -6,7 +6,7 @@ import ComponentNavbar from '../ComponentNavbar';
 import Filter from './Filter';
 import Detail from './Detail';
 import TransferOut from './TransferOut';
-import PictureList from '../archive/PictureList';
+import PictureList from './PictureList';
 import Capture from './Capture';
 
 ReactDOM.render(
