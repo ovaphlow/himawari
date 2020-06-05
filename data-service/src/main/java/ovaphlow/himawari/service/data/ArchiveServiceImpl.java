@@ -24,11 +24,11 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select * from himawari.archive " +
-                    "where sn = ? or id_card = ? or position(? in sn_repeal) > 0" +
+                    "where sn = ? or id_card = ?" +
                     "limit 2";
             QueryRunner qr = new QueryRunner();
             List<Map<String, Object>> result = qr.query(cnx, sql, new MapListHandler(),
-                    req.getFilter());
+                    req.getFilter(), req.getFilter());
             if (result.size() == 0) {
                 resp.put("message", "未找到指定档案号/身份证的档案");
                 resp.put("content", req.getFilter());
@@ -122,27 +122,6 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void list(ArchiveProto.ArchiveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select * from himawari.archive order by id desc limit 200";
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
-        } catch (Exception e) {
-            logger.error("", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
         ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();

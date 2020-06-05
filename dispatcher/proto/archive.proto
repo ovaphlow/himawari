@@ -8,7 +8,6 @@ service ArchiveService {
     rpc CheckValid (CheckValidRequest) returns (Reply) {}
     rpc CheckValidWithId (CheckValidWithIdRequest) returns (Reply) {}
 
-    rpc List (ArchiveRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
     rpc Update (UpdateRequest) returns (Reply) {}
@@ -16,8 +15,6 @@ service ArchiveService {
 
     rpc TransferIn (TransferInRequest) returns (Reply) {}
 }
-
-message ArchiveRequest { string data = 1; }
 
 message SearchRequest { string filter = 1; }
 

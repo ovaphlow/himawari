@@ -22,20 +22,20 @@ function Index() {
 }
 
 function Home() {
-  const [keyword, setKeyword] = useState('');
+  const [filter, setFilter] = useState('');
 
   const handleSearch = async () => {
     const response = await window.fetch('/api/archive/search', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ keyword }),
+      body: JSON.stringify({ filter }),
     });
     const res = await response.json();
     if (res.message) {
       window.alert(res.message);
       return;
     }
-    window.location = `archive.html#/${res.content.id}`;
+    window.location = `archive.html#/${res.content.id}?uuid=${res.content.uuid}`;
   };
 
   return (
@@ -49,9 +49,9 @@ function Home() {
               <label className="lead">输入档案号或身份证</label>
               <input
                 type="search"
-                value={keyword || ''}
+                value={filter || ''}
                 className="form-control form-control-lg text-center"
-                onChange={(event) => setKeyword(event.target.value)}
+                onChange={(event) => setFilter(event.target.value)}
               />
             </div>
 

@@ -83,7 +83,7 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
    */
 router.put('/search', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.search({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.search(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
