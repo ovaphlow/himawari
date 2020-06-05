@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package current_user;
+
+service CurrentUserService {
+    rpc SignUp (SignUpRequest) returns (Reply) {}
+    rpc SignIn (SignInRequest) returns (Reply) {}
+}
+
+message SignUpRequest {
+    string uuid = 1;
+    string username = 2;
+    string password = 3;
+    string salt = 4;
+}
+
+message SignInRequest { string username = 1; }
+
+message Reply { string data = 1; }

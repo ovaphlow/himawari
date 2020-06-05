@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import ComponentToolbar from './ComponentToolbar';
 
 export default function DeptList() {

@@ -5,6 +5,7 @@ const bodyParser = require('koa-bodyparser');
 const staticCache = require('koa-static-cache');
 
 const logger = require('./logger');
+const routerCurrentUser = require('./route/current-user');
 const routerArchive = require('./route/archive');
 const routerPicture = require('./route/picture');
 const routerArchiveIsolated = require('./route/archive-isolated');
@@ -46,6 +47,11 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
+
+(() => {
+  app.use(routerCurrentUser.routes());
+  app.use(routerCurrentUser.allowedMethods());
+})();
 
 (() => {
   app.use(routerArchive.routes());

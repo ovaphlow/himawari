@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 
+import { SIGN_IN_URL } from '../constant';
 import Navbar from '../ComponentNavbar';
 
 ReactDOM.render(
@@ -12,6 +13,14 @@ ReactDOM.render(
 );
 
 function Index() {
+  useEffect(() => {
+    const auth = window.sessionStorage.getItem('auth');
+    if (!auth) {
+      window.location = SIGN_IN_URL;
+      return;
+    }
+  }, []);
+
   return (
     <HashRouter>
       <Switch>
@@ -40,7 +49,7 @@ function Home() {
 
   return (
     <>
-      <Navbar category="home" />
+      <Navbar category="首页" />
 
       <div className="container">
         <div className="row mt-5">

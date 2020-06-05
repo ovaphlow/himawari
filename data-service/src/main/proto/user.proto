@@ -7,14 +7,22 @@ option java_outer_classname = "UserProto";
 package user;
 
 service UserService {
-    rpc list (UserRequest) returns (UserReply) {}
-    rpc filter (UserRequest) returns (UserReply) {}
-    rpc save (UserRequest) returns (UserReply) {}
-    rpc get (UserRequest) returns (UserReply) {}
-    rpc update (UserRequest) returns (UserReply) {}
-    rpc remove (UserRequest) returns (UserReply) {}
+    rpc Filter (FilterRequest) returns (Reply) {}
+    rpc Get (GetRequest) returns (Reply) {}
+    rpc Remove (RemoveRequest) returns (Reply) {}
 }
 
-message UserRequest { string data = 1; }
+message FilterRequest { string filter = 1; }
 
-message UserReply { string data = 1; }
+message GetRequest {
+    uint32 id = 1;
+    string uuid = 2;
+}
+
+message RemoveRequest {
+    uint32 id = 1;
+    string uuid = 2;
+}
+
+message Reply { string data = 1; }
+
