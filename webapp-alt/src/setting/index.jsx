@@ -8,7 +8,8 @@ import VaultList from './VaultList';
 import VaultDetail from './VaultDetail';
 import DeptList from './DeptList';
 import DeptDetail from './DeptDetail';
-import UserList from './UserList';
+import UserFilter from './UserFilter';
+import UserDetail from './UserDetail';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -22,7 +23,6 @@ function Index() {
     const auth = window.sessionStorage.getItem('auth');
     if (!auth) {
       window.location = SIGN_IN_URL;
-      return;
     }
   }, []);
 
@@ -37,7 +37,8 @@ function Index() {
         <Route exact path="/部门"><DeptList /></Route>
         <Route exact path="/部门/新增"><DeptDetail cat="新增" /></Route>
         <Route path="/部门/:id"><DeptDetail cat="编辑" /></Route>
-        <Route exact path="/用户"><UserList /></Route>
+        <Route exact path="/用户"><UserFilter /></Route>
+        <Route path="/用户/:id"><UserDetail /></Route>
       </Switch>
     </HashRouter>
   );

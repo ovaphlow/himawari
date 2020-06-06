@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import ComponentToolbar from './ComponentToolbar';
 
-export default function UserList() {
+export default function UserFilter() {
   const [filter, setFilter] = useState('');
   const [list, setList] = useState([]);
 
@@ -19,7 +19,7 @@ export default function UserList() {
       return;
     }
     setList(res.content);
-  }
+  };
 
   return (
     <div className="container">
@@ -45,7 +45,7 @@ export default function UserList() {
             <div className="col-auto">
               <div className="input-group">
                 <div className="input-group-prepend">
-                  <span className="input-group-text">姓名</span>
+                  <span className="input-group-text">姓名/部门</span>
                 </div>
                 <input
                   type="text"
@@ -83,6 +83,24 @@ export default function UserList() {
                 <th>管理员</th>
               </tr>
             </thead>
+
+            <tbody>
+              {list.map((it) => (
+                <tr key={it.id}>
+                  <td className="text-right">
+                    <span className="pull-left">
+                      <a href={`#/用户/${it.id}?uuid=${it.uuid}`}>
+                        <i className="fa fa-fw fa-edit" />
+                      </a>
+                    </span>
+                    {it.id}
+                  </td>
+                  <td>{it.username}</td>
+                  <td>{it.dept}</td>
+                  <td>{it.auth_super ? '是' : '否'}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>

@@ -46,6 +46,28 @@ router.get('/:id', async (ctx) => {
   }
 });
 
+router.put('/:id', async (ctx) => {
+  const fetch = (body) => new Promise((resolve, reject) => {
+    grpcClient.update(body, (err, response) => {
+      if (err) {
+        logger.error(err);
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(response.data));
+    });
+  });
+  try {
+    ctx.response.body = await fetch({
+      id: parseInt(ctx.params.id, 10),
+      ...ctx.request.body,
+    });
+  } catch (err) {
+    logger.error(err);
+    ctx.response.body = { message: '服务器错误' };
+  }
+});
+
 router.delete('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
     grpcClient.remove(body, (err, response) => {
@@ -70,7 +92,7 @@ router.delete('/:id', async (ctx) => {
 
 router.put('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

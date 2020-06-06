@@ -22,16 +22,15 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, c.v as dept, " +
-                    "(select super from himawari.auth where user_id = u.id) as super " +
-                    "from public.user as u left join public.common as c on c.id = u.dept_id " +
-                    "where position(? in u.name) > 0 " +
-                    "or position(? in u.username) > 0 " +
-                    "or position(? in c.v) > 0 " +
-                    "order by id desc limit 200";
+            String sql = "select u.id, u.uuid, u.dept_id, u.username, u.auth_super, s.name as dept " +
+                    "from himawari.user as u left join himawari.setting as s on s.id = u.dept_id " +
+                    "where position(? in u.username) > 0 " +
+                    "or position(? in s.name) > 0 " +
+                    "order by u.id desc " +
+                    "limit 200";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    req.getFilter(), req.getFilter(), req.getFilter()));
+                    req.getFilter(), req.getFilter()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
@@ -50,15 +49,37 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, " +
-                    "(select super from himawari.auth where user_id = u.id) as super, " +
-                    "(select v from public.common where id = u.dept_id) as dept " +
-                    "from public.user as u " +
-                    "where id = ? and uuid = ? " +
+            String sql = "select u.id, u.uuid, u.dept_id, u.username, u.auth_super, c.name as dept " +
+                    "from himawari.user as u left join himawari.setting as c on c.id = u.dept_id " +
+                    "where u.id = ? and u.uuid = ?" +
                     "limit 1";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
                     req.getId(), req.getUuid()));
+        } catch (Exception e) {
+            logger.error("", e);
+            resp.put("message", "gRPC服务器错误");
+        }
+
+        Gson gson = new Gson();
+        UserProto.Reply reply = UserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void update(UserProto.UpdateRequest req, StreamObserver<UserProto.Reply> responseObserver) {
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("message", "");
+        resp.put("content", "");
+
+        try (Connection cnx = DBUtil.getConnection()) {
+            String sql = "update himawari.user " +
+                    "set uuid = ?, username = ?, dept_id = ?, auth_super = ? " +
+                    "where id = ?";
+            QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql,
+                    req.getUuid(), req.getUsername(), req.getDeptId(), req.getAuthSuper(), req.getId());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
@@ -77,7 +98,9 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
+            String sql = "delete from himawari.user where id = ? and uuid = ?";
             QueryRunner qr = new QueryRunner();
+            qr.update(cnx, sql, req.getId(), req.getUuid());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");
