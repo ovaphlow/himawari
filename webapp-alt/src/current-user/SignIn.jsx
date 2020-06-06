@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import md5 from 'blueimp-md5';
+import { useEffect } from 'react/cjs/react.development';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
@@ -17,8 +18,8 @@ export default function SignIn() {
       body: JSON.stringify({
         username,
         password: md5(password),
-      })
-    })
+      }),
+    });
     const res = await response.json();
     if (res.message) {
       window.alert(res.message);
@@ -26,7 +27,11 @@ export default function SignIn() {
     }
     window.sessionStorage.setItem('auth', JSON.stringify(res.content));
     window.location = 'index.html';
-  }
+  };
+
+  useEffect(() => {
+    window.sessionStorage.clear();
+  }, []);
 
   return (
     <div className="container">
@@ -61,5 +66,5 @@ export default function SignIn() {
         </div>
       </div>
     </div>
-  )
+  );
 }

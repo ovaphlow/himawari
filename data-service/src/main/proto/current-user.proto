@@ -9,6 +9,8 @@ package current_user;
 service CurrentUserService {
     rpc SignUp (SignUpRequest) returns (Reply) {}
     rpc SignIn (SignInRequest) returns (Reply) {}
+    rpc GetSalt (GetSaltRequest) returns (Reply) {}
+    rpc UpdatePassword (UpdatePasswordRequest) returns (Reply) {}
 }
 
 message SignUpRequest {
@@ -19,5 +21,16 @@ message SignUpRequest {
 }
 
 message SignInRequest { string username = 1; }
+
+message GetSaltRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
+
+message UpdatePasswordRequest {
+    int32 id = 1;
+    string uuid = 2;
+    string new_password = 3;
+}
 
 message Reply { string data = 1; }

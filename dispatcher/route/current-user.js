@@ -89,5 +89,59 @@ router.put('/sign-in', async (ctx) => {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
   }
+});
 
+router.put('/update-password', async (ctx) => {
+  const getSalt = (data) => new Promise((resolve, reject) => {
+    grpcClient.getSalt(data, (err, response) => {
+      if (err) {
+        logger.error(err);
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(response.data));
+    });
+  });
+  const updatePassword = (data) => new Promise((resolve, reject) => {
+    grpcClient.updatePassword(data, (err, response) => {
+      if (err) {
+        logger.error(err);
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(response.data));
+    });
+  });
+  try {
+    let result = await getSalt({
+      id: ctx.request.body.id,
+      uuid: ctx.request.body.uuid,
+    });
+    if (result.message) {
+      ctx.response.body = result;
+      return;
+    }
+    if (!result.content.salt) {
+      ctx.response.body = { message: '用户信息错误', content: '' };
+      return;
+    }
+    const hmac = crypto.createHmac('sha256', result.content.salt);
+    hmac.update(ctx.request.body.current_password);
+    const password_salted = hmac.digest('hex');
+    if (password_salted !== result.content.password) {
+      ctx.response.body = { message: '用户名或密码错误', content: '' };
+      return;
+    }
+    logger.info(password_salted, result.content.password);
+    const hmac2 = crypto.createHmac('sha256', result.content.salt);
+    hmac2.update(ctx.request.body.new_password);
+    ctx.response.body = await updatePassword({
+      id: ctx.request.body.id,
+      uuid: ctx.request.body.uuid,
+      new_password: hmac2.digest('hex'),
+    })
+  } catch (err) {
+    logger.error(err);
+    ctx.response.body = { message: '服务器错误' };
+  }
 });

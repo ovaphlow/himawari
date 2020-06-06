@@ -13,7 +13,7 @@ export default function SignUp() {
       return;
     }
 
-    if (password != password2) {
+    if (password !== password2) {
       window.alert('两次输入的密码不一致');
       return;
     }
@@ -25,15 +25,15 @@ export default function SignUp() {
         uuid: uuidv5(username, uuidv5.DNS),
         username,
         password: md5(password),
-      })
-    })
+      }),
+    });
     const res = await response.json();
     if (res.message) {
       window.alert(res.message);
       return;
     }
     window.location = '#/登录';
-  }
+  };
 
   return (
     <div className="container">
@@ -73,5 +73,5 @@ export default function SignUp() {
         </div>
       </div>
     </div>
-  )
+  );
 }

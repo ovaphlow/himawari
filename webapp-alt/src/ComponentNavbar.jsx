@@ -64,6 +64,13 @@ export default function ComponentNavbar({ category }) {
               系统设定
             </a>
           </li>
+
+          <li className={`nav-item ${category === '当前用户' ? 'active' : ''}`}>
+            <a className="nav-link" href="current-user.html#/">
+              <i className="fa fa-fw fa-user" />
+              当前用户
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
