@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function Picture() {
-  const [countdown, setCountdown] = useState(3000);
+  const [countdown, setCountdown] = useState(30);
   const [interval_id, setIntervalId] = useState(0);
   const { id } = useParams();
   const [list, setList] = useState([]);
@@ -24,7 +24,14 @@ export default function Picture() {
 
     setIntervalId(window.setInterval(loop, 1000));
 
+    // 需要替换为触摸屏事件
     window.addEventListener('mousemove', handleResetCountdown, false);
+
+    return () => {
+      window.clearInterval(interval_id);
+      // 需要替换为触摸屏事件
+      window.removeEventListener('mousemove', handleResetCountdown, false);
+    };
   }, []);
 
   useEffect(() => {
