@@ -18,7 +18,6 @@ export default function Capture() {
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
-        window.console.info(stream);
         videoRef.current.srcObject = stream;
       })
       .catch((err) => window.console.error(err));
@@ -36,6 +35,7 @@ export default function Capture() {
     l.push({ id: index + 1, data: d });
     setList(l);
     setIndex(index + 1);
+    window.console.info(l);
   };
 
   const handleRemove = (event) => {
