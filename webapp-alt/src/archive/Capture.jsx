@@ -17,7 +17,10 @@ export default function Capture() {
   const handleOpenDevice = () => {
     navigator.mediaDevices
       .getUserMedia(constraints)
-      .then((stream) => { videoRef.current.srcObject = stream; })
+      .then((stream) => {
+        window.console.info(stream);
+        videoRef.current.srcObject = stream;
+      })
       .catch((err) => window.console.error(err));
   };
 
@@ -103,25 +106,17 @@ export default function Capture() {
         </ol>
       </nav>
 
+      <div className="alert alert-warning shadow">
+        该功能目前使用base64编码存储图片内容，占用空间及带宽比较大。
+        <br />
+        在使用高拍仪厂商SDK时可以使用SDK自带的文件存储功能。
+        <br />
+        Windows系统中使用Edge浏览器调用摄像头测试。
+      </div>
+
       <div className="card bg-dark shadow">
         <div className="card-body">
           <h3 className="text-muted">扫描档案图片</h3>
-          <hr />
-
-          <div className="alert alert-warning shadow">
-            该功能目前使用base64编码存储图片内容，占用空间及带宽比较大。
-            <br />
-            在使用高拍仪厂商SDK时可以使用SDK自带的文件存储功能。
-            <br />
-            Windows系统中使用Edge浏览器调用摄像头测试。
-          </div>
-
-          <div className="row">
-            <div className="col text-center">
-              <video id="video" width={`${constraints.video.width}px`} height={`${constraints.video.height}px`} autoPlay="autoplay" ref={videoRef} />
-            </div>
-          </div>
-
           <hr />
 
           <div className="text-center">
@@ -139,6 +134,14 @@ export default function Capture() {
                 <i className="fa fa-fw fa-upload" />
                 上传
               </button>
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="row">
+            <div className="col text-center">
+              <video id="video" width={`${constraints.video.width}px`} height={`${constraints.video.height}px`} autoPlay="autoplay" ref={videoRef} />
             </div>
           </div>
 

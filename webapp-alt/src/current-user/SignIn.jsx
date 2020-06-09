@@ -39,7 +39,7 @@ export default function SignIn() {
 
       <hr />
 
-      <div className="card bg-dark shadow mt-5 col-6 offset-3">
+      <div className="card bg-dark shadow mt-5 col-8 offset-2 col-md-6 offset-md-3">
         <div className="card-body">
           <div className="form-group">
             <label>用户名</label>

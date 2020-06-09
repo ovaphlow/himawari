@@ -5,6 +5,7 @@ import { v5 as uuidv5 } from 'uuid';
 
 import ComponentAction from './ComponentAction';
 import ComponentVaultPicker from '../ComponentVaultPicker';
+import useAuth from '../useAuth';
 
 export default function Detail({ cat }) {
   const { id } = useParams();
@@ -18,6 +19,7 @@ export default function Detail({ cat }) {
   const [tel, setTel] = useState('');
   const [remark, setRemark] = useState('');
   const [vault_id, setVaultID] = useState(0);
+  const auth = useAuth();
 
   useEffect(() => {
     if (cat === '编辑') {
@@ -33,7 +35,7 @@ export default function Detail({ cat }) {
         setGender(doc.gender);
         setTel(doc.tel);
         setRemark(doc.remark);
-        setVaultID(doc.vault_id);
+        setVaultID(parseInt(doc.vault_id, 10));
       })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +125,12 @@ export default function Detail({ cat }) {
 
   const handleRemove = async () => {
     if (!window.confirm('确定要删除当前数据？')) return;
+
+    if (!auth.auth_super) {
+      window.alert('当前用户没有对应权限');
+      return;
+    }
+
     const response = await window.fetch(`/api/archive/${id}`, {
       method: 'DELETE',
     });

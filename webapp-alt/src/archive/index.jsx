@@ -20,8 +20,6 @@ ReactDOM.render(
 function Index() {
   useEffect(() => {
     const auth = window.sessionStorage.getItem('auth');
-    window.console.info(auth);
-    window.console.info(SIGN_IN_URL);
     if (!auth) {
       window.location = SIGN_IN_URL;
       return;
