@@ -8,7 +8,7 @@ export default function Capture() {
   const [name, setName] = useState('');
   const [constraints] = useState({
     audio: true,
-    video: { width: 1280, height: 720 },
+    video: { width: 800, height: 600 },
   });
   const [list, setList] = useState([]);
   const [index, setIndex] = useState(0);
