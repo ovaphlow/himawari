@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import { v5 as uuidv5 } from 'uuid';
 
 export default function Capture() {
   const { id } = useParams();
@@ -55,15 +56,14 @@ export default function Capture() {
   };
 
   const handleUpload = async () => {
-    const uuid = new URLSearchParams(location.search).get('uuid');
     const loop = async (i) => {
       if (i === list.length) return;
       const response = await window.fetch('/api/picture/', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          id,
-          uuid,
+          uuid: uuidv5(`$id`, uuidv5.DNS),
+          archive_id: id,
           doc: JSON.stringify({ base64: list[i].data }),
         })
       });

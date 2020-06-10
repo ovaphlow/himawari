@@ -8,16 +8,16 @@ service PictureService {
     rpc Get (GetRequest) returns (Reply) {}
 }
 
-message ListRequest { uint32 archive_id = 1; }
+message ListRequest { int32 archive_id = 1; }
 
 message SaveRequest {
     string uuid = 1;
-    uint32 archive_id = 2;
+    int32 archive_id = 2;
     string doc = 3;
 }
 
 message GetRequest {
-    uint32 id = 1;
+    int32 id = 1;
     string uuid = 2;
     uint32 archive_id = 3;
 }

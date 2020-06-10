@@ -10,10 +10,19 @@ export default function PictureList() {
 
   useEffect(() => {
     (async () => {
-      const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
-      const res = await response.json();
+      const uuid = new URLSearchParams(location.search).get('uuid');
+      let response = await window.fetch(`/api/archive/${id}?uuid=${uuid}`);
+      let res = await response.json();
       setSn(res.content.sn);
       setName(res.content.name);
+
+      response = await window.fetch(`/api/picture/`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+      });
+      res = await response.json();
+      window.console.info(res);
     })();
   }, []);
 
