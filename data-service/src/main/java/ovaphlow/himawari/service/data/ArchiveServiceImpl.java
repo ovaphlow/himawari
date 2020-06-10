@@ -61,6 +61,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
                     "where position(? in sn) > 0 " +
                     "or position(? in id_card) > 0 " +
                     "or position(? in name) > 0 " +
+                    "order by id desc " +
                     "limit 2000";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),

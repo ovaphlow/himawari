@@ -27,7 +27,7 @@ export default function Detail({ cat }) {
         const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
         const res = await response.json();
         setSN(res.content.sn);
-        setSNRepeal(res.content.sn_alt);
+        setSNRepeal(JSON.parse(res.content.sn_repeal.value).join(','));
         setIdCard(res.content.id_card);
         setName(res.content.name);
         const doc = JSON.parse(res.content.doc.value);
@@ -57,8 +57,7 @@ export default function Detail({ cat }) {
     }
 
     const data = {
-      uuid: uuidv5(`${sn}-${id_card}`, uuidv5.DNS),
-      sn,
+      uuid: uuidv5(`${id_card}`, uuidv5.DNS),
       id_card,
       name,
       doc: JSON.stringify({
@@ -175,7 +174,7 @@ export default function Detail({ cat }) {
               <label>档案号</label>
               <input
                 type="text"
-                value={sn || ''}
+                value={sn}
                 className="form-control"
                 onChange={(event) => setSN(event.target.value)}
               />
@@ -185,7 +184,7 @@ export default function Detail({ cat }) {
               <label>附加档案号</label>
               <input
                 type="text"
-                value={sn_repeal || ''}
+                value={sn_repeal}
                 className="form-control"
                 onChange={(event) => setSNRepeal(event.target.value)}
               />
