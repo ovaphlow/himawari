@@ -10,6 +10,7 @@ import TransferOut from './TransferOut';
 import PictureList from './PictureList';
 import Picture from './Picture';
 import Capture from './Capture';
+import ImportData from './ImportData';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -33,6 +34,7 @@ function Index() {
       <Switch>
         <Route exact path="/"><Filter /></Route>
         <Route exact path="/转入"><Detail cat="转入" /></Route>
+        <Route exact path="/导入"><ImportData /></Route>
         <Route exact path="/:id"><Detail cat="编辑" /></Route>
         <Route path="/:id/转出"><TransferOut /></Route>
         <Route exact path="/:id/图像"><PictureList /></Route>
