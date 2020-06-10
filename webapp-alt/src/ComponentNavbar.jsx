@@ -30,8 +30,15 @@ export default function ComponentNavbar({ category }) {
 
           <li className={`nav-item ${category === '档案' ? 'active' : ''}`}>
             <a className="nav-link" href="archive.html">
-              <i className="fa fa-fw fa-file-archive-o" />
+              <i className="fa fa-fw fa-book" />
               档案管理
+            </a>
+          </li>
+
+          <li className={`nav-item ${category === '档案中转库' ? 'active' : ''}`}>
+            <a className="nav-link" href="archive-isolated.html">
+              <i className="fa fa-fw fa-file-archive-o" />
+              档案中转库
             </a>
           </li>
 
@@ -55,6 +62,13 @@ export default function ComponentNavbar({ category }) {
             <a className="nav-link" href="setting.html#/档案库">
               <i className="fa fa-fw fa-cogs" />
               系统设定
+            </a>
+          </li>
+
+          <li className={`nav-item ${category === '当前用户' ? 'active' : ''}`}>
+            <a className="nav-link" href="current-user.html#/">
+              <i className="fa fa-fw fa-user" />
+              当前用户
             </a>
           </li>
         </ul>

@@ -6,6 +6,9 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
 
   useEffect(() => {
     (async () => {
+      const response = await window.fetch('/api/setting/?cat=档案库');
+      const res = await response.json();
+      setData(res.content);
     })();
   }, []);
 
@@ -14,13 +17,13 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
       <label>档案所在地</label>
       <select
         name={name || 'vault_id'}
-        value={value}
+        value={value.toString()}
         className="form-control"
         onChange={onChange}
       >
         <option value="0">未选择</option>
         {data.map((it) => (
-          <option value={it.id} key={it.id}>{it.name}</option>
+          <option key={it.id} value={it.id}>{it.name}</option>
         ))}
       </select>
     </div>
@@ -29,6 +32,6 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
 
 ComponentVaultPicker.propTypes = {
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
-}
+};

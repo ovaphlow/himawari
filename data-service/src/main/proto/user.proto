@@ -1,20 +1,37 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+//option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.data";
 option java_outer_classname = "UserProto";
 
 package user;
 
-service User {
-    rpc list (UserRequest) returns (UserReply) {}
-    rpc filter (UserRequest) returns (UserReply) {}
-    rpc save (UserRequest) returns (UserReply) {}
-    rpc get (UserRequest) returns (UserReply) {}
-    rpc update (UserRequest) returns (UserReply) {}
-    rpc remove (UserRequest) returns (UserReply) {}
+service UserService {
+    rpc Filter (FilterRequest) returns (Reply) {}
+    rpc Get (GetRequest) returns (Reply) {}
+    rpc Update (UpdateRequest) returns (Reply) {}
+    rpc Remove (RemoveRequest) returns (Reply) {}
 }
 
-message UserRequest { string data = 1; }
+message FilterRequest { string filter = 1; }
 
-message UserReply { string data = 1; }
+message GetRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
+
+message UpdateRequest {
+    int32 id = 1;
+    string uuid = 2;
+    string username = 3;
+    int32 dept_id = 4;
+    bool auth_super = 5;
+}
+
+message RemoveRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
+
+message Reply { string data = 1; }
+

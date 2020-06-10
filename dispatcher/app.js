@@ -5,7 +5,10 @@ const bodyParser = require('koa-bodyparser');
 const staticCache = require('koa-static-cache');
 
 const logger = require('./logger');
+const routerCurrentUser = require('./route/current-user');
 const routerArchive = require('./route/archive');
+const routerPicture = require('./route/picture');
+const routerArchiveIsolated = require('./route/archive-isolated');
 const routerUser = require('./route/user');
 const routerSetting = require('./route/setting');
 
@@ -37,9 +40,32 @@ app.on('error', (err, ctx) => {
   logger.error('server error', err, ctx);
 });
 
+app.use(async (ctx, next) => {
+  if (ctx.request.url === '/' && ctx.request.method === 'GET') {
+    ctx.redirect('/index.html');
+  } else {
+    await next();
+  }
+});
+
+(() => {
+  app.use(routerCurrentUser.routes());
+  app.use(routerCurrentUser.allowedMethods());
+})();
+
 (() => {
   app.use(routerArchive.routes());
   app.use(routerArchive.allowedMethods());
+})();
+
+(() => {
+  app.use(routerPicture.routes());
+  app.use(routerPicture.allowedMethods());
+})();
+
+(() => {
+  app.use(routerArchiveIsolated.routes());
+  app.use(routerArchiveIsolated.allowedMethods());
 })();
 
 (() => {

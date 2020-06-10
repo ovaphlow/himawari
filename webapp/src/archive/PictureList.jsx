@@ -42,7 +42,7 @@ export default function PictureList() {
             <div className="row row-cols-3">
               {picture_list.map((it) => (
                 <div className="col pb-3" key={it.id}>
-                  <a href={`#档案/${it.master_id}/图像/${it.id}`}>
+                  <a href={`#/${it.archive_id}/图像/${it.id}`}>
                     <img src={it.content} alt={it.id} className="img-fluid rounded" />
                   </a>
                 </div>

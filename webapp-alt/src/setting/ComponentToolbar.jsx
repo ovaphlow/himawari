@@ -12,6 +12,11 @@ export default function ComponentToolbar() {
         <i className="fa fa-fw fa-sitemap" />
         部门
       </a>
+
+      <a href="#/用户" className="btn btn-outline-info">
+        <i className="fa fa-fw fa-users" />
+        用户
+      </a>
     </div>
   );
 }

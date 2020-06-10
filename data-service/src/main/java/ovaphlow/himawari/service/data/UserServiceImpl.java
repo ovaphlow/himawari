@@ -12,203 +12,102 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserServiceImpl extends UserGrpc.UserImplBase {
+public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void list(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
+    public void filter(UserProto.FilterRequest req, StreamObserver<UserProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select u.id, u.dept_id, u.username, u.name, " +
-                    "(select super from himawari.auth where user_id = u.id) as super, " +
-                    "(select v from public.common where id = u.dept_id) as dept " +
-                    "from public.user as u " +
-                    "order by id desc limit 200";
-            QueryRunner qr = new QueryRunner();
-            resp.put("content", qr.query(cnx, sql, new MapListHandler()));
-        } catch (Exception e) {
-            logger.error("{}", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void filter(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, c.v as dept, " +
-                    "(select super from himawari.auth where user_id = u.id) as super " +
-                    "from public.user as u left join public.common as c on c.id = u.dept_id " +
-                    "where position(? in u.name) > 0 " +
-                    "or position(? in u.username) > 0 " +
-                    "or position(? in c.v) > 0 " +
-                    "order by id desc limit 200";
+            String sql = "select u.id, u.uuid, u.dept_id, u.username, u.auth_super, s.name as dept " +
+                    "from himawari.user as u left join himawari.setting as s on s.id = u.dept_id " +
+                    "where position(? in u.username) > 0 " +
+                    "or position(? in s.name) > 0 " +
+                    "order by u.id desc " +
+                    "limit 200";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
-                    body.get("filter_string").toString(),
-                    body.get("filter_string").toString(),
-                    body.get("filter_string").toString()));
+                    req.getFilter(), req.getFilter()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        UserProto.Reply reply = UserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void save(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void get(UserProto.GetRequest req, StreamObserver<UserProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "insert into public.user " +
-                    "(username, password, name, dept_id, remark) " +
-                    "values (?, ?, ?, ?, ?) " +
-                    "returning id";
-            Double _id = Double.parseDouble(body.get("dept_id").toString());
-            QueryRunner qr = new QueryRunner();
-            Map<String, Object> result = qr.query(cnx, sql, new MapHandler(),
-                    body.get("username").toString(),
-                    body.get("password").toString(),
-                    body.get("name").toString(),
-                    _id.intValue(),
-                    body.get("remark").toString());
-            resp.put("content", result);
-            sql = "insert into himawari.auth " +
-                    "(user_id, super) " +
-                    "values (?, ?)";
-            Double _auth_super = Double.parseDouble(body.get("auth_super").toString());
-            qr.update(cnx, sql,
-                    Integer.parseInt(result.get("id").toString()),
-                    _auth_super.intValue());
-        } catch (Exception e) {
-            logger.error("{}", e);
-            resp.put("message", "gRPC服务器错误");
-        }
-
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void get(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "");
-        resp.put("content", "");
-
-        try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select u.id, u.dept_id, u.username, u.name, u.remark, " +
-                    "(select super from himawari.auth where user_id = u.id) as super, " +
-                    "(select v from public.common where id = u.dept_id) as dept " +
-                    "from public.user as u " +
-                    "where id = ? limit 1";
+            String sql = "select u.id, u.uuid, u.dept_id, u.username, u.auth_super, c.name as dept " +
+                    "from himawari.user as u left join himawari.setting as c on c.id = u.dept_id " +
+                    "where u.id = ? and u.uuid = ?" +
+                    "limit 1";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    Integer.parseInt(body.get("id").toString())));
+                    req.getId(), req.getUuid()));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        UserProto.Reply reply = UserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void update(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void update(UserProto.UpdateRequest req, StreamObserver<UserProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "update public.user " +
-                    "set name = ?, username = ?, dept_id = ?, " +
-                    "remark = ? " +
+            String sql = "update himawari.user " +
+                    "set uuid = ?, username = ?, dept_id = ?, auth_super = ? " +
                     "where id = ?";
-            Double _id = Double.parseDouble((body.get("id").toString()));
-            Double _dept_id = Double.parseDouble(body.get("dept_id").toString());
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
-                    body.get("name").toString(),
-                    body.get("username").toString(),
-                    _dept_id.intValue(),
-                    body.get("remark").toString(),
-                    _id.intValue());
-            sql = "update himawari.auth set super = ? where user_id = ?";
-            Double _auth_super = Double.parseDouble(body.get("auth_super").toString());
-            qr.update(cnx, sql,
-                _auth_super.intValue(),
-                _id.intValue());
+                    req.getUuid(), req.getUsername(), req.getDeptId(), req.getAuthSuper(), req.getId());
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        UserProto.Reply reply = UserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void remove(UserRequest req, StreamObserver<UserReply> responseObserver) {
-        Gson gson = new Gson();
-        Map<String, Object> body = gson.fromJson(req.getData(), Map.class);
+    public void remove(UserProto.RemoveRequest req, StreamObserver<UserProto.Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "delete from public.user where id = ?";
-            Double _id = Double.parseDouble((body.get("id").toString()));
+            String sql = "delete from himawari.user where id = ? and uuid = ?";
             QueryRunner qr = new QueryRunner();
-            qr.update(cnx, sql, _id.intValue());
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ps.setInt(1, id.intValue());
-//            ps.execute();
-            sql = "delete from himawari.auth where user_id = ?";
-            qr.update(cnx, sql, _id.intValue());
-//            ps = conn.prepareStatement(sql);
-//            ps.clearParameters();
-//            ps.setInt(1, id.intValue());
-//            ps.execute();
-//            conn.close();
+            qr.update(cnx, sql, req.getId(), req.getUuid());
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("", e);
             resp.put("message", "gRPC服务器错误");
         }
 
-        UserReply reply = UserReply.newBuilder().setData(gson.toJson(resp)).build();
+        Gson gson = new Gson();
+        UserProto.Reply reply = UserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

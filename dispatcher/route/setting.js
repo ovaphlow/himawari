@@ -5,15 +5,15 @@ const Router = require('@koa/router');
 const gRPC = require('../config/gRPC');
 const logger = require('../logger');
 
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../protos/setting.proto`, {
+const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/setting.proto`, {
   keepCase: true,
   longs: String,
   enums: String,
   defaults: true,
   oneofs: true,
 });
-const proto = grpc.loadPackageDefinition(packageDefinition).himawari;
-const grpcClient = new proto.Setting(
+const proto = grpc.loadPackageDefinition(packageDefinition).setting;
+const grpcClient = new proto.SettingService(
   `${gRPC.host}:${gRPC.port}`,
   grpc.credentials.createInsecure(),
 );

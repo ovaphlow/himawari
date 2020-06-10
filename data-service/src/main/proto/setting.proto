@@ -1,16 +1,17 @@
 syntax = "proto3";
 
+//option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.data";
 option java_outer_classname = "SettingProto";
 
-package himawari;
+package setting;
 
-service Setting {
-    rpc List (ListRequest) returns (SettingReply) {}
-    rpc Save (SaveRequest) returns (SettingReply) {}
-    rpc Get (GetRequest) returns (SettingReply) {}
-    rpc Update (UpdateRequest) returns (SettingReply) {}
-    rpc Remove (RemoveRequest) returns (SettingReply) {}
+service SettingService {
+    rpc List (ListRequest) returns (Reply) {}
+    rpc Save (SaveRequest) returns (Reply) {}
+    rpc Get (GetRequest) returns (Reply) {}
+    rpc Update (UpdateRequest) returns (Reply) {}
+    rpc Remove (RemoveRequest) returns (Reply) {}
 }
 
 message ListRequest {
@@ -46,6 +47,6 @@ message RemoveRequest {
     string uuid = 2;
 }
 
-message SettingReply {
+message Reply {
     string data = 1;
 }

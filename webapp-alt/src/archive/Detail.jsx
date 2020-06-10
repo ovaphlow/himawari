@@ -3,14 +3,13 @@ import { useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
 
-import ComponentToolbar from './ComponentToolbar';
-import ComponentSideNav from './ComponentSideNav';
+import ComponentAction from './ComponentAction';
 import ComponentVaultPicker from '../ComponentVaultPicker';
+import useAuth from '../useAuth';
 
 export default function Detail({ cat }) {
   const { id } = useParams();
   const location = useLocation();
-  const [opt, setOpt] = useState('');
   const [sn, setSN] = useState('');
   const [sn_repeal, setSNRepeal] = useState('');
   const [id_card, setIdCard] = useState('');
@@ -19,38 +18,16 @@ export default function Detail({ cat }) {
   const [gender, setGender] = useState('');
   const [tel, setTel] = useState('');
   const [remark, setRemark] = useState('');
-  const [vault_id, setVaultID] = useState('0');
-  const [reason, setReason] = useState('');
+  const [vault_id, setVaultID] = useState(0);
+  const auth = useAuth();
 
   useEffect(() => {
     if (cat === '编辑') {
-      const t_opt = new URLSearchParams(location.search).get('opt');
-      if (t_opt === '中转区') {
-        setOpt(t_opt);
-        (async () => {
-          const response = await fetch(`/api/archive/isolate/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
-          const res = await response.json();
-          setSN(res.content.sn);
-          setSNRepeal(JSON.parse(res.content.sn_repeal.value).join(','));
-          setIdCard(res.content.id_card);
-          setName(res.content.name);
-          const doc = JSON.parse(res.content.doc.value);
-          setBday(doc.bday);
-          setGender(doc.gender);
-          setTel(doc.tel);
-          setRemark(doc.remark);
-          setVaultID(doc.vault_id);
-          setReason(doc.reason);
-        })();
-        return;
-      }
-
       (async () => {
         const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`);
         const res = await response.json();
-        window.console.info(res);
         setSN(res.content.sn);
-        setSNRepeal(res.content.sn_alt);
+        setSNRepeal(JSON.parse(res.content.sn_repeal.value).join(','));
         setIdCard(res.content.id_card);
         setName(res.content.name);
         const doc = JSON.parse(res.content.doc.value);
@@ -58,8 +35,7 @@ export default function Detail({ cat }) {
         setGender(doc.gender);
         setTel(doc.tel);
         setRemark(doc.remark);
-        setVaultID(doc.vault_id);
-        setReason(doc.reason);
+        setVaultID(parseInt(doc.vault_id, 10));
       })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,8 +57,7 @@ export default function Detail({ cat }) {
     }
 
     const data = {
-      uuid: uuidv5(`${sn}-${id_card}`, uuidv5.DNS),
-      sn,
+      uuid: uuidv5(`${id_card}`, uuidv5.DNS),
       id_card,
       name,
       doc: JSON.stringify({
@@ -90,7 +65,7 @@ export default function Detail({ cat }) {
         gender,
         tel,
         remark,
-        vault_id,
+        vault_id: parseInt(vault_id, 10),
       }),
     };
 
@@ -118,20 +93,6 @@ export default function Detail({ cat }) {
       }
       window.history.go(-1);
     } else if (cat === '编辑') {
-      if (opt === '中转区') {
-        const response = await fetch(`/api/archive/isolate/${id}`, {
-          method: 'PUT',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ reason, ...data }),
-        });
-        const res = await response.json();
-        if (res.message) {
-          window.alert(res.message);
-          return;
-        }
-        window.location = '#/中转区';
-        return;
-      }
       let response = await window.fetch('/api/archive/check-valid-with-id', {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
@@ -157,71 +118,18 @@ export default function Detail({ cat }) {
         window.alert(res.message);
         return;
       }
-      window.location.reload(true);
+      window.history.go(-1);
     }
-  };
-
-  const handleSaveAndCapture = async () => {
-    if (!sn || !id_card || !name) {
-      window.alert('请完整填写所需信息');
-      return;
-    }
-    if (id_card.length !== 18) {
-      window.alert('身份证长度错误');
-      return;
-    }
-
-    const data = {
-      sn,
-      id_card,
-      name,
-      doc: {
-        bday,
-        gender,
-        tel,
-        remark,
-        vault_id,
-      },
-    };
-
-    let response = await fetch('/api/archive/check-valid', {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    let res = await response.json();
-    if (res.content.length > 0) {
-      window.alert('档案号或身份证与现有档案冲突');
-      return;
-    }
-
-    response = await window.fetch('/api/archive/', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    res = await response.json();
-    if (res.message) {
-      window.alert(res.message);
-      return;
-    }
-    window.location = `#档案/${res.content}/扫描`;
   };
 
   const handleRemove = async () => {
     if (!window.confirm('确定要删除当前数据？')) return;
-    if (opt === '中转区') {
-      const response = await fetch(`/api/archive/isolate/${id}`, {
-        method: 'DELETE',
-      });
-      const res = await response.json();
-      if (res.message) {
-        window.alert(res.message);
-        return;
-      }
-      window.location = '#档案/中转区';
+
+    if (!auth.auth_super) {
+      window.alert('当前用户没有对应权限');
       return;
     }
+
     const response = await window.fetch(`/api/archive/${id}`, {
       method: 'DELETE',
     });
@@ -233,72 +141,40 @@ export default function Detail({ cat }) {
     window.history.go(-1);
   };
 
-  const handleTransferIn = async () => {
-    if (!sn || !id_card || !name) {
-      window.alert('请完整填写所需信息');
-      return;
-    }
-    if (!window.confirm('确定要将当前数据转入档案库？')) return;
-
-    const data = {
-      sn,
-      id_card,
-      name,
-      doc: {
-        bday,
-        gender,
-        tel,
-        remark,
-        vault_id,
-      },
-    };
-
-    let response = await fetch('/api/archive/check-valid', {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    let res = await response.json();
-    if (res.message) {
-      window.alert(res.message);
-      return;
-    }
-    if (res.content.length > 0) {
-      window.alert('当前数据中的档案号或身份证与档案库中已有的档案相冲突');
-      return;
-    }
-    response = await fetch('/api/archive/transfer-in', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ id, ...data }),
-    });
-    res = await response.json();
-    if (res.message) {
-      window.alert(res.message);
-      return;
-    }
-    window.location = '#档案/中转区';
-  };
-
   return (
     <div className="container">
-      <h3>{`${cat} 档案`}</h3>
+      <h1>档案</h1>
+
       <hr />
 
-      <ComponentToolbar />
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-dark">
+          <li className="breadcrumb-item">
+            <a href="#/">档案</a>
+          </li>
 
-      {cat === '编辑' && (
-        <ComponentSideNav archive_id={id} />
-      )}
+          <li className="breadcrumb-item active" aria-current="page">
+            {sn}
+            {' '}
+            {name}
+          </li>
+        </ol>
+      </nav>
 
       <div className="card bg-dark shadow">
+        <div className="card-header">
+          {cat === '编辑' && (
+            <ComponentAction archive_id={id} archive_uuid={new URLSearchParams(location.search).get('uuid')} />
+          )}
+        </div>
+
         <div className="card-body">
           <div className="row">
             <div className="form-group col-3">
               <label>档案号</label>
               <input
                 type="text"
-                value={sn || ''}
+                value={sn}
                 className="form-control"
                 onChange={(event) => setSN(event.target.value)}
               />
@@ -308,7 +184,7 @@ export default function Detail({ cat }) {
               <label>附加档案号</label>
               <input
                 type="text"
-                value={sn_repeal || ''}
+                value={sn_repeal}
                 className="form-control"
                 onChange={(event) => setSNRepeal(event.target.value)}
               />
@@ -318,7 +194,7 @@ export default function Detail({ cat }) {
               <ComponentVaultPicker
                 name="vault_id"
                 value={vault_id}
-                onChange={(event) => setVaultID(event.target.value)}
+                onChange={(event) => setVaultID(parseInt(event.target.value, 10))}
               />
             </div>
           </div>
@@ -390,18 +266,6 @@ export default function Detail({ cat }) {
               />
             </div>
           </div>
-
-          {opt === '中转区' && (
-            <div className="form-group">
-              <label>转出原因</label>
-              <input
-                type="text"
-                value={reason || ''}
-                className="form-control"
-                onChange={(event) => setReason(event.target.value)}
-              />
-            </div>
-          )}
         </div>
 
         <div className="card-footer">
@@ -416,28 +280,10 @@ export default function Detail({ cat }) {
           </div>
 
           <div className="btn-group pull-right">
-            {cat === '转入' && (
-              <button type="button" className="btn btn-success" onClick={handleSaveAndCapture}>
-                <i className="fa fa-fw fa-camera" />
-                保存并扫描档案
-              </button>
-            )}
-
             {cat === '编辑' && (
               <button type="button" className="btn btn-danger" onClick={handleRemove}>
                 <i className="fa fa-fw fa-trash-o" />
                 删除
-              </button>
-            )}
-
-            {cat === '编辑' && opt === '中转区' && (
-              <button
-                type="button"
-                className="btn btn-info"
-                onClick={handleTransferIn}
-              >
-                <i className="fa fa-fw fa-download" />
-                转入档案库
               </button>
             )}
 

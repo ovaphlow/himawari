@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import ComponentToolbar from './ComponentToolbar';
 
@@ -6,17 +6,9 @@ export default function Filter() {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const response = await window.fetch('/api/archive/');
-      const res = await response.json();
-      setList(res.content);
-    })();
-  }, []);
-
   const handleFilter = async () => {
     setList([]);
-    const response = await window.fetch('/api/archive/filter', {
+    const response = await window.fetch('/api/archive/', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ filter }),
@@ -31,11 +23,14 @@ export default function Filter() {
 
   return (
     <div className="container">
-      <h3>查询档案</h3>
+      <h1>
+        查询档案
+        <span className="pull-right">
+          <ComponentToolbar />
+        </span>
+      </h1>
 
       <hr />
-
-      <ComponentToolbar />
 
       <div className="card bg-dark shadow">
         <div className="card-header">
@@ -57,7 +52,7 @@ export default function Filter() {
 
             <div className="col-auto">
               <div className="btn-group col-auto">
-                <button type="button" className="btn btn-success" onClick={handleFilter}>
+                <button type="button" className="btn btn-info" onClick={handleFilter}>
                   <i className="fa fa-fw fa-search" />
                   查询
                 </button>
@@ -78,9 +73,8 @@ export default function Filter() {
               <tr>
                 <th className="text-right">序号</th>
                 <th>档案号</th>
-                <th>附加档案号</th>
-                <th>身份证</th>
                 <th>姓名</th>
+                <th>身份证</th>
                 <th>性别</th>
                 <th>出生日期</th>
               </tr>
@@ -95,10 +89,13 @@ export default function Filter() {
                     </a>
                     <span className="pull-right">{it.id}</span>
                   </td>
-                  <td>{it.sn}</td>
-                  <td>{JSON.parse(it.sn_repeal.value).join(', ')}</td>
-                  <td>{it.id_card}</td>
+                  <td>
+                    {it.sn}
+                    <br />
+                    <span className="text-muted">{JSON.parse(it.sn_repeal.value).join(', ')}</span>
+                  </td>
                   <td>{it.name}</td>
+                  <td>{it.id_card}</td>
                   <td>{JSON.parse(it.doc.value).gender}</td>
                   <td>{JSON.parse(it.doc.value).bday}</td>
                 </tr>
