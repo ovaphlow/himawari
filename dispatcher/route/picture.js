@@ -42,6 +42,7 @@ router.get('/:id', async (ctx) => {
     ctx.response.body = await fetch({
       id: parseInt(ctx.params.id, 10),
       uuid: ctx.request.query.uuid,
+      archive_id: parseInt(ctx.request.query.archive_id, 10),
     });
   } catch (err) {
     logger.error(err);

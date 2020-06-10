@@ -16,13 +16,29 @@ export default function PictureList() {
       setSn(res.content.sn);
       setName(res.content.name);
 
-      response = await window.fetch(`/api/picture/`, {
+      response = await window.fetch('/api/picture/', {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) }),
+        body: JSON.stringify({ archive_id: parseInt(id, 10) }),
       });
       res = await response.json();
-      window.console.info(res);
+
+      const loop = async (index, plist) => {
+        if (index === res.content.length) return;
+        const it = res.content[index];
+        let resp = await window.fetch(`/api/picture/${it.id}?uuid=${it.uuid}&archive_id=${it.archive_id}`);
+        resp = await resp.json();
+        plist.push({
+          id: resp.content.id,
+          uuid: resp.content.uuid,
+          archive_id: resp.content.archive_id,
+          base64: JSON.parse(resp.content.doc.value).base64,
+        });
+        window.console.info(plist);
+        setList(plist);
+        loop(index + 1, plist);
+      };
+      loop(0, []);
     })();
   }, []);
 
@@ -57,8 +73,8 @@ export default function PictureList() {
           <div className="row row-cols-3">
             {list.map((it) => (
               <div className="col pb-3" key={it.id}>
-                <a href={`#/${it.master_id}/图像/${it.id}`}>
-                  <img src={it.content} alt={it.id} className="img-fluid rounded" />
+                <a href={`#/${it.archive_id}/图像/${it.id}?uuid=${it.uuid}&archive_uuid=${new URLSearchParams(location.search).get('uuid')}`}>
+                  <img src={it.base64} alt={it.uuid} className="img-fluid rounded" />
                 </a>
               </div>
             ))}

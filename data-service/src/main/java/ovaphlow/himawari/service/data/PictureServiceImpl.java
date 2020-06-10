@@ -22,7 +22,7 @@ public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBas
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, archive_id from himawari.picture where archive_id = ?";
+            String sql = "select id, uuid, archive_id from himawari.picture where archive_id = ?";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapListHandler(),
                     req.getArchiveId()));
@@ -69,7 +69,7 @@ public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBas
         resp.put("content", "");
 
         try (Connection cnx = DBUtil.getConnection()) {
-            String sql = "select id, archive_id, doc, " +
+            String sql = "select id, uuid, archive_id, doc, " +
                     "(select id from himawari.picture where id < ? order by id desc limit 1) as prev_id, " +
                     "(select id from himawari.picture where id > ? order by id limit 1) as next_id " +
                     "from himawari.picture " +

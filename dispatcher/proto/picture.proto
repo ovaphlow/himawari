@@ -19,7 +19,7 @@ message SaveRequest {
 message GetRequest {
     int32 id = 1;
     string uuid = 2;
-    uint32 archive_id = 3;
+    int32 archive_id = 3;
 }
 
 message Reply { string data = 1; }

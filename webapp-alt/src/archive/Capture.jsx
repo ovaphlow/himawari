@@ -62,14 +62,14 @@ export default function Capture() {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          uuid: uuidv5(`$id`, uuidv5.DNS),
+          uuid: uuidv5(`picture-${new Date()}`, uuidv5.DNS),
           archive_id: id,
           doc: JSON.stringify({ base64: list[i].data }),
-        })
+        }),
       });
       const res = await response.json();
       if (res.message) window.alert(`第 ${i + 1} 张图像上传失败: ${res.message}`);
-      window.location = `#/${id}/图像`;
+      window.location = `#/${id}/图像?uuid=${new URLSearchParams(location.search).get('uuid')}`;
       loop(i + 1);
     };
     loop(0);

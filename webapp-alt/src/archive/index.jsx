@@ -8,6 +8,7 @@ import Filter from './Filter';
 import Detail from './Detail';
 import TransferOut from './TransferOut';
 import PictureList from './PictureList';
+import Picture from './Picture';
 import Capture from './Capture';
 
 ReactDOM.render(
@@ -22,7 +23,6 @@ function Index() {
     const auth = window.sessionStorage.getItem('auth');
     if (!auth) {
       window.location = SIGN_IN_URL;
-      return;
     }
   }, []);
 
@@ -35,7 +35,8 @@ function Index() {
         <Route exact path="/转入"><Detail cat="转入" /></Route>
         <Route exact path="/:id"><Detail cat="编辑" /></Route>
         <Route path="/:id/转出"><TransferOut /></Route>
-        <Route path="/:id/图像"><PictureList /></Route>
+        <Route exact path="/:id/图像"><PictureList /></Route>
+        <Route path="/:archive_id/图像/:id"><Picture /></Route>
         <Route path="/:id/扫描"><Capture /></Route>
       </Switch>
     </HashRouter>
