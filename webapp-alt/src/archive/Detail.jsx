@@ -195,7 +195,7 @@ export default function Detail({ cat }) {
               <ComponentVaultPicker
                 name="vault_id"
                 value={vault_id}
-                onChange={(event) => setVaultID(event.target.value)}
+                onChange={(event) => setVaultID(parseInt(event.target.value, 10))}
               />
             </div>
           </div>

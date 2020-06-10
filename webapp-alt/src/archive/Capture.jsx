@@ -55,20 +55,26 @@ export default function Capture() {
   };
 
   const handleUpload = async () => {
+    const uuid = new URLSearchParams(location.search).get('uuid');
     const loop = async (i) => {
-      const response = await window.fetch(`/api/archive/${item.id}/base64`, {
+      if (i === list.length) return;
+      const response = await window.fetch('/api/picture/', {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ content: list[i].data }),
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          uuid,
+          doc: JSON.stringify({ base64: list[i].data }),
+        })
       });
       const res = await response.json();
       if (res.message) window.alert(`第 ${i + 1} 张图像上传失败: ${res.message}`);
-      window.location = `#/${item.id}/图片`;
+      window.location = `#/${id}/图像`;
       loop(i + 1);
     };
     loop(0);
+    setList([]);
+    setIndex(0);
   };
 
   useEffect(() => {
