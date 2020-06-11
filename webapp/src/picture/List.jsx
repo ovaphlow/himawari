@@ -23,7 +23,7 @@ export default function List() {
         body: JSON.stringify({ archive_id }),
       });
       const res = await response.json();
-      let plist = [];
+      const plist = [];
 
       const loop = async (index) => {
         if (index === res.content.length) return;
@@ -56,14 +56,14 @@ export default function List() {
 
   return (
     <div className="container">
-      <h1>档案</h1>
+      <h1>档案图像</h1>
 
       <hr />
 
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-dark">
           <li className="breadcrumb-item">
-            <a href="#/">档案</a>
+            <a href="archive.html#/">档案</a>
           </li>
 
           <li className="breadcrumb-item">
@@ -85,7 +85,7 @@ export default function List() {
           <div className="row row-cols-3">
             {list.map((it) => (
               <div className="col pb-3" key={it.id}>
-                <a href={`#/${it.id}?uuid=${it.uuid}`}>
+                <a href={`#/${it.id}?uuid=${it.uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`}>
                   <img src={it.base64} alt={it.uuid} className="img-fluid rounded" />
                 </a>
               </div>
