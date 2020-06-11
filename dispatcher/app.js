@@ -18,7 +18,7 @@ app.env = 'production';
 
 app.use(bodyParser({ jsonLimit: '4mb' }));
 
-app.use(staticCache(path.join(__dirname, '../webapp-alt/dist'), {
+app.use(staticCache(path.join(__dirname, '../webapp/dist'), {
   maxAge: 60 * 60 * 24 * 7,
   gzip: true,
 }));
