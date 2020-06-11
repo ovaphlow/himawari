@@ -184,11 +184,11 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
 
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "update himawari.archive " +
-                    "set uuid = ?, sn = ?, id_card = ?, name = ?, doc = ?::json " +
+                    "set uuid = ?, id_card = ?, name = ?, doc = ?::json " +
                     "where id = ?";
             QueryRunner qr = new QueryRunner();
             qr.update(cnx, sql,
-                    req.getUuid(), req.getSn(), req.getIdCard(), req.getName(), req.getDoc(), req.getId());
+                    req.getUuid(), req.getIdCard(), req.getName(), req.getDoc(), req.getId());
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");

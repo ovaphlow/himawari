@@ -8,10 +8,14 @@ export default function ImportData() {
   const [vault_id, setVaultId] = useState(0);
 
   const handleUpload = async () => {
+    if (!vault_id) {
+      window.alert('请选择档案所在地');
+      return;
+    }
     const formData = new FormData();
     const el = document.querySelector('#customFileLangHTML');
 
-    formData.append('vault_id', data.vault_id);
+    formData.append('vault_id', vault_id);
     formData.append('file', el.files[0]);
 
     const response = await fetch('/api/archive/import-data', {
@@ -21,7 +25,10 @@ export default function ImportData() {
     const res = await response.json();
     if (res.message) {
       window.alert(res.message);
+      return;
     }
+    window.alert('数据已上传至服务器分析处理，请稍后查看。');
+    window.location.reload(true);
   }
 
   return (

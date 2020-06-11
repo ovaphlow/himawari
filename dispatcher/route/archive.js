@@ -2,6 +2,7 @@ const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 const multer = require('@koa/multer');
+const uuid = require('uuid');
 const xlsx = require('node-xlsx');
 
 const upload = multer();
@@ -33,7 +34,7 @@ module.exports = router;
 
 router.post('/import-data', upload.single('file'), async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save({ data: JSON.stringify(body) }, (err, response) => {
+    grpcClient.save(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -43,28 +44,29 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
     });
   });
 
+  if (!ctx.request.file.buffer) {
+    ctx.response.body = { message: '没有上传文件', content: '' };
+    return;
+  }
   const sheets = xlsx.parse(ctx.request.file.buffer);
   const { data } = sheets[0];
   const resp = { message: '', content: '' };
   const loop = async (i) => {
     if (data.length < i + 1) return;
     const archive = {
+      uuid: uuid.v5(data[i][3], uuid.v5.DNS),
       sn: data[i][1],
-      sn_alt: '',
-      identity: data[i][3],
+      id_card: data[i][3],
       name: data[i][2],
-      birthday: data[i][4],
-      cangongshijian: '',
-      zhicheng: '',
-      gongling: '',
-      yutuixiuriqi: '',
-      tuixiuriqi: '',
-      remark: data[i][6],
-      vault_id: ctx.request.body.vault_id,
-      phone: data[i][5],
+      doc: JSON.stringify({
+        bday: data[i][4],
+        remark: data[i][6],
+        vault_id: ctx.request.body.vault_id,
+        tel: data[i][5],
+      }),
     };
-    if (!archive.sn || !archive.identity || !archive.name) {
-      resp.message = `缺少关键数据，档案号：${archive.sn}，身份证：${archive.identity}，姓名：${archive.name}`;
+    if (!archive.sn || !archive.id_card || !archive.name) {
+      resp.message = `缺少关键数据，档案号：${archive.sn}，身份证：${archive.id_card}，姓名：${archive.name}`;
       return;
     }
     const res = await grpcFetch(archive);
