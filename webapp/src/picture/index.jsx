@@ -29,8 +29,8 @@ function Index() {
 
       <Switch>
         <Route exact path="/"><List /></Route>
-        <Route exact path="/:id"><Detail /></Route>
-        <Route path="/:id/扫描"><Capture /></Route>
+        <Route exact path="/扫描"><Capture /></Route>
+        <Route path="/:id"><Detail /></Route>
       </Switch>
     </HashRouter>
   );
