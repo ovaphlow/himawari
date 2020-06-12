@@ -31,11 +31,16 @@ class Application constructor(
         server.awaitTermination()
     }
 
-    private class SettingService : SettingServiceGrpcKt.SettingServiceCoroutineImplBase() {
-        override suspend fun list(request: SettingProto.ListRequest) = SettingProto.Reply
-                .newBuilder()
-                .setData("Hello ${request.cat}")
-                .build()
+//    private class SettingService : SettingServiceGrpcKt.SettingServiceCoroutineImplBase() {
+//        override suspend fun list(request: SettingProto.ListRequest) = SettingProto.Reply
+//                .newBuilder()
+//                .setData("Hello ${request.cat}")
+//                .build()
+//    }
+    private class SettingService: SettingServiceGrpcKt.SettingServiceCoroutineImplBase() {
+        override suspend fun list(request: SettingProto.ListRequest): SettingProto.Reply {
+            return SettingProto.Reply.newBuilder().setData("{message:\"123\"}").build()
+        }
     }
 }
 
