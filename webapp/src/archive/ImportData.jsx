@@ -29,7 +29,7 @@ export default function ImportData() {
     }
     window.alert('数据已上传至服务器分析处理，请稍后查看。');
     window.location.reload(true);
-  }
+  };
 
   return (
     <div className="container">

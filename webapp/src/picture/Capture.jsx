@@ -43,8 +43,6 @@ export default function Capture() {
     const t_id = parseInt(event.target.getAttribute('data-id'), 10);
     if (!t_id || t_id < 1) return;
 
-    // 删除对应图像数据
-    // ???
     const li = list.slice();
     for (let i = 0; i < li.length; i += 1) {
       if (li[i].id === t_id) {
@@ -63,7 +61,7 @@ export default function Capture() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           uuid: uuidv5(`picture-${new Date()}`, uuidv5.DNS),
-          archive_id: archive_id,
+          archive_id,
           doc: JSON.stringify({ base64: list[i].data }),
         }),
       });

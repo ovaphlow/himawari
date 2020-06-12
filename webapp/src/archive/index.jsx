@@ -7,9 +7,6 @@ import ComponentNavbar from '../ComponentNavbar';
 import Filter from './Filter';
 import Detail from './Detail';
 import TransferOut from './TransferOut';
-import PictureList from './PictureList';
-import Picture from './Picture';
-import Capture from './Capture';
 import ImportData from './ImportData';
 
 ReactDOM.render(
@@ -37,9 +34,6 @@ function Index() {
         <Route exact path="/导入"><ImportData /></Route>
         <Route exact path="/:id"><Detail cat="编辑" /></Route>
         <Route path="/:id/转出"><TransferOut /></Route>
-        <Route exact path="/:id/图像"><PictureList /></Route>
-        <Route path="/:archive_id/图像/:id"><Picture /></Route>
-        <Route path="/:id/扫描"><Capture /></Route>
       </Switch>
     </HashRouter>
   );
