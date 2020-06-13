@@ -50,6 +50,7 @@ class Application constructor(private val port: Int) {
                 """.trimIndent()
                 val qr = QueryRunner()
                 resp["content"] = qr.query(cnx, sql, MapListHandler(), request.cat)
+                cnx.close()
             } catch (e: Exception) {
                 logger.error("", e)
                 resp["message"] = "gRPC服务错误"
@@ -70,6 +71,7 @@ class Application constructor(private val port: Int) {
                 val qr = QueryRunner()
                 resp["content"] = qr.query(cnx, sql, MapHandler(),
                         request.uuid, request.masterId, request.category, request.name, request.value, request.doc)
+                cnx.close()
             } catch (e: Exception) {
                 logger.error("", e)
                 resp["message"] = "gRPC服务错误"
@@ -87,6 +89,7 @@ class Application constructor(private val port: Int) {
                 val qr = QueryRunner()
                 resp["content"] = qr.query(cnx, sql, MapHandler(),
                         request.id, request.uuid)
+                cnx.close()
             } catch (e: Exception) {
                 logger.error("", e)
                 resp["message"] = "gRPC服务错误"
@@ -106,6 +109,7 @@ class Application constructor(private val port: Int) {
                 val qr = QueryRunner()
                 qr.update(cnx, sql, request.uuid, request.masterId, request.category, request.name,
                             request.value, request.doc, request.id)
+                cnx.close()
             } catch (e: Exception) {
                 logger.error("", e)
                 resp["message"] = "gRPC服务错误"
@@ -122,6 +126,7 @@ class Application constructor(private val port: Int) {
                 """.trimIndent()
                 val qr = QueryRunner()
                 qr.update(cnx, sql, request.id, request.uuid)
+                cnx.close()
             } catch (e: Exception) {
                 logger.error("", e)
                 resp["message"] = "gRPC服务错误"
