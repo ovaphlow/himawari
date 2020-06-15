@@ -20,6 +20,8 @@ Java: 1912.01 req/sec
 
 Kotlin: 1410.86 req/sec
 
+Java/Kotlin: 57.69/73.06 req/sec
+
 ```
 ./ab -n 100000 -c 2000 http://192.168.1.248:8910/api/setting/?cat=档案库
 ```
