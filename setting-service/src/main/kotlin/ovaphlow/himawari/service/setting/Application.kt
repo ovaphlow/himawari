@@ -137,7 +137,7 @@ class Application constructor(private val port: Int) {
 }
 
 fun main() {
-    val port = 50051
+    val port = 8912
     val server = Application(port)
     server.start()
     server.blockUntilShutdown()
