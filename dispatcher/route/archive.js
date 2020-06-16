@@ -19,11 +19,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive.pr
 });
 const proto = grpc.loadPackageDefinition(packageDefinition).archive;
 const grpcClient = new proto.ArchiveService(
-  `${gRPC.host}:${gRPC.port}`,
-  grpc.credentials.createInsecure(), {
-    'grpc.max_receive_message_length': gRPC.option['grpc.max_receive_message_length'],
-    'grpc.max_send_message_length': gRPC.option['grpc.max_send_message_length'],
-  },
+  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
+  grpc.credentials.createInsecure(),
 );
 
 const router = new Router({

@@ -8,7 +8,6 @@ import org.apache.commons.dbutils.handlers.MapHandler
 import org.apache.commons.dbutils.handlers.MapListHandler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.sql.Connection
 
 class Application constructor(private val port: Int) {
     private val logger: Logger = LoggerFactory.getLogger(Application::class.java)
@@ -16,6 +15,7 @@ class Application constructor(private val port: Int) {
     val server: Server = ServerBuilder
             .forPort(port)
             .addService(SettingService())
+            .addService(CurrentUserServiceImpl())
             .build()
 
     fun start() {
@@ -42,9 +42,9 @@ class Application constructor(private val port: Int) {
         val logger: Logger = LoggerFactory.getLogger(SettingService::class.java)
 
         override suspend fun list(request: ListSettingRequest): Reply {
-            val resp: HashMap<String, Any> = hashMapOf("message" to "", "content" to "")
+            val resp = hashMapOf<String, Any>("message" to "", "content" to "")
             try {
-                val cnx: Connection = Postgres.connection
+                val cnx = Postgres.connection
                 val sql = """
                     select * from himawari.setting where master_id = 0 and category = ?
                 """.trimIndent()

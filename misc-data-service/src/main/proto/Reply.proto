@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari.service.miscdata";
+
+package miscdata;
+
+message Reply {
+    string data = 1;
+}

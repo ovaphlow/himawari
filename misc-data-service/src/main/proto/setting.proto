@@ -3,6 +3,8 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.miscdata";
 
+import "Reply.proto";
+
 package miscdata;
 
 service Setting {
@@ -44,8 +46,4 @@ message UpdateSettingRequest {
 message RemoveSettingRequest {
     uint32 id = 1;
     string uuid = 2;
-}
-
-message Reply {
-    string data = 1;
 }

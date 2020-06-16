@@ -1,10 +1,6 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
-// const multer = require('@koa/multer');
-// const xlsx = require('node-xlsx');
-
-// const upload = multer();
 
 const gRPC = require('../config/gRPC');
 const logger = require('../logger');
@@ -18,11 +14,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive-is
 });
 const proto = grpc.loadPackageDefinition(packageDefinition).archive_isolated;
 const grpcClient = new proto.ArchiveIsolatedService(
-  `${gRPC.host}:${gRPC.port}`,
-  grpc.credentials.createInsecure(), {
-    'grpc.max_receive_message_length': gRPC.option['grpc.max_receive_message_length'],
-    'grpc.max_send_message_length': gRPC.option['grpc.max_send_message_length'],
-  },
+  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
+  grpc.credentials.createInsecure(),
 );
 
 const router = new Router({

@@ -14,10 +14,10 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/picture.pr
 });
 const proto = grpc.loadPackageDefinition(packageDefinition).picture;
 const grpcClient = new proto.PictureService(
-  `${gRPC.host}:${gRPC.port}`,
+  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
   grpc.credentials.createInsecure(), {
-    'grpc.max_receive_message_length': gRPC.option['grpc.max_receive_message_length'],
-    'grpc.max_send_message_length': gRPC.option['grpc.max_send_message_length'],
+    'grpc.max_receive_message_length': gRPC.bizService.option['grpc.max_receive_message_length'],
+    'grpc.max_send_message_length': gRPC.bizService.option['grpc.max_send_message_length'],
   },
 );
 

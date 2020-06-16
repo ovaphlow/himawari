@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari.service.miscdata";
+
+import "Reply.proto";
+
+package miscdata;
+
+service CurrentUser {
+    rpc SignUp (SignUpRequest) returns (Reply) {}
+    rpc SignIn (SignInRequest) returns (Reply) {}
+    rpc GetSalt (GetSaltRequest) returns (Reply) {}
+    rpc UpdatePassword (UpdatePasswordRequest) returns (Reply) {}
+}
+
+message SignUpRequest {
+    string uuid = 1;
+    string username = 2;
+    string password = 3;
+    string salt = 4;
+}
+
+message SignInRequest { string username = 1; }
+
+message GetSaltRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
+
+message UpdatePasswordRequest {
+    int32 id = 1;
+    string uuid = 2;
+    string new_password = 3;
+}
