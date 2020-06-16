@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package current_user;
+package miscdata;
 
-service CurrentUserService {
+service CurrentUser {
     rpc SignUp (SignUpRequest) returns (Reply) {}
     rpc SignIn (SignInRequest) returns (Reply) {}
     rpc GetSalt (GetSaltRequest) returns (Reply) {}

@@ -14,8 +14,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/current-us
   defaults: true,
   oneofs: true,
 });
-const proto = grpc.loadPackageDefinition(packageDefinition).current_user;
-const grpcClient = new proto.CurrentUserService(
+const proto = grpc.loadPackageDefinition(packageDefinition).miscdata;
+const grpcClient = new proto.CurrentUser(
   `${gRPC.miscDataService.host}:${gRPC.miscDataService.port}`,
   grpc.credentials.createInsecure(),
 );

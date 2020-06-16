@@ -3,7 +3,7 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.miscdata";
 
-import "Reply.proto";
+import "reply.proto";
 
 package miscdata;
 
