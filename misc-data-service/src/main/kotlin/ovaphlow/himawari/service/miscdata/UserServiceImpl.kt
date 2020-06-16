@@ -60,7 +60,7 @@ class UserServiceImpl: UserGrpcKt.UserCoroutineImplBase() {
                 set uuid = ?, username = ?, dept_id = ?, auth_super = ?
                 where id = ?
             """.trimIndent()
-            qr.update(cnx, sql, request.uuid, request.username, request.deptId, request.authSuper)
+            qr.update(cnx, sql, request.uuid, request.username, request.deptId, request.authSuper, request.id)
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"

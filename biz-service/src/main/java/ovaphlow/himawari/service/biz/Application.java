@@ -20,7 +20,6 @@ public class Application {
                 .addService(new ArchiveServiceImpl())
                 .addService(new PictureServiceImpl())
                 .addService(new ArchiveIsolatedServiceImpl())
-                .addService(new UserServiceImpl())
                 .build()
                 .start();
         logger.info("BIZ-SERVICE 启动于端口 " + Global.getPORT());
