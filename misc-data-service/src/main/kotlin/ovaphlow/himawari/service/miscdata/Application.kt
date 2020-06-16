@@ -38,7 +38,7 @@ class Application constructor(private val port: Int) {
         server.awaitTermination()
     }
 
-    private class SettingService : SettingServiceGrpcKt.SettingServiceCoroutineImplBase() {
+    private class SettingService: SettingGrpcKt.SettingCoroutineImplBase() {
         val logger: Logger = LoggerFactory.getLogger(SettingService::class.java)
 
         override suspend fun list(request: ListSettingRequest): Reply {

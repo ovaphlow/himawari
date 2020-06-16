@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package setting;
+package miscdata;
 
-service SettingService {
+service Setting {
     rpc List (ListRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}

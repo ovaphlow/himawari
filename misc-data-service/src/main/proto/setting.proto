@@ -3,9 +3,9 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.miscdata";
 
-package setting;
+package miscdata;
 
-service SettingService {
+service Setting {
     rpc List (ListSettingRequest) returns (Reply);
     rpc Save (SaveSettingRequest) returns (Reply) {}
     rpc Get (GetSettingRequest) returns (Reply) {}
