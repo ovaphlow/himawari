@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari.service.miscdata";
+
+package setting;
+
+service SettingService {
+    rpc List (ListSettingRequest) returns (Reply);
+    rpc Save (SaveSettingRequest) returns (Reply) {}
+    rpc Get (GetSettingRequest) returns (Reply) {}
+    rpc Update (UpdateSettingRequest) returns (Reply) {}
+    rpc Remove (RemoveSettingRequest) returns (Reply) {}
+}
+
+message ListSettingRequest {
+    string cat = 1;
+}
+
+message SaveSettingRequest {
+    string uuid = 1;
+    uint32 master_id = 2;
+    string category = 3;
+    string name = 4;
+    string value = 5;
+    string doc = 6;
+}
+
+message GetSettingRequest {
+    uint32 id = 1;
+    string uuid = 2;
+}
+
+message UpdateSettingRequest {
+    uint32 id = 1;
+    string uuid = 2;
+    uint32 master_id = 3;
+    string category = 4;
+    string name = 5;
+    string value = 6;
+    string doc = 7;
+}
+
+message RemoveSettingRequest {
+    uint32 id = 1;
+    string uuid = 2;
+}
+
+message Reply {
+    string data = 1;
+}
