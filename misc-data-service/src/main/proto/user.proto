@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari.service.miscdata";
+
+import "reply.proto";
+
+package miscdata;
+
+service User {
+    rpc Filter (FilterUserRequest) returns (Reply) {}
+    rpc Get (GetUserRequest) returns (Reply) {}
+    rpc Update (UpdateUserRequest) returns (Reply) {}
+    rpc Remove (RemoveUserRequest) returns (Reply) {}
+}
+
+message FilterUserRequest { string filter = 1; }
+
+message GetUserRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
+
+message UpdateUserRequest {
+    int32 id = 1;
+    string uuid = 2;
+    string username = 3;
+    int32 dept_id = 4;
+    bool auth_super = 5;
+}
+
+message RemoveUserRequest {
+    int32 id = 1;
+    string uuid = 2;
+}

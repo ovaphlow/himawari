@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package user;
+package miscdata;
 
-service UserService {
+service User {
     rpc Filter (FilterRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
     rpc Update (UpdateRequest) returns (Reply) {}
