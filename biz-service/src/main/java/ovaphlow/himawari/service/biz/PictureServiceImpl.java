@@ -12,11 +12,11 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBase {
+public class PictureServiceImpl extends PictureGrpc.PictureImplBase {
     private static final Logger logger = LoggerFactory.getLogger(PictureServiceImpl.class);
 
     @Override
-    public void list(PictureProto.ListRequest req, StreamObserver<PictureProto.Reply> responseObserver) {
+    public void list(ListPictureRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -32,13 +32,13 @@ public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBas
         }
 
         Gson gson = new Gson();
-        PictureProto.Reply reply = PictureProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void save(PictureProto.SaveRequest req, StreamObserver<PictureProto.Reply> responseObserver) {
+    public void save(SavePictureRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -57,13 +57,13 @@ public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBas
         }
 
         Gson gson = new Gson();
-        PictureProto.Reply reply = PictureProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get(PictureProto.GetRequest req, StreamObserver<PictureProto.Reply> responseObserver) {
+    public void get(GetPictureRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -83,7 +83,7 @@ public class PictureServiceImpl extends PictureServiceGrpc.PictureServiceImplBas
         }
 
         Gson gson = new Gson();
-        PictureProto.Reply reply = PictureProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

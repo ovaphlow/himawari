@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package archive_isolated;
+package biz;
 
-service ArchiveIsolatedService {
+service ArchiveIsolated {
     rpc Filter (FilterRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}

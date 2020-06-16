@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package picture;
+package biz;
 
-service PictureService {
+service Picture {
     rpc List (ListRequest) returns (Reply) {}
     rpc Save (SaveRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}

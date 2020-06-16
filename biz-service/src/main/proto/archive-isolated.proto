@@ -1,24 +1,25 @@
 syntax = "proto3";
 
-//option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.biz";
-option java_outer_classname = "ArchiveIsolatedProto";
 
-package archive_isolated;
+import "reply.proto";
 
-service ArchiveIsolatedService {
-    rpc Filter (FilterRequest) returns (Reply) {}
-    rpc Save (SaveRequest) returns (Reply) {}
-    rpc Get (GetRequest) returns (Reply) {}
-    rpc Update (UpdateRequest) returns (Reply) {}
-    rpc Remove (RemoveRequest) returns (Reply) {}
+package biz;
 
-    rpc TransferIn (TransferInRequest) returns (Reply) {}
+service ArchiveIsolated {
+    rpc Filter (FilterArchiveIsolatedRequest) returns (Reply) {}
+    rpc Save (SaveArchiveIsolatedRequest) returns (Reply) {}
+    rpc Get (GetArchiveIsolatedRequest) returns (Reply) {}
+    rpc Update (UpdateArchiveIsolatedRequest) returns (Reply) {}
+    rpc Remove (RemoveArchiveIsolatedRequest) returns (Reply) {}
+
+    rpc TransferIn (TransferInArchiveIsolatedRequest) returns (Reply) {}
 }
 
-message FilterRequest { string filter = 1; }
+message FilterArchiveIsolatedRequest { string filter = 1; }
 
-message SaveRequest {
+message SaveArchiveIsolatedRequest {
     string uuid = 1;
     string sn_repeal = 3;
     string id_card = 4;
@@ -26,9 +27,9 @@ message SaveRequest {
     string doc = 6;
 }
 
-message GetRequest { uint32 id = 1; string uuid = 2; }
+message GetArchiveIsolatedRequest { uint32 id = 1; string uuid = 2; }
 
-message UpdateRequest {
+message UpdateArchiveIsolatedRequest {
     uint32 id = 1;
     string uuid = 2;
     string sn_repeal = 4;
@@ -37,9 +38,9 @@ message UpdateRequest {
     string doc = 7;
 }
 
-message RemoveRequest { uint32 id = 1; string uuid = 2; }
+message RemoveArchiveIsolatedRequest { uint32 id = 1; string uuid = 2; }
 
-message TransferInRequest {
+message TransferInArchiveIsolatedRequest {
     uint32 id = 1;
     string uuid = 2;
     string sn_repeal = 3;
@@ -47,5 +48,3 @@ message TransferInRequest {
     string name = 5;
     string doc = 6;
 }
-
-message Reply { string data = 1; }

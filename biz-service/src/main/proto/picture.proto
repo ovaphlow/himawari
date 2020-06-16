@@ -1,29 +1,28 @@
 syntax = "proto3";
 
-//option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.biz";
-option java_outer_classname = "PictureProto";
 
-package picture;
+import "reply.proto";
 
-service PictureService {
-    rpc List (ListRequest) returns (Reply) {}
-    rpc Save (SaveRequest) returns (Reply) {}
-    rpc Get (GetRequest) returns (Reply) {}
+package biz;
+
+service Picture {
+    rpc List (ListPictureRequest) returns (Reply) {}
+    rpc Save (SavePictureRequest) returns (Reply) {}
+    rpc Get (GetPictureRequest) returns (Reply) {}
 }
 
-message ListRequest { int32 archive_id = 1; }
+message ListPictureRequest { int32 archive_id = 1; }
 
-message SaveRequest {
+message SavePictureRequest {
     string uuid = 1;
     int32 archive_id = 2;
     string doc = 3;
 }
 
-message GetRequest {
+message GetPictureRequest {
     int32 id = 1;
     string uuid = 2;
     int32 archive_id = 3;
 }
-
-message Reply { string data = 1; }

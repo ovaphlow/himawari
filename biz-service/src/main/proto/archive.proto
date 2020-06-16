@@ -1,34 +1,42 @@
 syntax = "proto3";
 
-//option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "ovaphlow.himawari.service.biz";
-option java_outer_classname = "ArchiveProto";
 
-package archive;
+import "reply.proto";
 
-service ArchiveService {
-    rpc Search (SearchRequest) returns (Reply) {}
-    rpc Filter (FilterRequest) returns (Reply) {}
-    rpc CheckValid (CheckValidRequest) returns (Reply) {}
-    rpc CheckValidWithId (CheckValidWithIdRequest) returns (Reply) {}
+package biz;
 
-    rpc Save (SaveRequest) returns (Reply) {}
-    rpc Get (GetRequest) returns (Reply) {}
-    rpc Update (UpdateRequest) returns (Reply) {}
-    rpc Remove (RemoveRequest) returns (Reply) {}
+service Archive {
+    rpc Search (SearchArchiveRequest) returns (Reply) {}
+    rpc Filter (FilterArchiveRequest) returns (Reply) {}
+    rpc CheckValid (CheckValidArchiveRequest) returns (Reply) {}
+    rpc CheckValidWithId (CheckValidArchiveWithIdRequest) returns (Reply) {}
 
-    rpc TransferIn (TransferInRequest) returns (Reply) {}
+    rpc Save (SaveArchiveRequest) returns (Reply) {}
+    rpc Get (GetArchiveRequest) returns (Reply) {}
+    rpc Update (UpdateArchiveRequest) returns (Reply) {}
+    rpc Remove (RemoveArchiveRequest) returns (Reply) {}
+
+    rpc TransferIn (TransferInArchiveRequest) returns (Reply) {}
 }
 
-message SearchRequest { string filter = 1; }
+message SearchArchiveRequest { string filter = 1; }
 
-message FilterRequest { string filter = 1; }
+message FilterArchiveRequest { string filter = 1; }
 
-message CheckValidRequest { string sn = 1; string id_card = 2; }
+message CheckValidArchiveRequest {
+    string sn = 1;
+    string id_card = 2;
+}
 
-message CheckValidWithIdRequest { uint32 id = 1; string sn = 2; string id_card = 3; }
+message CheckValidArchiveWithIdRequest {
+    int32 id = 1;
+    string sn = 2;
+    string id_card = 3;
+}
 
-message SaveRequest {
+message SaveArchiveRequest {
     string uuid = 1;
     string sn = 2;
     string id_card = 3;
@@ -36,23 +44,26 @@ message SaveRequest {
     string doc = 5;
 }
 
-message GetRequest {
-    uint32 id = 1;
+message GetArchiveRequest {
+    int32 id = 1;
     string uuid = 2;
 }
 
-message UpdateRequest {
-    uint32 id = 1;
+message UpdateArchiveRequest {
+    int32 id = 1;
     string uuid = 2;
     string id_card = 3;
     string name = 4;
     string doc = 5;
 }
 
-message RemoveRequest { uint32 id = 1; string uuid = 2; }
+message RemoveArchiveRequest {
+    int32 id = 1;
+    string uuid = 2;
+}
 
-message TransferInRequest {
-    uint32 id = 1;
+message TransferInArchiveRequest {
+    int32 id = 1;
     string uuid = 2;
     string sn = 3;
     string sn_repeal = 4;
@@ -60,5 +71,3 @@ message TransferInRequest {
     string name = 6;
     string doc = 7;
 }
-
-message Reply { string data = 1; }

@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBase {
+public class ArchiveServiceImpl extends ArchiveGrpc.ArchiveImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveServiceImpl.class);
 
     @Override
-    public void search(ArchiveProto.SearchRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void search(SearchArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -45,13 +45,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void filter(ArchiveProto.FilterRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void filter(FilterArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -72,13 +72,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void checkValid(ArchiveProto.CheckValidRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void checkValid(CheckValidArchiveRequest req, StreamObserver<Reply> responseObserver) {
         logger.info("{} {}", req.getSn(), req.getIdCard());
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
@@ -98,13 +98,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void checkValidWithId(ArchiveProto.CheckValidWithIdRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void checkValidWithId(CheckValidArchiveWithIdRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -123,13 +123,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void save(ArchiveProto.SaveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void save(SaveArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -149,13 +149,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get(ArchiveProto.GetRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void get(GetArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -171,13 +171,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void update(ArchiveProto.UpdateRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void update(UpdateArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -195,13 +195,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void remove(ArchiveProto.RemoveRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void remove(RemoveArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -216,13 +216,13 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void transferIn(ArchiveProto.TransferInRequest req, StreamObserver<ArchiveProto.Reply> responseObserver) {
+    public void transferIn(TransferInArchiveRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -244,7 +244,7 @@ public class ArchiveServiceImpl extends ArchiveServiceGrpc.ArchiveServiceImplBas
         }
 
         Gson gson = new Gson();
-        ArchiveProto.Reply reply = ArchiveProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

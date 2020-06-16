@@ -17,8 +17,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive.pr
   defaults: true,
   oneofs: true,
 });
-const proto = grpc.loadPackageDefinition(packageDefinition).archive;
-const grpcClient = new proto.ArchiveService(
+const proto = grpc.loadPackageDefinition(packageDefinition).biz;
+const grpcClient = new proto.Archive(
   `${gRPC.bizService.host}:${gRPC.bizService.port}`,
   grpc.credentials.createInsecure(),
 );

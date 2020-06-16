@@ -12,11 +12,11 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.ArchiveIsolatedServiceImplBase {
+public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedGrpc.ArchiveIsolatedImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveIsolatedServiceImpl.class);
 
     @Override
-    public void filter(ArchiveIsolatedProto.FilterRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void filter(FilterArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -36,13 +36,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void save(ArchiveIsolatedProto.SaveRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void save(SaveArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -61,13 +61,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get(ArchiveIsolatedProto.GetRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void get(GetArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -83,13 +83,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void update(ArchiveIsolatedProto.UpdateRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void update(UpdateArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -107,13 +107,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void remove(ArchiveIsolatedProto.RemoveRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void remove(RemoveArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -129,13 +129,13 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void transferIn(ArchiveIsolatedProto.TransferInRequest req, StreamObserver<ArchiveIsolatedProto.Reply> responseObserver) {
+    public void transferIn(TransferInArchiveIsolatedRequest req, StreamObserver<Reply> responseObserver) {
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "");
         resp.put("content", "");
@@ -157,7 +157,7 @@ public class ArchiveIsolatedServiceImpl extends ArchiveIsolatedServiceGrpc.Archi
         }
 
         Gson gson = new Gson();
-        ArchiveIsolatedProto.Reply reply = ArchiveIsolatedProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+        Reply reply = Reply.newBuilder().setData(gson.toJson(resp)).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

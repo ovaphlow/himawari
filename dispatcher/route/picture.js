@@ -12,8 +12,8 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/picture.pr
   defaults: true,
   oneofs: true,
 });
-const proto = grpc.loadPackageDefinition(packageDefinition).picture;
-const grpcClient = new proto.PictureService(
+const proto = grpc.loadPackageDefinition(packageDefinition).biz;
+const grpcClient = new proto.Picture(
   `${gRPC.bizService.host}:${gRPC.bizService.port}`,
   grpc.credentials.createInsecure(), {
     'grpc.max_receive_message_length': gRPC.bizService.option['grpc.max_receive_message_length'],
