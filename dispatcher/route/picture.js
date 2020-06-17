@@ -1,25 +1,7 @@
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 
-const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/picture.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).biz;
-const grpcClient = new proto.Picture(
-  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
-  grpc.credentials.createInsecure(), {
-    'grpc.max_receive_message_length': gRPC.bizService.option['grpc.max_receive_message_length'],
-    'grpc.max_send_message_length': gRPC.bizService.option['grpc.max_send_message_length'],
-  },
-);
+const pictureStub = require('../grpc/picture-stub');
 
 const router = new Router({
   prefix: '/api/picture',
@@ -29,7 +11,7 @@ module.exports = router;
 
 router.get('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.get(body, (err, response) => {
+    pictureStub.get(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -52,7 +34,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.list(body, (err, response) => {
+    pictureStub.list(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -71,7 +53,7 @@ router.put('/', async (ctx) => {
 
 router.post('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save(body, (err, response) => {
+    pictureStub.save(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

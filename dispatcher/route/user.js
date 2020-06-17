@@ -1,22 +1,7 @@
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 
-const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/user.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).miscdata;
-const grpcClient = new proto.User(
-  `${gRPC.miscDataService.host}:${gRPC.miscDataService.port}`,
-  grpc.credentials.createInsecure(),
-);
+const userStub = require('../grpc/user-stub');
 
 const router = new Router({
   prefix: '/api/user',
@@ -26,7 +11,7 @@ module.exports = router;
 
 router.get('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.get(body, (err, response) => {
+    userStub.get(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -48,7 +33,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.update(body, (err, response) => {
+    userStub.update(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -70,7 +55,7 @@ router.put('/:id', async (ctx) => {
 
 router.delete('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.remove(body, (err, response) => {
+    userStub.remove(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -92,7 +77,7 @@ router.delete('/:id', async (ctx) => {
 
 router.put('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter(body, (err, response) => {
+    userStub.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

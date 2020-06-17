@@ -14,7 +14,7 @@ object Postgres {
 
     init {
         val config = HikariConfig()
-        config.jdbcUrl = "jdbc:postgresql://192.168.1.223:5432/ovaphlow"
+        config.jdbcUrl = "jdbc:postgresql://192.168.1.213:5432/ovaphlow"
         config.username = "ovaphlow"
         config.password = ""
         config.maximumPoolSize = 8

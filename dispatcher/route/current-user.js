@@ -1,24 +1,9 @@
 const crypto = require('crypto');
 
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 
-const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/current-user.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).miscdata;
-const grpcClient = new proto.CurrentUser(
-  `${gRPC.miscDataService.host}:${gRPC.miscDataService.port}`,
-  grpc.credentials.createInsecure(),
-);
+const currentUserStub = require('../grpc/current-user-stub');
 
 const router = new Router({
   prefix: '/api/current-user',
@@ -28,7 +13,7 @@ module.exports = router;
 
 router.post('/sign-up', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.signUp(data, (err, response) => {
+    currentUserStub.signUp(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -56,7 +41,7 @@ router.post('/sign-up', async (ctx) => {
 
 router.put('/sign-in', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.signIn(data, (err, response) => {
+    currentUserStub.signIn(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -93,7 +78,7 @@ router.put('/sign-in', async (ctx) => {
 
 router.put('/update-password', async (ctx) => {
   const getSalt = (data) => new Promise((resolve, reject) => {
-    grpcClient.getSalt(data, (err, response) => {
+    currentUserStub.getSalt(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -103,7 +88,7 @@ router.put('/update-password', async (ctx) => {
     });
   });
   const updatePassword = (data) => new Promise((resolve, reject) => {
-    grpcClient.updatePassword(data, (err, response) => {
+    currentUserStub.updatePassword(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

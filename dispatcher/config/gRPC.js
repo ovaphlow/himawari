@@ -14,6 +14,10 @@ const gRPC = {
       'grpc.max_send_message_length': 1024 * 1024 * 256,
       'grpc.max_receive_message_length': 1024 * 1024 * 256,
     },
+  },
+  utilityService: {
+    host: '192.168.1.248',
+    port: 50051,
   }
 };
 

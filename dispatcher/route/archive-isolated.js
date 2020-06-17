@@ -1,22 +1,7 @@
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 
-const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive-isolated.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).biz;
-const grpcClient = new proto.ArchiveIsolated(
-  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
-  grpc.credentials.createInsecure(),
-);
+const archiveIsolatedStub = require('../grpc/archive-isolated-stub');
 
 const router = new Router({
   prefix: '/api/archive-isolated',
@@ -26,7 +11,7 @@ module.exports = router;
 
 router.post('/transfer-in', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.transferIn(body, (err, response) => {
+    archiveIsolatedStub.transferIn(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -45,7 +30,7 @@ router.post('/transfer-in', async (ctx) => {
 
 router.get('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.get(body, (err, response) => {
+    archiveIsolatedStub.get(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -67,7 +52,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.update(body, (err, response) => {
+    archiveIsolatedStub.update(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -89,7 +74,7 @@ router.put('/:id', async (ctx) => {
 
 router.delete('/:id', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.remove(body, (err, response) => {
+    archiveIsolatedStub.remove(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -111,7 +96,7 @@ router.delete('/:id', async (ctx) => {
 
 router.put('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter(body, (err, response) => {
+    archiveIsolatedStub.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -130,7 +115,7 @@ router.put('/', async (ctx) => {
 
 router.post('/', async (ctx) => {
   const fetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save(body, (err, response) => {
+    archiveIsolatedStub.save(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

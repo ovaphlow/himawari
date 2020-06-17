@@ -1,5 +1,6 @@
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
+const fs = require('fs');
+const path = require('path');
+
 const Router = require('@koa/router');
 const multer = require('@koa/multer');
 const uuid = require('uuid');
@@ -9,19 +10,8 @@ const upload = multer();
 
 const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/archive.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).biz;
-const grpcClient = new proto.Archive(
-  `${gRPC.bizService.host}:${gRPC.bizService.port}`,
-  grpc.credentials.createInsecure(),
-);
+const archiveStub = require('../grpc/archive-stub');
+const fileStub = require('../grpc/file-stub');
 
 const router = new Router({
   prefix: '/api/archive',
@@ -30,8 +20,33 @@ const router = new Router({
 module.exports = router;
 
 router.post('/import-data', upload.single('file'), async (ctx) => {
-  const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save(body, (err, response) => {
+  // const grpcFetch = (body) => new Promise((resolve, reject) => {
+  //   archiveStub.save(body, (err, response) => {
+  //     if (err) {
+  //       logger.error(err);
+  //       reject(err);
+  //       return;
+  //     }
+  //     resolve(JSON.parse(response.data));
+  //   });
+  // });
+
+  if (!ctx.request.file.buffer) {
+    ctx.response.body = { message: '没有上传文件', content: '' };
+    return;
+  }
+
+  const file_name = uuid.v5(`${new Date()}`, uuid.v5.DNS) + '.xlsx';
+  const file_path = path.join('..', 'utility-service', 'temp_file', file_name);
+  fs.writeFile(file_path, ctx.request.file.buffer, 'utf8', (err) => {
+    if (err) {
+      logger.error(err);
+      ctx.response.body = { message: '服务器错误', content: '' };
+      return;
+    }
+  });
+  const fetch = (body) => new Promise((resolve, reject) => {
+    fileStub.parseXlsx(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -40,41 +55,37 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
       resolve(JSON.parse(response.data));
     });
   });
-
-  if (!ctx.request.file.buffer) {
-    ctx.response.body = { message: '没有上传文件', content: '' };
-    return;
-  }
-  const sheets = xlsx.parse(ctx.request.file.buffer);
-  const { data } = sheets[0];
-  const resp = { message: '', content: '' };
-  const loop = async (i) => {
-    if (data.length < i + 1) return;
-    const archive = {
-      uuid: uuid.v5(data[i][3], uuid.v5.DNS),
-      sn: data[i][1],
-      id_card: data[i][3],
-      name: data[i][2],
-      doc: JSON.stringify({
-        bday: data[i][4],
-        remark: data[i][6],
-        vault_id: ctx.request.body.vault_id,
-        tel: data[i][5],
-      }),
-    };
-    if (!archive.sn || !archive.id_card || !archive.name) {
-      resp.message = `缺少关键数据，档案号：${archive.sn}，身份证：${archive.id_card}，姓名：${archive.name}`;
-      return;
-    }
-    const res = await grpcFetch(archive);
-    if (res.message) {
-      resp.message = `导入数据时发生错误，档案号：${archive.sn}，身份证：${archive.identity}，姓名：${archive.name}`;
-      return;
-    }
-    loop(i + 1);
-  };
-  loop(1);
-  ctx.response.body = resp;
+  ctx.response.body = await fetch({ file_name });
+  // const sheets = xlsx.parse(ctx.request.file.buffer);
+  // const { data } = sheets[0];
+  // const resp = { message: '', content: '' };
+  // const loop = async (i) => {
+  //   if (data.length < i + 1) return;
+  //   const archive = {
+  //     uuid: uuid.v5(data[i][3], uuid.v5.DNS),
+  //     sn: data[i][1],
+  //     id_card: data[i][3],
+  //     name: data[i][2],
+  //     doc: JSON.stringify({
+  //       bday: data[i][4],
+  //       remark: data[i][6],
+  //       vault_id: ctx.request.body.vault_id,
+  //       tel: data[i][5],
+  //     }),
+  //   };
+  //   if (!archive.sn || !archive.id_card || !archive.name) {
+  //     resp.message = `缺少关键数据，档案号：${archive.sn}，身份证：${archive.id_card}，姓名：${archive.name}`;
+  //     return;
+  //   }
+  //   const res = await grpcFetch(archive);
+  //   if (res.message) {
+  //     resp.message = `导入数据时发生错误，档案号：${archive.sn}，身份证：${archive.identity}，姓名：${archive.name}`;
+  //     return;
+  //   }
+  //   loop(i + 1);
+  // };
+  // loop(1);
+  // ctx.response.body = resp;
 });
 
 /**
@@ -82,7 +93,7 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
  */
 router.put('/search', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.search(body, (err, response) => {
+    archiveStub.search(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -101,7 +112,7 @@ router.put('/search', async (ctx) => {
 
 router.put('/check-valid', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.checkValid(body, (err, response) => {
+    archiveStub.checkValid(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -120,7 +131,7 @@ router.put('/check-valid', async (ctx) => {
 
 router.put('/check-valid-with-id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.checkValidWithId(body, (err, response) => {
+    archiveStub.checkValidWithId(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -139,7 +150,7 @@ router.put('/check-valid-with-id', async (ctx) => {
 
 router.post('/transfer-in/', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.transferIn(body, (err, response) => {
+    archiveStub.transferIn(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -158,7 +169,7 @@ router.post('/transfer-in/', async (ctx) => {
 
 router.get('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.get(body, (err, response) => {
+    archiveStub.get(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -180,7 +191,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.update(body, (err, response) => {
+    archiveStub.update(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -202,7 +213,7 @@ router.put('/:id', async (ctx) => {
 
 router.delete('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.remove({ data: JSON.stringify(body) }, (err, response) => {
+    archiveStub.remove({ data: JSON.stringify(body) }, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -228,7 +239,7 @@ router.delete('/:id', async (ctx) => {
    */
 router.put('/', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.filter(body, (err, response) => {
+    archiveStub.filter(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -247,7 +258,7 @@ router.put('/', async (ctx) => {
 
 router.post('/', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    grpcClient.save(body, (err, response) => {
+    archiveStub.save(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

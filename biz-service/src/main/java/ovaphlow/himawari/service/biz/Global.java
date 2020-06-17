@@ -2,7 +2,7 @@ package ovaphlow.himawari.service.biz;
 
 public class Global {
     private static int PORT = 8911;
-    private static String DB_URL = "192.168.1.223:5432/ovaphlow";
+    private static String DB_URL = "192.168.1.213:5432/ovaphlow";
     private static String DB_USERNAME = "ovaphlow";
     private static String DB_PASSWORD = "";
 //    private static String DB_URL = "127.0.0.1:5432/ovaphlow";

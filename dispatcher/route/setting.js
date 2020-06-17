@@ -1,22 +1,7 @@
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
 const Router = require('@koa/router');
 
-const gRPC = require('../config/gRPC');
 const logger = require('../logger');
-
-const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/setting.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-const proto = grpc.loadPackageDefinition(packageDefinition).miscdata;
-const grpcClient = new proto.Setting(
-  `${gRPC.miscDataService.host}:${gRPC.miscDataService.port}`,
-  grpc.credentials.createInsecure(),
-);
+const settingStub = require('../grpc/setting-stub');
 
 const router = new Router({
   prefix: '/api/setting',
@@ -26,7 +11,7 @@ module.exports = router;
 
 router.get('/:id', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.get(data, (err, response) => {
+    settingStub.get(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -48,7 +33,7 @@ router.get('/:id', async (ctx) => {
 
 router.put('/:id', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.update(data, (err, response) => {
+    settingStub.update(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -67,7 +52,7 @@ router.put('/:id', async (ctx) => {
 
 router.delete('/:id', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.remove(data, (err, response) => {
+    settingStub.remove(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -89,7 +74,7 @@ router.delete('/:id', async (ctx) => {
 
 router.get('/', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.list(data, (err, response) => {
+    settingStub.list(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -108,7 +93,7 @@ router.get('/', async (ctx) => {
 
 router.post('/', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    grpcClient.save(data, (err, response) => {
+    settingStub.save(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
