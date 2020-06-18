@@ -18,6 +18,11 @@ class MessageStub(object):
                 request_serializer=message__pb2.SaveRequest.SerializeToString,
                 response_deserializer=message__pb2.Reply.FromString,
                 )
+        self.UnreadMessage = channel.unary_unary(
+                '/miscdata.Message/UnreadMessage',
+                request_serializer=message__pb2.UnreadMessageRequest.SerializeToString,
+                response_deserializer=message__pb2.Reply.FromString,
+                )
 
 
 class MessageServicer(object):
@@ -29,12 +34,23 @@ class MessageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UnreadMessage(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MessageServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Save': grpc.unary_unary_rpc_method_handler(
                     servicer.Save,
                     request_deserializer=message__pb2.SaveRequest.FromString,
+                    response_serializer=message__pb2.Reply.SerializeToString,
+            ),
+            'UnreadMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.UnreadMessage,
+                    request_deserializer=message__pb2.UnreadMessageRequest.FromString,
                     response_serializer=message__pb2.Reply.SerializeToString,
             ),
     }
@@ -59,6 +75,22 @@ class Message(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/miscdata.Message/Save',
             message__pb2.SaveRequest.SerializeToString,
+            message__pb2.Reply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UnreadMessage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/miscdata.Message/UnreadMessage',
+            message__pb2.UnreadMessageRequest.SerializeToString,
             message__pb2.Reply.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)

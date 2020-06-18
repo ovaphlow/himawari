@@ -18,6 +18,11 @@ class ArchiveStub(object):
                 request_serializer=archive__pb2.SaveRequest.SerializeToString,
                 response_deserializer=archive__pb2.Reply.FromString,
                 )
+        self.CheckValid = channel.unary_unary(
+                '/biz.Archive/CheckValid',
+                request_serializer=archive__pb2.CheckValidRequest.SerializeToString,
+                response_deserializer=archive__pb2.Reply.FromString,
+                )
 
 
 class ArchiveServicer(object):
@@ -29,12 +34,23 @@ class ArchiveServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CheckValid(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ArchiveServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Save': grpc.unary_unary_rpc_method_handler(
                     servicer.Save,
                     request_deserializer=archive__pb2.SaveRequest.FromString,
+                    response_serializer=archive__pb2.Reply.SerializeToString,
+            ),
+            'CheckValid': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckValid,
+                    request_deserializer=archive__pb2.CheckValidRequest.FromString,
                     response_serializer=archive__pb2.Reply.SerializeToString,
             ),
     }
@@ -59,6 +75,22 @@ class Archive(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/biz.Archive/Save',
             archive__pb2.SaveRequest.SerializeToString,
+            archive__pb2.Reply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CheckValid(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/biz.Archive/CheckValid',
+            archive__pb2.CheckValidRequest.SerializeToString,
             archive__pb2.Reply.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)

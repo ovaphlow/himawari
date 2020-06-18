@@ -9,10 +9,15 @@ package miscdata;
 
 service Message {
     rpc Save (SaveMessageRequest) returns (Reply) {}
+    rpc UnreadMessage (UnreadMessageRequest) returns (Reply) {}
 }
 
 message SaveMessageRequest {
     string uuid = 1;
     int32 user_id = 2;
     string doc = 3;
+}
+
+message UnreadMessageRequest {
+    int32 user_id = 1;
 }

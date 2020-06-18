@@ -4,6 +4,7 @@ package biz;
 
 service Archive {
     rpc Save (SaveRequest) returns (Reply) {}
+    rpc CheckValid (CheckValidRequest) returns (Reply) {}
 }
 
 message SaveRequest {
@@ -12,6 +13,11 @@ message SaveRequest {
     string id_card = 3;
     string name = 4;
     string doc = 5;
+}
+
+message CheckValidRequest {
+    string sn = 1;
+    string id_card = 2;
 }
 
 message Reply {
