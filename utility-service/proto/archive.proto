@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package biz;
+
+service Archive {
+    rpc Save (SaveRequest) returns (Reply) {}
+}
+
+message SaveRequest {
+    string uuid = 1;
+    string sn = 2;
+    string id_card = 3;
+    string name = 4;
+    string doc = 5;
+}
+
+message Reply {
+    string data = 1;
+}

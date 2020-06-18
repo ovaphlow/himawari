@@ -20,17 +20,6 @@ const router = new Router({
 module.exports = router;
 
 router.post('/import-data', upload.single('file'), async (ctx) => {
-  // const grpcFetch = (body) => new Promise((resolve, reject) => {
-  //   archiveStub.save(body, (err, response) => {
-  //     if (err) {
-  //       logger.error(err);
-  //       reject(err);
-  //       return;
-  //     }
-  //     resolve(JSON.parse(response.data));
-  //   });
-  // });
-
   if (!ctx.request.file.buffer) {
     ctx.response.body = { message: '没有上传文件', content: '' };
     return;
@@ -213,7 +202,7 @@ router.put('/:id', async (ctx) => {
 
 router.delete('/:id', async (ctx) => {
   const grpcFetch = (body) => new Promise((resolve, reject) => {
-    archiveStub.remove({ data: JSON.stringify(body) }, (err, response) => {
+    archiveStub.remove(body, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);

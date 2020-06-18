@@ -13,6 +13,7 @@ class Application constructor(private val port: Int) {
             .addService(SettingServiceImpl())
             .addService(UserServiceImpl())
             .addService(CurrentUserServiceImpl())
+            .addService(MessageServiceImpl())
             .build()
 
     fun start() {

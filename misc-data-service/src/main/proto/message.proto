@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ovaphlow.himawari.service.miscdata";
+
+import "reply.proto";
+
+package miscdata;
+
+service Message {
+    rpc Save (SaveMessageRequest) returns (Reply) {}
+}
+
+message SaveMessageRequest {
+    string uuid = 1;
+    int32 user_id = 2;
+    string doc = 3;
+}

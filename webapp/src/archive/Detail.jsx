@@ -130,7 +130,7 @@ export default function Detail({ cat }) {
       return;
     }
 
-    const response = await window.fetch(`/api/archive/${id}`, {
+    const response = await window.fetch(`/api/archive/${id}?uuid=${new URLSearchParams(location.search).get('uuid')}`, {
       method: 'DELETE',
     });
     const res = await response.json();
