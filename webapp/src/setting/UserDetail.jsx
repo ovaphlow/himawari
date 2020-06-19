@@ -88,15 +88,15 @@ export default function Detail() {
         <div className="card-body">
           <div className="row">
             <div className="col">
-              <div className="form-group">
-                <label>用户名</label>
+              <div className="mb-3">
+                <label className="form-label">用户名</label>
                 <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
               </div>
             </div>
 
             <div className="col">
-              <div className="form-group">
-                <label>部门</label>
+              <div className="mb-3">
+                <label className="form-label">部门</label>
                 <select
                   value={dept_id.toString()}
                   className="form-control"
@@ -111,8 +111,8 @@ export default function Detail() {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>权限：管理员</label>
+          <div className="mb-3">
+            <label className="form-label">权限：管理员</label>
             <select
               value={auth_super}
               className="form-control"

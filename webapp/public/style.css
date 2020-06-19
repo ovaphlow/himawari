@@ -5,7 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background-color: #282c34; */
   background-color: #5b5f68;
   /* color: white; */
   color: rgba(255, 255, 255, 0.897);
@@ -16,8 +15,10 @@ code {
     monospace;
 }
 
-.container {
-  margin-top: 1rem;
+.container-fluid {
+  /* margin-top: 1rem; */
+  background-color: #343a40;
+  /* background-color: #5b5f68; */
 }
 
 .text-small {
@@ -28,3 +29,13 @@ code {
   background-color: transparent;
   color: white;
 }
+
+.form-select {
+  background-color: transparent;
+  color: white;
+}
+
+.form-file-input {
+  background-color: transparent;
+  color: white;
+ }

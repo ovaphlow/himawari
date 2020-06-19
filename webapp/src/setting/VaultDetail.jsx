@@ -108,8 +108,8 @@ export default function VaultDetail({ cat }) {
         <div className="card-body">
           <div className="row">
             <div className="col-4">
-              <div className="form-group">
-                <label>名称</label>
+              <div className="mb-3">
+                <label className="form-label">名称</label>
                 <input
                   type="text"
                   value={name || ''}
@@ -120,8 +120,8 @@ export default function VaultDetail({ cat }) {
             </div>
 
             <div className="col-4 offset-4">
-              <div className="form-group">
-                <label>电话</label>
+              <div className="mb-3">
+                <label className="form-label">电话</label>
                 <input
                   type="tel"
                   value={phone || ''}
@@ -132,8 +132,8 @@ export default function VaultDetail({ cat }) {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>地址</label>
+          <div className="mb-3">
+            <label className="form-label">地址</label>
             <input
               type="text"
               value={addr || ''}

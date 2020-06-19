@@ -108,8 +108,8 @@ export default function DeptDetail({ cat }) {
         <div className="card-body">
           <div className="row">
             <div className="col-4">
-              <div className="form-group">
-                <label>名称</label>
+              <div className="mb-3">
+                <label className="form-label">名称</label>
                 <input
                   type="text"
                   value={name || ''}
@@ -120,8 +120,8 @@ export default function DeptDetail({ cat }) {
             </div>
 
             <div className="col-4 offset-4">
-              <div className="form-group">
-                <label>电话</label>
+              <div className="mb-3">
+                <label className="form-label">电话</label>
                 <input
                   type="tel"
                   value={tel}
@@ -132,8 +132,8 @@ export default function DeptDetail({ cat }) {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>位置</label>
+          <div className="mb-3">
+            <label className="form-label">位置</label>
             <input
               type="text"
               value={addr || ''}

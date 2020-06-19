@@ -14,9 +14,10 @@
   "dependencies": {
     "axios": "^0.19.2",
     "blueimp-md5": "^2.16.0",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^5.0.0-alpha1",
     "font-awesome": "^4.7.0",
     "moment": "^2.26.0",
+    "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

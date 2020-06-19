@@ -41,8 +41,8 @@ export default function UserFilter() {
 
       <div className="card bg-dark shadow">
         <div className="card-header">
-          <div className="form-row">
-            <div className="col-auto">
+          <div className="row">
+            <div className="col">
               <div className="input-group">
                 <div className="input-group-prepend">
                   <span className="input-group-text">姓名/部门</span>
@@ -58,7 +58,7 @@ export default function UserFilter() {
             </div>
 
             <div className="col-auto">
-              <div className="btn-group col-auto">
+              <div className="btn-group">
                 <button type="button" className="btn btn-info" onClick={handleFilter}>
                   <i className="fa fa-fw fa-search" />
                   查询

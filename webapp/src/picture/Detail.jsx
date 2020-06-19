@@ -8,7 +8,6 @@ export default function Detail() {
   const [archive_id, setArchiveId] = useState(0);
   const [archive_uuid, setArchiveUuid] = useState('');
   const [sn, setSn] = useState('');
-  const [name, setName] = useState('');
   const [base64, setBase64] = useState('');
   const [prev_id, setPrevId] = useState(0);
   const [next_id, setNextId] = useState(0);
@@ -36,7 +35,6 @@ export default function Detail() {
       const response = await window.fetch(`/api/archive/${archive_id}?uuid=${archive_uuid}`);
       const res = await response.json();
       setSn(res.content.sn);
-      setName(res.content.name);
     })();
   }, [archive_id, archive_uuid]);
 
@@ -53,51 +51,58 @@ export default function Detail() {
   }, [uuid, archive_id]);
 
   return (
-    <div className="container-lg">
-      <h1>档案图像</h1>
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                  查询档案
+                </span>
+              </li>
 
-      <hr />
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `archive.html#/${archive_id}?uuid=${archive_uuid}`; }}>
+                  {sn}
+                </span>
+              </li>
 
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item">
-            <a href="archive.html#/">档案</a>
-          </li>
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `#/?archive_id=${archive_id}&archive_uuid=${archive_uuid}`; }}>
+                  档案图像
+                </span>
+              </li>
 
-          <li className="breadcrumb-item">
-            <a href={`archive.html#/${archive_id}?archive_uuid=${archive_uuid}`}>
-              {sn}
-              {' '}
-              {name}
-            </a>
-          </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                <span className="text-muted">&gt;</span>
+                {uuid}
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
 
-          <li className="breadcrumb-item">
-            <a href={`#/?archive_id=${archive_id}&archive_uuid=${archive_uuid}`}>
-              图像
-            </a>
-          </li>
+        <div className="clearfix p-2" />
+      </div>
 
-          <li className="breadcrumb-item active" aria-current="page">
-            {uuid}
-          </li>
-        </ol>
-      </nav>
+      <div className="m-3" />
 
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-sm btn-secondary"
-              onClick={() => { window.location = `#/?archive_id=${archive_id}&uuid=${archive_uuid}`; }}
-            >
-              返回
-            </button>
-          </div>
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-header">
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-sm btn-secondary"
+                onClick={() => { window.location = `#/?archive_id=${archive_id}&uuid=${archive_uuid}`; }}
+              >
+                返回
+              </button>
+            </div>
 
-          <div className="btn-group pull-right">
-            {prev_id > 0 && (
+            <div className="btn-group pull-right">
+              {prev_id > 0 && (
               <button
                 type="button"
                 className="btn btn-sm btn-outline-info"
@@ -106,8 +111,8 @@ export default function Detail() {
                 <i className="fa fa-fw fa-arrow-left" />
                 上一张
               </button>
-            )}
-            {next_id > 0 && (
+              )}
+              {next_id > 0 && (
               <button
                 type="button"
                 className="btn btn-sm btn-outline-info"
@@ -116,12 +121,13 @@ export default function Detail() {
                 <i className="fa fa-fw fa-arrow-right" />
                 下一张
               </button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="card-body">
-          <img src={base64} alt={uuid} className="img-fluid rounded mx-auto d-block" />
+          <div className="card-body">
+            <img src={base64} alt={uuid} className="img-fluid rounded mx-auto d-block" />
+          </div>
         </div>
       </div>
     </div>

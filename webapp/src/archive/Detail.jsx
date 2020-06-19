@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
 
 import ComponentAction from './ComponentAction';
+import ComponentToolbar from './ComponentToolbar';
 import ComponentVaultPicker from '../ComponentVaultPicker';
 import useAuth from '../useAuth';
 
@@ -142,155 +143,182 @@ export default function Detail({ cat }) {
   };
 
   return (
-    <div className="container-lg">
-      <h1>档案</h1>
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                  查询档案
+                </span>
+              </li>
 
-      <hr />
+              <li className="breadcrumb-item active" aria-current="page">
+                {cat !== '编辑' && (
+                  <strong>
+                    <span className="text-muted">&gt;</span>
+                    {cat}
+                    <span className="text-muted">&lt;</span>
+                  </strong>
+                )}
+                {cat === '编辑' && (
+                  <strong>
+                    <span className="text-muted">&gt;</span>
+                    {sn}
+                    <span className="text-muted">&lt;</span>
+                  </strong>
+                )}
+              </li>
+            </ol>
+          </h1>
+        </nav>
 
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item">
-            <a href="#/">档案</a>
-          </li>
+        <hr />
 
-          <li className="breadcrumb-item active" aria-current="page">
-            {sn}
-            {' '}
-            {name}
-          </li>
-        </ol>
-      </nav>
-
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          {cat === '编辑' && (
-            <ComponentAction archive_id={id} archive_uuid={new URLSearchParams(location.search).get('uuid')} />
-          )}
+        <div className="text-center">
+          <ComponentToolbar />
         </div>
 
-        <div className="card-body">
-          <div className="row">
-            <div className="form-group col-3">
-              <label>档案号</label>
-              <input
-                type="text"
-                value={sn}
-                className="form-control"
-                onChange={(event) => setSN(event.target.value)}
-              />
+        <div className="clearfix p-2" />
+      </div>
+
+      <div className="m-3" />
+
+      <div className="container-lg">
+        {cat === '编辑' && (
+          <ComponentAction archive_id={id} archive_uuid={new URLSearchParams(location.search).get('uuid')} />
+        )}
+
+        <div className="m-2" />
+
+        <div className="card bg-dark shadow">
+          <div className="card-header" />
+
+          <div className="card-body">
+            <div className="row">
+              <div className="col-3 mb-3">
+                <label className="form-label">档案号</label>
+                <input
+                  type="text"
+                  value={sn}
+                  className="form-control"
+                  onChange={(event) => setSN(event.target.value)}
+                />
+              </div>
+
+              <div className="col mb-3">
+                <label className="form-label">附加档案号</label>
+                <input
+                  type="text"
+                  value={sn_repeal}
+                  className="form-control"
+                  onChange={(event) => setSNRepeal(event.target.value)}
+                />
+              </div>
+
+              <div className="col-3">
+                <ComponentVaultPicker
+                  name="vault_id"
+                  value={vault_id}
+                  onChange={(event) => setVaultID(parseInt(event.target.value, 10))}
+                />
+              </div>
             </div>
 
-            <div className="form-group col">
-              <label>附加档案号</label>
-              <input
-                type="text"
-                value={sn_repeal}
-                className="form-control"
-                onChange={(event) => setSNRepeal(event.target.value)}
-              />
+            <div className="row">
+              <div className="col mb-3">
+                <label className="form-label">身份证</label>
+                <input
+                  type="text"
+                  value={id_card || ''}
+                  className="form-control"
+                  onChange={(event) => setIdCard(event.target.value)}
+                  onBlur={handleIdCardBlur}
+                />
+              </div>
+
+              <div className="mb-3 col">
+                <label className="form-label">姓名</label>
+                <input
+                  type="text"
+                  value={name || ''}
+                  className="form-control"
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </div>
+
+              <div className="mb-3 col">
+                <label className="form-label">出生日期</label>
+                <input
+                  type="text"
+                  value={bday || ''}
+                  className="form-control"
+                  onChange={(event) => setBday(event.target.value)}
+                />
+              </div>
+
+              <div className="mb-3 col">
+                <label className="form-label">性别</label>
+                <select
+                  className="form-control"
+                  value={gender || ''}
+                  onChange={(event) => setGender(event.target.value)}
+                >
+                  <option value="">未选择</option>
+                  <option value="女">女</option>
+                  <option value="男">男</option>
+                </select>
+              </div>
             </div>
 
-            <div className="col-3">
-              <ComponentVaultPicker
-                name="vault_id"
-                value={vault_id}
-                onChange={(event) => setVaultID(parseInt(event.target.value, 10))}
-              />
+            <div className="row">
+              <div className="mb-3 col-3">
+                <label className="form-label">联系电话</label>
+                <input
+                  type="text"
+                  value={tel || ''}
+                  className="form-control"
+                  onChange={(event) => setTel(event.target.value)}
+                />
+              </div>
+
+              <div className="mb-3 col">
+                <label className="form-label">备注</label>
+                <input
+                  type="text"
+                  value={remark || ''}
+                  className="form-control"
+                  onChange={(event) => setRemark(event.target.value)}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="row">
-            <div className="form-group col">
-              <label>身份证</label>
-              <input
-                type="text"
-                value={id_card || ''}
-                className="form-control"
-                onChange={(event) => setIdCard(event.target.value)}
-                onBlur={handleIdCardBlur}
-              />
-            </div>
-
-            <div className="form-group col">
-              <label>姓名</label>
-              <input
-                type="text"
-                value={name || ''}
-                className="form-control"
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
-
-            <div className="form-group col">
-              <label>出生日期</label>
-              <input
-                type="text"
-                value={bday || ''}
-                className="form-control"
-                onChange={(event) => setBday(event.target.value)}
-              />
-            </div>
-
-            <div className="form-group col">
-              <label>性别</label>
-              <select
-                className="form-control"
-                value={gender || ''}
-                onChange={(event) => setGender(event.target.value)}
+          <div className="card-footer">
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => window.history.go(-1)}
               >
-                <option value="">未选择</option>
-                <option value="女">女</option>
-                <option value="男">男</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="form-group col-3">
-              <label>联系电话</label>
-              <input
-                type="text"
-                value={tel || ''}
-                className="form-control"
-                onChange={(event) => setTel(event.target.value)}
-              />
+                返回
+              </button>
             </div>
 
-            <div className="form-group col">
-              <label>备注</label>
-              <input
-                type="text"
-                value={remark || ''}
-                className="form-control"
-                onChange={(event) => setRemark(event.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="card-footer">
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => window.history.go(-1)}
-            >
-              返回
-            </button>
-          </div>
-
-          <div className="btn-group pull-right">
-            {cat === '编辑' && (
+            <div className="btn-group pull-right">
+              {cat === '编辑' && (
               <button type="button" className="btn btn-danger" onClick={handleRemove}>
                 <i className="fa fa-fw fa-trash-o" />
                 删除
               </button>
-            )}
+              )}
 
-            <button type="button" className="btn btn-primary" onClick={handleSave}>
-              <i className="fa fa-fw fa-save" />
-              保存
-            </button>
+              <button type="button" className="btn btn-primary" onClick={handleSave}>
+                <i className="fa fa-fw fa-save" />
+                保存
+              </button>
+            </div>
           </div>
         </div>
       </div>

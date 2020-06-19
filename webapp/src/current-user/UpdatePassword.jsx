@@ -65,8 +65,8 @@ export default function UpdatePassword() {
         <div className="card-body">
           <div className="row">
             <div className="col">
-              <div className="form-group">
-                <label>当前密码</label>
+              <div className="mb-3">
+                <label className="form-label">当前密码</label>
                 <input
                   type="password"
                   value={current_password}
@@ -78,8 +78,8 @@ export default function UpdatePassword() {
             </div>
 
             <div className="col">
-              <div className="form-group">
-                <label>新密码</label>
+              <div className="mb-3">
+                <label className="form-label">新密码</label>
                 <input
                   type="password"
                   value={new_password}
@@ -91,8 +91,8 @@ export default function UpdatePassword() {
             </div>
 
             <div className="col">
-              <div className="form-group">
-                <label>重复新密码</label>
+              <div className="mb-3">
+                <label className="form-label">重复新密码</label>
                 <input
                   type="password"
                   value={new_password2}

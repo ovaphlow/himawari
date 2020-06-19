@@ -41,13 +41,13 @@ export default function SignIn() {
 
       <div className="card bg-dark shadow mt-5 col-8 offset-2 col-md-6 offset-md-3">
         <div className="card-body">
-          <div className="form-group">
-            <label>用户名</label>
+          <div className="mb-3">
+            <label className="form-label">用户名</label>
             <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
           </div>
 
-          <div className="form-group">
-            <label>密码</label>
+          <div className="mb-3">
+            <label className="form-label">密码</label>
             <input type="password" value={password} className="form-control" onChange={(event) => setPassword(event.target.value)} />
           </div>
         </div>

@@ -6,7 +6,6 @@ export default function List() {
   const [archive_id, setArchiveId] = useState(0);
   const [archive_uuid, setArchiveUuid] = useState('');
   const [sn, setSn] = useState('');
-  const [name, setName] = useState('');
   const [list, setList] = useState([]);
 
   useEffect(() => {
@@ -50,46 +49,53 @@ export default function List() {
       const response = await window.fetch(`/api/archive/${archive_id}?uuid=${archive_uuid}`);
       const res = await response.json();
       setSn(res.content.sn);
-      setName(res.content.name);
     })();
   }, [archive_id, archive_uuid]);
 
   return (
-    <div className="container-lg">
-      <h1>档案图像</h1>
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                  查询档案
+                </span>
+              </li>
 
-      <hr />
+              <li className="breadcrumb-item">
+                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `archive.html#/${archive_id}?uuid=${archive_uuid}`; }}>
+                  {sn}
+                </span>
+              </li>
 
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item">
-            <a href="archive.html#/">档案</a>
-          </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                <span className="text-muted">&gt;</span>
+                档案图像
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
 
-          <li className="breadcrumb-item">
-            <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`}>
-              {sn}
-              {' '}
-              {name}
-            </a>
-          </li>
+        <div className="clearfix p-2" />
+      </div>
 
-          <li className="breadcrumb-item active" aria-current="page">
-            图像
-          </li>
-        </ol>
-      </nav>
+      <div className="m-3" />
 
-      <div className="card bg-dark shadow">
-        <div className="card-body">
-          <div className="row row-cols-3">
-            {list.map((it) => (
-              <div className="col pb-3" key={it.id}>
-                <a href={`#/${it.id}?uuid=${it.uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`}>
-                  <img src={it.base64} alt={it.uuid} className="img-fluid rounded" />
-                </a>
-              </div>
-            ))}
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-body">
+            <div className="row row-cols-3">
+              {list.map((it) => (
+                <div className="col pb-3" key={it.id}>
+                  <a href={`#/${it.id}?uuid=${it.uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`}>
+                    <img src={it.base64} alt={it.uuid} className="img-fluid rounded" />
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

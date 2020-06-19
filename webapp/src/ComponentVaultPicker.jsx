@@ -13,12 +13,12 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
   }, []);
 
   return (
-    <div className="form-group">
-      <label>档案所在地</label>
+    <div className="mb-3">
+      <label className="form-label">档案所在地</label>
       <select
         name={name || 'vault_id'}
         value={value.toString()}
-        className="form-control"
+        className="form-select"
         onChange={onChange}
       >
         <option value="0">未选择</option>

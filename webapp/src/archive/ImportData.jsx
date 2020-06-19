@@ -32,45 +32,75 @@ export default function ImportData() {
   };
 
   return (
-    <div className="container-lg">
-      <h1>
-        导入档案
-        <span className="pull-right">
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <strong>
+                  <span className="text-muted">&gt;</span>
+                  导入档案
+                  <span className="text-muted">&lt;</span>
+                </strong>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
-
-      <hr />
-
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          <a href={xlsxTemplate}>导入档案表格模板</a>
         </div>
 
-        <div className="card-body">
-          <div className="row">
-            <div className="col-4">
-              <VaultPicker name="vault_id" value={vault_id} onChange={(event) => setVaultId(parseInt(event.target.value, 10))} />
+        <div className="clearfix p-2" />
+      </div>
+
+      <div className="m-3" />
+
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-header">
+            <a href={xlsxTemplate}>导入档案表格模板</a>
+          </div>
+
+          <div className="card-body">
+            <div className="row">
+              <div className="col-4">
+                <VaultPicker name="vault_id" value={vault_id} onChange={(event) => setVaultId(parseInt(event.target.value, 10))} />
+              </div>
             </div>
 
-            <div className="col">
-              <div className="form-group">
-                <label>&nbsp;</label>
+            {/* <div className="col mb-3">
+                <label className="form-label">&nbsp;</label>
                 <div className="custom-file">
                   <input type="file" className="custom-file-input" id="customFileLangHTML" />
                   <label className="custom-file-label" htmlFor="customFileLangHTML" data-browse="选择文件">后缀名为xlsx的Excel表格文件</label>
                 </div>
+              </div> */}
+
+            <div className="row">
+              <div className="col mb-4">
+                <div className="form-file">
+                  <div className="m-4" />
+                  <input type="file" className="form-file-input" id="customFile" />
+                  <label className="form-file-label" htmlFor="customFile">
+                    <span className="form-file-text">选择 Excel (.xlsx) 文件...</span>
+                    <span className="form-file-button">浏览</span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="card-footer">
-          <div className="btn-group pull-right">
-            <button type="button" className="btn btn-primary" onClick={handleUpload}>
-              <i className="fa fa-fw fa-check" />
-              确定
-            </button>
+          <div className="card-footer">
+            <div className="btn-group pull-right">
+              <button type="button" className="btn btn-primary" onClick={handleUpload}>
+                <i className="fa fa-fw fa-check" />
+                确定
+              </button>
+            </div>
           </div>
         </div>
       </div>
