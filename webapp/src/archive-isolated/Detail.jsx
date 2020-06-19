@@ -150,7 +150,7 @@ export default function Detail({ cat }) {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>档案中转库</h1>
 
       <hr />

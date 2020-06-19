@@ -13,7 +13,7 @@ export default function VaultList() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         <i className="fa fa-fw fa-map-marker" />
         档案库

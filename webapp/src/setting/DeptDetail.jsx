@@ -81,7 +81,7 @@ export default function DeptDetail({ cat }) {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         <i className="fa fa-fw fa-sitemap" />
         部门

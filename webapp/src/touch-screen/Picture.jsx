@@ -42,7 +42,7 @@ export default function Picture() {
   }, [countdown]);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1 className="mt-5 text-center">
         <span className="pull-left">
           {countdown}

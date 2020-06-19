@@ -55,7 +55,7 @@ export default function List() {
   }, [archive_id, archive_uuid]);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>档案图像</h1>
 
       <hr />

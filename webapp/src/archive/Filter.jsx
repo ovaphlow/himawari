@@ -22,7 +22,7 @@ export default function Filter() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         查询档案
         <span className="pull-right">

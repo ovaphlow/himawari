@@ -20,7 +20,7 @@ export default function Filter() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         档案中转库
         <span className="pull-right">

@@ -47,7 +47,7 @@ export default function UpdatePassword() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         当前用户
         <span className="pull-right">

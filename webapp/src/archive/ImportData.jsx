@@ -32,7 +32,7 @@ export default function ImportData() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         导入档案
         <span className="pull-right">

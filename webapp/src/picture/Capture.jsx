@@ -92,7 +92,7 @@ export default function Capture() {
   }, [archive_id, archive_uuid]);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>档案</h1>
 
       <hr />

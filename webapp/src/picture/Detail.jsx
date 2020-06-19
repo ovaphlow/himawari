@@ -53,7 +53,7 @@ export default function Detail() {
   }, [uuid, archive_id]);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>档案图像</h1>
 
       <hr />

@@ -27,7 +27,7 @@ export default function Detail() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1 className="mt-5 text-center">档案查询终端</h1>
 
       <hr />

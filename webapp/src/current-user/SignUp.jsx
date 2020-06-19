@@ -36,7 +36,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>注册</h1>
 
       <hr />

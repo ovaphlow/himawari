@@ -34,7 +34,7 @@ export default function SignIn() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>登录</h1>
 
       <hr />

@@ -31,7 +31,7 @@ export default function TransferOut() {
   };
 
   return (
-    <div className="container">
+    <div className="container-lg">
       <h1>
         档案
         <span className="pull-right">
