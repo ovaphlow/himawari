@@ -11,7 +11,7 @@ export default function UpdatePassword() {
   const handleChangePassword = async () => {
     if (!current_password || !new_password || !new_password2) {
       window.alert('请完整填写所需信息');
-      return
+      return;
     }
 
     if (current_password === new_password) {
@@ -21,30 +21,30 @@ export default function UpdatePassword() {
 
     if (new_password !== new_password2) {
       window.alert('两次输入的新密码不一致');
-      return
+      return;
     }
 
-    const auth = JSON.parse(window.sessionStorage.getItem('auth'))
+    const auth = JSON.parse(window.sessionStorage.getItem('auth'));
 
     const data = {
       id: auth.id,
       uuid: auth.uuid,
       current_password: md5(current_password),
       new_password: md5(new_password),
-    }
+    };
 
     const response = await window.fetch('/api/current-user/update-password/', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(data),
-    })
+    });
     const res = await response.json();
     if (res.message) {
       window.alert(res.message);
       return;
     }
     window.location = '#/登录';
-  }
+  };
 
   return (
     <div className="container">
@@ -115,5 +115,5 @@ export default function UpdatePassword() {
         </div>
       </div>
     </div>
-  )
+  );
 }

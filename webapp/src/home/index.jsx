@@ -17,7 +17,6 @@ function Index() {
     const auth = window.sessionStorage.getItem('auth');
     if (!auth) {
       window.location = SIGN_IN_URL;
-      return;
     }
   }, []);
 
