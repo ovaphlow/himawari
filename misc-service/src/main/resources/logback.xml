@@ -6,9 +6,9 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <file>./logs/ovaphlow.himawari.service.miscdata.log</file>
+        <file>./logs/ovaphlow.himawari.service.misc.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>ovaphlow.himawari.service.miscdata.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>ovaphlow.himawari.service.misc.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>

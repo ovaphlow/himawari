@@ -1,4 +1,4 @@
-package ovaphlow.himawari.service.miscdata
+package ovaphlow.himawari.service.misc
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

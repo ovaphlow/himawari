@@ -1,4 +1,4 @@
-package ovaphlow.himawari.service.miscdata
+package ovaphlow.himawari.service.misc
 
 import com.google.gson.Gson
 import org.apache.commons.dbutils.QueryRunner
@@ -44,7 +44,10 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
             val qr = QueryRunner()
             val cnx = Postgres.connection
             val sql = """
-               select * from himawari.user where username = ?
+                select *,
+                    (select name from himawari.setting where id = u.dept_id) as dept
+                from himawari.user as u
+                where username = ?
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapHandler(), request.username)
             cnx.close()

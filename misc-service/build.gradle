@@ -79,8 +79,8 @@ protobuf {
 startScripts.enabled = false
 
 task helloWorldServer(type: CreateStartScripts) {
-    mainClassName = "ovaphlow.himawari.service.miscdata.ApplicationKt"
-    applicationName = "run-himawari-misc-data-service-202006-1"
+    mainClassName = "ovaphlow.himawari.service.misc.ApplicationKt"
+    applicationName = "run-himawari-misc-service-202006-1"
     outputDir = startScripts.outputDir
     classpath = startScripts.classpath
 }

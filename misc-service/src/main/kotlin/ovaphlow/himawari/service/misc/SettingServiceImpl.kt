@@ -1,4 +1,4 @@
-package ovaphlow.himawari.service.miscdata
+package ovaphlow.himawari.service.misc
 
 import com.google.gson.Gson
 import org.apache.commons.dbutils.QueryRunner

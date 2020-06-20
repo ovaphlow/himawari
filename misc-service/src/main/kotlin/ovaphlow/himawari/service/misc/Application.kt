@@ -1,4 +1,4 @@
-package ovaphlow.himawari.service.miscdata
+package ovaphlow.himawari.service.misc
 
 import io.grpc.Server
 import io.grpc.ServerBuilder

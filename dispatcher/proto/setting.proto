@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package miscdata;
+package misc;
 
 service Setting {
     rpc List (ListRequest) returns (Reply) {}
