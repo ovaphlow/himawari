@@ -28,7 +28,7 @@ function Index() {
 
   return (
     <HashRouter>
-      <ComponentNavbar category="系统设置" />
+      <ComponentNavbar category="系统设定" />
 
       <Switch>
         <Route exact path="/档案库"><VaultList /></Route>

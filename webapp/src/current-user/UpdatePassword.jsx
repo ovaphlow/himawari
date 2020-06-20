@@ -47,73 +47,98 @@ export default function UpdatePassword() {
   };
 
   return (
-    <div className="container-lg">
-      <h1>
-        当前用户
-        <span className="pull-right">
+    <>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <a href="#/" className="text-light">
+                  当前用户
+                </a>
+              </li>
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  修改密码
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
-
-      <hr />
-
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          <span className="lead text-danger">修改密码后需要重新登录</span>
         </div>
 
-        <div className="card-body">
-          <div className="row">
-            <div className="col">
-              <div className="mb-3">
-                <label className="form-label">当前密码</label>
-                <input
-                  type="password"
-                  value={current_password}
-                  autoComplete="current-password"
-                  className="form-control"
-                  onChange={(event) => setCurrentPassword(event.target.value)}
-                />
-              </div>
-            </div>
+        <div className="clearfix p-2" />
+      </div>
 
-            <div className="col">
-              <div className="mb-3">
-                <label className="form-label">新密码</label>
-                <input
-                  type="password"
-                  value={new_password}
-                  autoComplete="new-password"
-                  className="form-control"
-                  onChange={(event) => setNewPassword(event.target.value)}
-                />
-              </div>
-            </div>
+      <div className="m-3" />
 
-            <div className="col">
-              <div className="mb-3">
-                <label className="form-label">重复新密码</label>
-                <input
-                  type="password"
-                  value={new_password2}
-                  autoComplete="new-password"
-                  className="form-control"
-                  onChange={(event) => setNewPassword2(event.target.value)}
-                />
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-header">
+            <span className="lead text-danger">修改密码后需要重新登录</span>
+          </div>
+
+          <div className="card-body">
+            <div className="row">
+              <div className="col">
+                <div className="mb-3">
+                  <label className="form-label">当前密码</label>
+                  <input
+                    type="password"
+                    value={current_password}
+                    autoComplete="current-password"
+                    className="form-control"
+                    onChange={(event) => setCurrentPassword(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col">
+                <div className="mb-3">
+                  <label className="form-label">新密码</label>
+                  <input
+                    type="password"
+                    value={new_password}
+                    autoComplete="new-password"
+                    className="form-control"
+                    onChange={(event) => setNewPassword(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col">
+                <div className="mb-3">
+                  <label className="form-label">重复新密码</label>
+                  <input
+                    type="password"
+                    value={new_password2}
+                    autoComplete="new-password"
+                    className="form-control"
+                    onChange={(event) => setNewPassword2(event.target.value)}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="card-footer">
-          <div className="btn-group pull-right">
-            <button type="button" className="btn btn-primary" onClick={handleChangePassword}>
-              <i className="fa fa-fw fa-save" />
-              修改密码
-            </button>
+          <div className="card-footer">
+            <div className="btn-group pull-right">
+              <button type="button" className="btn btn-primary" onClick={handleChangePassword}>
+                <i className="fa fa-fw fa-save" />
+                修改密码
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

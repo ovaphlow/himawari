@@ -59,20 +59,20 @@ export default function List() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                <a href={'archive.html#/'} className="text-light">
                   查询档案
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `archive.html#/${archive_id}?uuid=${archive_uuid}`; }}>
+                <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`} className="text-light">
                   {sn}
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item active" aria-current="page">
                 <span className="text-muted">&gt;</span>
-                档案图像
+                <strong>档案图像</strong>
                 <span className="text-muted">&lt;</span>
               </li>
             </ol>

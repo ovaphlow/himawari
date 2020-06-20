@@ -13,60 +13,71 @@ export default function VaultList() {
   }, []);
 
   return (
-    <div className="container-lg">
-      <h1>
-        <i className="fa fa-fw fa-map-marker" />
-        档案库
-        <span className="pull-right">
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  档案库
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
-
-      <hr />
-
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item active" aria-current="page">
-            档案库
-          </li>
-        </ol>
-      </nav>
-
-      <div className="card bg-dark shadow mt-2">
-        <div className="card-header">
-          <a href="#/档案库/新增" className="btn btn-sm btn-success">
-            <i className="fa fa-fw fa-plus" />
-            新增
-          </a>
         </div>
 
-        <div className="card-body">
-          <table className="table table-dark table-hover">
-            <thead>
-              <tr>
-                <th className="text-right">序号</th>
-                <th>名称</th>
-                <th>地址</th>
-                <th>电话</th>
-              </tr>
-            </thead>
+        <div className="p-2" />
+      </div>
 
-            <tbody>
-              {data.map((it) => (
-                <tr key={it.id}>
-                  <td>
-                    <a href={`#/档案库/${it.id}?uuid=${it.uuid}`}>
-                      <i className="fa fa-fw fa-edit" />
-                    </a>
-                    <span className="pull-right">{it.id}</span>
-                  </td>
-                  <td>{it.name}</td>
-                  <td>{JSON.parse(it.doc.value).addr}</td>
-                  <td>{JSON.parse(it.doc.value).phone}</td>
+      <div className="m-5" />
+
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-header">
+            <a href="#/档案库/新增" className="btn btn-sm btn-light">
+              <i className="fa fa-fw fa-plus" />
+              新增
+            </a>
+          </div>
+
+          <div className="card-body">
+            <table className="table table-dark table-hover">
+              <caption>档案库</caption>
+              <thead>
+                <tr>
+                  <th className="text-right">序号</th>
+                  <th>名称</th>
+                  <th>地址</th>
+                  <th>电话</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {data.map((it) => (
+                  <tr key={it.id}>
+                    <td>
+                      <a href={`#/档案库/${it.id}?uuid=${it.uuid}`}>
+                        <i className="fa fa-fw fa-edit" />
+                      </a>
+                      <span className="pull-right">{it.id}</span>
+                    </td>
+                    <td>{it.name}</td>
+                    <td>{JSON.parse(it.doc.value).addr}</td>
+                    <td>{JSON.parse(it.doc.value).phone}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

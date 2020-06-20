@@ -71,12 +71,14 @@ public class PictureServiceImpl extends PictureGrpc.PictureImplBase {
         try (Connection cnx = DBUtil.getConnection()) {
             String sql = "select id, uuid, archive_id, doc, " +
                     "(select id from himawari.picture where id < ? order by id desc limit 1) as prev_id, " +
-                    "(select id from himawari.picture where id > ? order by id limit 1) as next_id " +
+                    "(select uuid from himawari.picture where id < ? order by id desc limit 1) as prev_uuid, " +
+                    "(select id from himawari.picture where id > ? order by id limit 1) as next_id, " +
+                    "(select uuid from himawari.picture where id > ? order by id limit 1) as next_uuid " +
                     "from himawari.picture " +
                     "where id = ? and uuid = ? and archive_id = ?";
             QueryRunner qr = new QueryRunner();
             resp.put("content", qr.query(cnx, sql, new MapHandler(),
-                    req.getId(), req.getId(), req.getId(), req.getUuid(), req.getArchiveId()));
+                    req.getId(), req.getId(), req.getId(), req.getId(), req.getId(), req.getUuid(), req.getArchiveId()));
         } catch (Exception e) {
             logger.error("", e);
             resp.put("message", "gRPC服务器错误");

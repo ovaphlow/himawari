@@ -149,9 +149,9 @@ export default function Detail({ cat }) {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                <a href="#/" className="text-light">
                   查询档案
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item active" aria-current="page">

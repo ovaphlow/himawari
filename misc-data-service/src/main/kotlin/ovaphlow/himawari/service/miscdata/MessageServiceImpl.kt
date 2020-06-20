@@ -21,6 +21,7 @@ class MessageServiceImpl: MessageGrpcKt.MessageCoroutineImplBase() {
                 returning id
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapHandler(), request.uuid, request.userId, request.doc)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("", e)
             resp["message"] = "gRPC服务错误"

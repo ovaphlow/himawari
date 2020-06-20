@@ -81,81 +81,91 @@ export default function DeptDetail({ cat }) {
   };
 
   return (
-    <div className="container-lg">
-      <h1>
-        <i className="fa fa-fw fa-sitemap" />
-        部门
-        <span className="pull-right">
+    <div>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item active">
+                <a href="#/部门" className="text-light">
+                  部门
+                </a>
+              </li>
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  {cat}
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
-
-      <hr />
-
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item">
-            <a href="#/部门">部门</a>
-          </li>
-
-          <li className="breadcrumb-item active" aria-current="page">
-            {cat}
-          </li>
-        </ol>
-      </nav>
-
-      <div className="card bg-dark shadow mt-2">
-        <div className="card-body">
-          <div className="row">
-            <div className="col-4">
-              <div className="mb-3">
-                <label className="form-label">名称</label>
-                <input
-                  type="text"
-                  value={name || ''}
-                  className="form-control"
-                  onChange={(event) => setName(event.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="col-4 offset-4">
-              <div className="mb-3">
-                <label className="form-label">电话</label>
-                <input
-                  type="tel"
-                  value={tel}
-                  className="form-control"
-                  onChange={(event) => setTel(event.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">位置</label>
-            <input
-              type="text"
-              value={addr || ''}
-              className="form-control"
-              onChange={(event) => setAddr(event.target.value)}
-            />
-          </div>
         </div>
 
-        <div className="card-footer">
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => window.history.go(-1)}
-            >
-              返回
-            </button>
+        <div className="p-2" />
+      </div>
+
+      <div className="m-5" />
+
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-body">
+            <div className="row">
+              <div className="col-4">
+                <div className="mb-3">
+                  <label className="form-label">名称</label>
+                  <input
+                    type="text"
+                    value={name || ''}
+                    className="form-control"
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col-4 offset-4">
+                <div className="mb-3">
+                  <label className="form-label">电话</label>
+                  <input
+                    type="tel"
+                    value={tel}
+                    className="form-control"
+                    onChange={(event) => setTel(event.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">位置</label>
+              <input
+                type="text"
+                value={addr || ''}
+                className="form-control"
+                onChange={(event) => setAddr(event.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="btn-group pull-right">
-            {cat === '编辑' && (
+          <div className="card-footer">
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => window.history.go(-1)}
+              >
+                返回
+              </button>
+            </div>
+
+            <div className="btn-group pull-right">
+              {cat === '编辑' && (
               <button
                 type="button"
                 className="btn btn-danger"
@@ -164,12 +174,13 @@ export default function DeptDetail({ cat }) {
                 <i className="fa fa-fw fa-trash-o" />
                 删除
               </button>
-            )}
+              )}
 
-            <button type="button" className="btn btn-primary" onClick={handleSave}>
-              <i className="fa fa-fw fa-save" />
-              保存
-            </button>
+              <button type="button" className="btn btn-primary" onClick={handleSave}>
+                <i className="fa fa-fw fa-save" />
+                保存
+              </button>
+            </div>
           </div>
         </div>
       </div>

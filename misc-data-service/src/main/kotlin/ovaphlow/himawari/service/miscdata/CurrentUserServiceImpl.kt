@@ -14,13 +14,13 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
         try {
             val cnx = Postgres.connection
             var sql = """
-               select count(*) as qty from himawari.user where username = ? 
+               select count(*) as qty from himawari.user where username = ?
             """.trimIndent()
             val qr = QueryRunner()
             val result = qr.query(cnx, sql, MapHandler(), request.username)
             if ("0" === result["qty"]) {
                 sql = """
-                   insert into 
+                   insert into
                    himawari.user (uuid, username, password, salt)
                    values (?, ?, ?, ?)
                    returning id
@@ -44,9 +44,10 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
             val qr = QueryRunner()
             val cnx = Postgres.connection
             val sql = """
-               select * from himawari.user where username = ? 
+               select * from himawari.user where username = ?
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapHandler(), request.username)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -63,6 +64,7 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
                 select password, salt from himawari.user where id = ? and uuid = ?
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapHandler(), request.id, request.uuid)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -76,9 +78,10 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
             val qr = QueryRunner()
             val cnx = Postgres.connection
             val sql = """
-               update himawari.user set password = ? where id = ? and uuid = ? 
+               update himawari.user set password = ? where id = ? and uuid = ?
             """.trimIndent()
             qr.update(cnx, sql, request.id, request.uuid)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -86,4 +89,3 @@ class CurrentUserServiceImpl: CurrentUserGrpcKt.CurrentUserCoroutineImplBase() {
         return Reply.newBuilder().setData(Gson().toJson(resp)).build()
     }
 }
-

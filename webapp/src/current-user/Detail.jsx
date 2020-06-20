@@ -11,9 +11,9 @@ export default function Detail() {
 
   useEffect(() => {
     window.console.info(auth);
-      setUsername(auth.username);
-      setDept(auth.dept);
-      setAuthSuper(auth.auth_super);
+    setUsername(auth.username);
+    setDept(auth.dept);
+    setAuthSuper(auth.auth_super);
   }, []);
 
   return (
@@ -22,7 +22,7 @@ export default function Detail() {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item">
+              <li className="breadcrumb-item active">
                 <strong>
                   <span className="text-muted">&gt;</span>
                   当前用户

@@ -48,20 +48,20 @@ export default function TransferOut() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                <a href="#/" className="text-light">
                   查询档案
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `#/${id}?uuid=${uuid}`; }}>
+                <a href={`#/${id}?uuid=${uuid}`} className="text-light">
                   {sn}
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item active" aria-current="page">
                 <span className="text-muted">&gt;</span>
-                转出
+                <strong>转出</strong>
                 <span className="text-muted">&lt;</span>
               </li>
             </ol>

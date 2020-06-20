@@ -96,15 +96,15 @@ export default function Capture() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                <a href={'archive.html#/'} className="text-light">
                   查询档案
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `archive.html#/${archive_id}?uuid=${archive_uuid}`; }}>
+                <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`} className="text-light">
                   {sn}
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item active" aria-current="page">
@@ -127,6 +127,14 @@ export default function Capture() {
           <br />
           在使用高拍仪厂商SDK时可以使用SDK自带的文件存储功能。
         </div>
+
+        <div className="btn-group">
+          <button type="button" className="btn btn-secondary btn-sm" onClick={() => { window.history.go(-1); }}>
+            返回
+          </button>
+        </div>
+
+        <div className="m-2" />
 
         <div className="card bg-dark shadow">
           <div className="card-body">

@@ -22,88 +22,100 @@ export default function UserFilter() {
   };
 
   return (
-    <div className="container-lg">
-      <h1>
-        <i className="fa fa-fw fa-users" />
-        用户
-        <span className="pull-right">
+    <>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  用户
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
+        </div>
 
-      <hr />
+        <div className="p-2" />
+      </div>
 
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item active" aria-current="page">用户</li>
-        </ol>
-      </nav>
+      <div className="m-5" />
 
-      <div className="card bg-dark shadow">
-        <div className="card-header">
-          <div className="row">
-            <div className="col">
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">姓名/部门</span>
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-header">
+            <div className="row">
+              <div className="col">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">姓名/部门</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="filter"
+                    value={filter || ''}
+                    className="form-control"
+                    onChange={(event) => setFilter(event.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="filter"
-                  value={filter || ''}
-                  className="form-control"
-                  onChange={(event) => setFilter(event.target.value)}
-                />
               </div>
-            </div>
 
-            <div className="col-auto">
-              <div className="btn-group">
-                <button type="button" className="btn btn-info" onClick={handleFilter}>
-                  <i className="fa fa-fw fa-search" />
-                  查询
-                </button>
+              <div className="col-auto">
+                <div className="btn-group">
+                  <button type="button" className="btn btn-info" onClick={handleFilter}>
+                    <i className="fa fa-fw fa-search" />
+                    查询
+                  </button>
 
-                <button type="button" className="btn btn-secondary" onClick={() => window.location.reload(true)}>
-                  <i className="fa fa-fw fa-refresh" />
-                  重置
-                </button>
+                  <button type="button" className="btn btn-secondary" onClick={() => window.location.reload(true)}>
+                    <i className="fa fa-fw fa-refresh" />
+                    重置
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="card-body">
-          <table className="table table-dark table-striped">
-            <thead>
-              <tr>
-                <th className="text-right">序号</th>
-                <th>用户</th>
-                <th>部门</th>
-                <th>管理员</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {list.map((it) => (
-                <tr key={it.id}>
-                  <td className="text-right">
-                    <span className="pull-left">
-                      <a href={`#/用户/${it.id}?uuid=${it.uuid}`}>
-                        <i className="fa fa-fw fa-edit" />
-                      </a>
-                    </span>
-                    {it.id}
-                  </td>
-                  <td>{it.username}</td>
-                  <td>{it.dept}</td>
-                  <td>{it.auth_super ? '是' : '否'}</td>
+          <div className="card-body">
+            <table className="table table-dark table-striped">
+              <thead>
+                <tr>
+                  <th className="text-right">序号</th>
+                  <th>用户</th>
+                  <th>部门</th>
+                  <th>管理员</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {list.map((it) => (
+                  <tr key={it.id}>
+                    <td className="text-right">
+                      <span className="pull-left">
+                        <a href={`#/用户/${it.id}?uuid=${it.uuid}`}>
+                          <i className="fa fa-fw fa-edit" />
+                        </a>
+                      </span>
+                      {it.id}
+                    </td>
+                    <td>{it.username}</td>
+                    <td>{it.dept}</td>
+                    <td>{it.auth_super ? '是' : '否'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

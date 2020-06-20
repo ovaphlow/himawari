@@ -10,15 +10,17 @@ export default function Detail() {
   const [sn, setSn] = useState('');
   const [base64, setBase64] = useState('');
   const [prev_id, setPrevId] = useState(0);
+  const [prev_uuid, setPrevUuid] = useState('');
   const [next_id, setNextId] = useState(0);
+  const [next_uuid, setNextUuid] = useState('');
 
   const handlePrevious = () => {
-    window.location = `#/${prev_id}?uuid=${uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`;
+    window.location = `#/${prev_id}?uuid=${prev_uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`;
     window.location.reload(true);
   };
 
   const handleNext = () => {
-    window.location = `#/${next_id}?uuid=${uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`;
+    window.location = `#/${next_id}?uuid=${next_uuid}&archive_id=${archive_id}&archive_uuid=${archive_uuid}`;
     window.location.reload(true);
   };
 
@@ -46,7 +48,9 @@ export default function Detail() {
       const res = await response.json();
       setBase64(JSON.parse(res.content.doc.value).base64);
       setPrevId(res.content.prev_id || 0);
+      setPrevUuid(res.content.prev_uuid || '');
       setNextId(res.content.next_id || 0);
+      setNextUuid(res.content.next_uuid || '');
     })();
   }, [uuid, archive_id]);
 
@@ -57,26 +61,28 @@ export default function Detail() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = '#/'; }}>
+                <a href="archive.html#/" className="text-light">
                   查询档案
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `archive.html#/${archive_id}?uuid=${archive_uuid}`; }}>
+                <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`} className="text-light">
                   {sn}
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item">
-                <span role="link" style={{ cursor: 'pointer' }} onClick={() => { window.location = `#/?archive_id=${archive_id}&archive_uuid=${archive_uuid}`; }}>
+                <a href={`#/?archive_id=${archive_id}&archive_uuid=${archive_uuid}`} className="text-light">
                   档案图像
-                </span>
+                </a>
               </li>
 
               <li className="breadcrumb-item active" aria-current="page">
                 <span className="text-muted">&gt;</span>
-                {uuid}
+                <strong>
+                  {uuid}
+                </strong>
                 <span className="text-muted">&lt;</span>
               </li>
             </ol>
@@ -105,7 +111,7 @@ export default function Detail() {
               {prev_id > 0 && (
               <button
                 type="button"
-                className="btn btn-sm btn-outline-info"
+                className="btn btn-sm btn-info"
                 onClick={handlePrevious}
               >
                 <i className="fa fa-fw fa-arrow-left" />
@@ -115,7 +121,7 @@ export default function Detail() {
               {next_id > 0 && (
               <button
                 type="button"
-                className="btn btn-sm btn-outline-info"
+                className="btn btn-sm btn-info"
                 onClick={handleNext}
               >
                 <i className="fa fa-fw fa-arrow-right" />

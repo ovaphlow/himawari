@@ -63,87 +63,100 @@ export default function Detail() {
   }, []);
 
   return (
-    <div className="container-lg">
-      <h1>
-        <i className="fa fa-fw fa-users" />
-        用户
-        <span className="pull-right">
+    <>
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item active">
+                <a href="#/用户" className="text-light">
+                  用户
+                </a>
+              </li>
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  编辑
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+
+        <hr />
+
+        <div className="text-center">
           <ComponentToolbar />
-        </span>
-      </h1>
-
-      <hr />
-
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb bg-dark">
-          <li className="breadcrumb-item">
-            <a href="#/用户">用户</a>
-          </li>
-
-          <li className="breadcrumb-item active" aria-current="page">编辑</li>
-        </ol>
-      </nav>
-
-      <div className="card bg-dark shadow">
-        <div className="card-body">
-          <div className="row">
-            <div className="col">
-              <div className="mb-3">
-                <label className="form-label">用户名</label>
-                <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
-              </div>
-            </div>
-
-            <div className="col">
-              <div className="mb-3">
-                <label className="form-label">部门</label>
-                <select
-                  value={dept_id.toString()}
-                  className="form-control"
-                  onChange={(event) => setDeptId(parseInt(event.target.value, 10))}
-                >
-                  <option value="0">未选择</option>
-                  {dept_list.map((it) => (
-                    <option key={it.id} value={it.id}>{it.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">权限：管理员</label>
-            <select
-              value={auth_super}
-              className="form-control"
-              onChange={(event) => setAuthSuper(event.target.value === 'true')}
-            >
-              <option value="false">否</option>
-              <option value="true">是</option>
-            </select>
-          </div>
         </div>
 
-        <div className="card-footer">
-          <div className="btn-group">
-            <button type="button" className="btn btn-secondary" onClick={() => { window.history.go(-1); }}>
-              返回
-            </button>
+        <div className="p-2" />
+      </div>
+
+      <div className="m-5" />
+
+      <div className="container-lg">
+        <div className="card bg-dark shadow">
+          <div className="card-body">
+            <div className="row">
+              <div className="col">
+                <div className="mb-3">
+                  <label className="form-label">用户名</label>
+                  <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
+                </div>
+              </div>
+
+              <div className="col">
+                <div className="mb-3">
+                  <label className="form-label">部门</label>
+                  <select
+                    value={dept_id.toString()}
+                    className="form-control"
+                    onChange={(event) => setDeptId(parseInt(event.target.value, 10))}
+                  >
+                    <option value="0">未选择</option>
+                    {dept_list.map((it) => (
+                      <option key={it.id} value={it.id}>{it.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">权限：管理员</label>
+              <select
+                value={auth_super}
+                className="form-control"
+                onChange={(event) => setAuthSuper(event.target.value === 'true')}
+              >
+                <option value="false">否</option>
+                <option value="true">是</option>
+              </select>
+            </div>
           </div>
 
-          <div className="btn-group pull-right">
-            <button type="button" className="btn btn-danger" onClick={handleRemove}>
-              <i className="fa fa-fw fa-trash" />
-              删除
-            </button>
+          <div className="card-footer">
+            <div className="btn-group">
+              <button type="button" className="btn btn-secondary" onClick={() => { window.history.go(-1); }}>
+                返回
+              </button>
+            </div>
 
-            <button type="button" className="btn btn-primary" onClick={handleSave}>
-              <i className="fa fa-fw fa-save" />
-              保存
-            </button>
+            <div className="btn-group pull-right">
+              <button type="button" className="btn btn-danger" onClick={handleRemove}>
+                <i className="fa fa-fw fa-trash" />
+                删除
+              </button>
+
+              <button type="button" className="btn btn-primary" onClick={handleSave}>
+                <i className="fa fa-fw fa-save" />
+                保存
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

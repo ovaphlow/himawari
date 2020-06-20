@@ -24,6 +24,7 @@ class UserServiceImpl: UserGrpcKt.UserCoroutineImplBase() {
                 limit 200
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapListHandler(), request.filter, request.filter)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -43,6 +44,7 @@ class UserServiceImpl: UserGrpcKt.UserCoroutineImplBase() {
                 limit 1
             """.trimIndent()
             resp["content"] = qr.query(cnx, sql, MapHandler(), request.id, request.uuid)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -61,6 +63,7 @@ class UserServiceImpl: UserGrpcKt.UserCoroutineImplBase() {
                 where id = ?
             """.trimIndent()
             qr.update(cnx, sql, request.uuid, request.username, request.deptId, request.authSuper, request.id)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
@@ -77,6 +80,7 @@ class UserServiceImpl: UserGrpcKt.UserCoroutineImplBase() {
                 delete from himawari.user where id = ? and uuid = ?
             """.trimIndent()
             qr.update(cnx, sql, request.id, request.uuid)
+            cnx.close()
         } catch (e: Exception) {
             logger.error("{}", e)
             resp["message"] = "gRPC服务错误"
