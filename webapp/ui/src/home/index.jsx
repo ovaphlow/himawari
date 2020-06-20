@@ -50,6 +50,25 @@ function Home() {
     <>
       <Navbar category="首页" />
 
+      <div className="container-fluid">
+        <nav aria-label="breadcrumb">
+          <h1>
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>
+                  检索档案
+                </strong>
+                <span className="text-muted">&lt;</span>
+              </li>
+            </ol>
+          </h1>
+        </nav>
+        <div className="clearfix p-2" />
+      </div>
+
+      <div className="m-3" />
+
       <div className="container-lg">
         <div className="row mt-5">
           <div className="col-8 offset-2 text-center">
