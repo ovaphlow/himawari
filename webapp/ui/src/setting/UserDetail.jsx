@@ -68,8 +68,8 @@ export default function Detail() {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <a href="#/用户" className="text-light">
+              <li className="breadcrumb-item">
+                <a href="#/用户" className="text-reset text-decoration-none">
                   用户
                 </a>
               </li>

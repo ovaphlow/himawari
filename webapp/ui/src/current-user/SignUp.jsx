@@ -43,9 +43,7 @@ export default function SignUp() {
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item active">
                 <span className="text-muted">&gt;</span>
-                <strong>
-                  注册
-                </strong>
+                <strong>注册</strong>
                 <span className="text-muted">&lt;</span>
               </li>
             </ol>

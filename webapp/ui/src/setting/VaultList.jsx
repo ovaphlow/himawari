@@ -41,7 +41,7 @@ export default function VaultList() {
       <div className="m-5" />
 
       <div className="container-lg">
-        <div className="card bg-dark shadow">
+        <div className="card bg-dark shadow vh-100">
           <div className="card-header">
             <a href="#/档案库/新增" className="btn btn-sm btn-light">
               <i className="fa fa-fw fa-plus" />

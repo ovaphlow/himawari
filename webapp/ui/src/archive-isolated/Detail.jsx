@@ -110,7 +110,7 @@ export default function Detail({ cat }) {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <a href="#/" className="text-light">
+                <a href="#/" className="text-reset text-decoration-none">
                   查询档案
                 </a>
               </li>

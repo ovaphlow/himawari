@@ -53,7 +53,7 @@ export default function UpdatePassword() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <a href="#/" className="text-light">
+                <a href="#/" className="text-reset text-decoration-none">
                   当前用户
                 </a>
               </li>

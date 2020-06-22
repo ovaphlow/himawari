@@ -86,8 +86,8 @@ export default function DeptDetail({ cat }) {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <a href="#/部门" className="text-light">
+              <li className="breadcrumb-item">
+                <a href="#/部门" className="text-reset text-decoration-none">
                   部门
                 </a>
               </li>

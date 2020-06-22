@@ -23,11 +23,9 @@ export default function Detail() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item active">
-                <strong>
-                  <span className="text-muted">&gt;</span>
-                  当前用户
-                  <span className="text-muted">&lt;</span>
-                </strong>
+                <span className="text-muted">&gt;</span>
+                <strong>当前用户</strong>
+                <span className="text-muted">&lt;</span>
               </li>
             </ol>
           </h1>

@@ -59,13 +59,13 @@ export default function List() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <a href="archive.html#/" className="text-light">
+                <a href="archive.html#/" className="text-reset text-decoration-none">
                   查询档案
                 </a>
               </li>
 
               <li className="breadcrumb-item">
-                <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`} className="text-light">
+                <a href={`archive.html#/${archive_id}?uuid=${archive_uuid}`} className="text-reset text-decoration-none">
                   {sn}
                 </a>
               </li>

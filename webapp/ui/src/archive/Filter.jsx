@@ -27,12 +27,10 @@ export default function Filter() {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item">
-                <strong>
-                  <span className="text-muted">&gt;</span>
-                  查询档案
-                  <span className="text-muted">&lt;</span>
-                </strong>
+              <li className="breadcrumb-item active">
+                <span className="text-muted">&gt;</span>
+                <strong>查询档案</strong>
+                <span className="text-muted">&lt;</span>
               </li>
             </ol>
           </h1>

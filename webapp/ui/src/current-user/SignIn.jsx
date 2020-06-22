@@ -41,9 +41,7 @@ export default function SignIn() {
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item active">
                 <span className="text-muted">&gt;</span>
-                <strong>
-                  登录
-                </strong>
+                <strong>登录</strong>
                 <span className="text-muted">&lt;</span>
               </li>
             </ol>

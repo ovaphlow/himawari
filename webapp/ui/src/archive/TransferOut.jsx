@@ -47,13 +47,13 @@ export default function TransferOut() {
           <h1>
             <ol className="breadcrumb bg-dark">
               <li className="breadcrumb-item">
-                <a href="#/" className="text-light">
+                <a href="#/" className="text-reset text-decoration-none">
                   查询档案
                 </a>
               </li>
 
               <li className="breadcrumb-item">
-                <a href={`#/${id}?uuid=${uuid}`} className="text-light">
+                <a href={`#/${id}?uuid=${uuid}`} className="text-reset text-decoration-none">
                   {sn}
                 </a>
               </li>

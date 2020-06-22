@@ -86,8 +86,8 @@ export default function VaultDetail({ cat }) {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <a href="#/档案库" className="text-light">
+              <li className="breadcrumb-item">
+                <a href="#/档案库" className="text-reset text-decoration-none">
                   档案库
                 </a>
               </li>
