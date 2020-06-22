@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
+
+import useAuth from '../useAuth';
 import ComponentToolbar from './ComponentToolbar';
 
-export default function VaultList() {
-  const [data, setData] = useState([]);
+export default function MessageList() {
+  const auth = useAuth();
+  const [list, setList] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const response = await window.fetch('/api/setting/?cat=档案库');
+      const response = await window.fetch(`/api/message/?user_id=${auth.id}`);
       const res = await response.json();
-      setData(res.content);
+      window.console.info(res);
+      setList(res.content || []);
     })();
   }, []);
 
@@ -21,7 +25,7 @@ export default function VaultList() {
               <li className="breadcrumb-item active">
                 <span className="text-muted">&gt;</span>
                 <strong>
-                  档案库
+                  系统消息
                 </strong>
                 <span className="text-muted">&lt;</span>
               </li>
@@ -42,37 +46,29 @@ export default function VaultList() {
 
       <div className="container-lg">
         <div className="card bg-dark shadow">
-          <div className="card-header">
-            <a href="#/档案库/新增" className="btn btn-sm btn-light">
-              <i className="fa fa-fw fa-plus" />
-              新增
-            </a>
-          </div>
-
           <div className="card-body">
-            <table className="table table-dark table-hover">
-              <caption>档案库</caption>
+            <table className="table table-dark table-striped table-bordered">
+              <caption>未读消息</caption>
               <thead>
                 <tr>
                   <th className="text-right">序号</th>
-                  <th>名称</th>
-                  <th>地址</th>
-                  <th>电话</th>
+                  <th>发送方</th>
+                  <th>标题</th>
                 </tr>
               </thead>
-
               <tbody>
-                {data.map((it) => (
+                {list.map((it) => (
                   <tr key={it.id}>
-                    <td>
-                      <a href={`#/档案库/${it.id}?uuid=${it.uuid}`}>
-                        <i className="fa fa-fw fa-edit" />
-                      </a>
-                      <span className="pull-right">{it.id}</span>
+                    <td rowSpan="2" className="text-right">
+                      {it.id}
+                      <span className="float-left">
+                        <a href={`#/${it.id}?uuid=${it.uuid}`}>
+                          <i className="fa fa-fw fa-edit" />
+                        </a>
+                      </span>
                     </td>
-                    <td>{it.name}</td>
-                    <td>{JSON.parse(it.doc.value).addr}</td>
-                    <td>{JSON.parse(it.doc.value).phone}</td>
+                    <td>{JSON.parse(it.doc.value).send_by}</td>
+                    <td>{JSON.parse(it.doc.value).title}</td>
                   </tr>
                 ))}
               </tbody>

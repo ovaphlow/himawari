@@ -11,6 +11,7 @@ const routerPicture = require('./route/picture');
 const routerArchiveIsolated = require('./route/archive-isolated');
 const routerUser = require('./route/user');
 const routerSetting = require('./route/setting');
+const routerMessage = require('./route/message');
 
 const app = new Koa();
 
@@ -18,7 +19,7 @@ app.env = 'production';
 
 app.use(bodyParser({ jsonLimit: '4mb' }));
 
-const STATIC_PATH = path.join(__dirname, '..', 'public')
+const STATIC_PATH = path.join(__dirname, '..', 'public');
 app.use(staticCache(STATIC_PATH, {
   maxAge: 60 * 60 * 24 * 7,
   gzip: true,
@@ -77,6 +78,11 @@ app.use(async (ctx, next) => {
 (() => {
   app.use(routerSetting.routes());
   app.use(routerSetting.allowedMethods());
+})();
+
+(() => {
+  app.use(routerMessage.routes());
+  app.use(routerMessage.allowedMethods());
 })();
 
 module.exports = app;

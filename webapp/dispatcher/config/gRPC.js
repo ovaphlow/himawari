@@ -7,7 +7,7 @@ const gRPC = {
       'grpc.max_receive_message_length': 1024 * 1024 * 256,
     },
   },
-  miscDataService: {
+  miscService: {
     host: '192.168.1.248',
     port: 8912,
     option: {

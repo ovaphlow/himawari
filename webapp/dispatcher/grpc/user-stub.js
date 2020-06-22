@@ -12,7 +12,7 @@ const packageDefinition = protoLoader.loadSync(`${__dirname}/../proto/user.proto
 });
 const proto = grpc.loadPackageDefinition(packageDefinition).misc;
 const grpcClient = new proto.User(
-  `${gRPC.miscDataService.host}:${gRPC.miscDataService.port}`,
+  `${gRPC.miscService.host}:${gRPC.miscService.port}`,
   grpc.credentials.createInsecure(),
 );
 

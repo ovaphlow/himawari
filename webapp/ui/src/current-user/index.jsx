@@ -7,6 +7,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Detail from './Detail';
 import UpdatePassword from './UpdatePassword';
+import MessageList from './MessageList';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -25,6 +26,7 @@ function Index() {
         <Route path="/登录"><SignIn /></Route>
         <Route path="/注册"><SignUp /></Route>
         <Route path="/修改密码"><UpdatePassword /></Route>
+        <Route path="/消息"><MessageList /></Route>
       </Switch>
     </HashRouter>
   );

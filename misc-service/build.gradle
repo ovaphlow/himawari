@@ -78,7 +78,7 @@ protobuf {
 
 startScripts.enabled = false
 
-task helloWorldServer(type: CreateStartScripts) {
+task miscService(type: CreateStartScripts) {
     mainClassName = "ovaphlow.himawari.service.misc.ApplicationKt"
     applicationName = "run-himawari-misc-service-202006-1"
     outputDir = startScripts.outputDir
@@ -86,6 +86,6 @@ task helloWorldServer(type: CreateStartScripts) {
 }
 
 applicationDistribution.into("bin") {
-    from(helloWorldServer)
+    from(miscService)
     fileMode = 0755
 }
