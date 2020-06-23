@@ -47,32 +47,18 @@ export default function MessageList() {
       <div className="container-lg">
         <div className="card bg-dark shadow">
           <div className="card-body">
-            <table className="table table-dark table-striped table-bordered">
-              <caption>未读消息</caption>
-              <thead>
-                <tr>
-                  <th className="text-right">序号</th>
-                  <th>发送方</th>
-                  <th>标题</th>
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((it) => (
-                  <tr key={it.id}>
-                    <td rowSpan="2" className="text-right">
-                      {it.id}
-                      <span className="float-left">
-                        <a href={`#/${it.id}?uuid=${it.uuid}`}>
-                          <i className="fa fa-fw fa-edit" />
-                        </a>
-                      </span>
-                    </td>
-                    <td>{JSON.parse(it.doc.value).send_by}</td>
-                    <td>{JSON.parse(it.doc.value).title}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ul className="list-group">
+              {list.map((it) => (
+                <li key={it.id} className="list-group-item list-group-item-action list-group-item-dark">
+                  <div className="d-flex w-100 justify-content-between">
+                    <h4 className="mb-1">{JSON.parse(it.doc.value).title}</h4>
+                    <small className="text-primary">{JSON.parse(it.doc.value).send_by}</small>
+                  </div>
+                  <p className="mb-1">{JSON.parse(it.doc.value).content}</p>
+                  <small className="text-muted">{JSON.parse(it.doc.value).datime}</small>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
