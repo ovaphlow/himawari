@@ -9,7 +9,8 @@ package misc;
 
 service Message {
     rpc Save (SaveMessageRequest) returns (Reply) {}
-    rpc ListUnread (ListUnreadMessageRequest) returns (Reply) {}
+    rpc List (ListMessageRequest) returns (Reply) {}
+    rpc MarkRead (MarkMessageReadRequest) returns (Reply) {}
 }
 
 message SaveMessageRequest {
@@ -18,6 +19,12 @@ message SaveMessageRequest {
     string doc = 3;
 }
 
-message ListUnreadMessageRequest {
+message ListMessageRequest {
     int32 user_id = 1;
+    string status = 2;
+}
+
+message MarkMessageReadRequest {
+    int32 id = 1;
+    string uuid = 2;
 }

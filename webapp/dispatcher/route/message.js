@@ -9,9 +9,9 @@ const router = new Router({
 
 module.exports = router;
 
-router.get('/', async (ctx) => {
+router.put('/:id/mark-read', async (ctx) => {
   const fetch = (data) => new Promise((resolve, reject) => {
-    messageStub.listUnread(data, (err, response) => {
+    messageStub.markRead(data, (err, response) => {
       if (err) {
         logger.error(err);
         reject(err);
@@ -21,7 +21,32 @@ router.get('/', async (ctx) => {
     });
   });
   try {
-    ctx.response.body = await fetch({ user_id: parseInt(ctx.request.query.user_id, 10) });
+    ctx.response.body = await fetch({
+      id: parseInt(ctx.params.id, 10),
+      uuid: ctx.request.query.uuid,
+    });
+  } catch (err) {
+    logger.error(err);
+    ctx.response.body = { message: '服务器错误' };
+  }
+});
+
+router.get('/', async (ctx) => {
+  const fetch = (data) => new Promise((resolve, reject) => {
+    messageStub.list(data, (err, response) => {
+      if (err) {
+        logger.error(err);
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(response.data));
+    });
+  });
+  try {
+    ctx.response.body = await fetch({
+      user_id: parseInt(ctx.request.query.user_id, 10),
+      status: JSON.stringify({ status: ctx.request.query.status }),
+    });
   } catch (err) {
     logger.error(err);
     ctx.response.body = { message: '服务器错误' };
