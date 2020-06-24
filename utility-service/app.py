@@ -28,7 +28,7 @@ class File(file_pb2_grpc.FileServicer):
                         stub = message_pb2_grpc.MessageStub(channel)
                         response = stub.Save(message_pb2.SaveRequest(
                             uuid=str(uuid.uuid1()),
-                            user_id=request.user_id
+                            user_id=request.user_id,
                             doc=json.dumps({
                                 'send_by': '导入档案服务',
                                 'title': '身份证长度错误',
@@ -45,7 +45,7 @@ class File(file_pb2_grpc.FileServicer):
                         stub = message_pb2_grpc.MessageStub(channel)
                         response = stub.Save(message_pb2.SaveRequest(
                             uuid=str(uuid.uuid1()),
-                            user_id=request.user_id
+                            user_id=request.user_id,
                             doc=json.dumps({
                                 'send_by': '导入档案服务',
                                 'title': '档案号或姓名数据异常',
@@ -60,17 +60,24 @@ class File(file_pb2_grpc.FileServicer):
                 with grpc.insecure_channel('127.0.0.1:8911') as channel:
                     stub = archive_pb2_grpc.ArchiveStub(channel)
                     # 检查档案号/身份证是否重复
+                    response = stub.CheckValid(archive_pb2.CheckValidRequest(
+                        sn=sheet.cell(row=i, column=2).value,
+                        id_card=sheet.cell(row=i, column=4).value,
+                    ))
+                    print('检查档案号/身份证是否重复')
+                    print(response)
                     response = stub.Save(archive_pb2.SaveRequest(
-                            uuid=str(uuid.uuid5(uuid.NAMESPACE_DNS, sheet.cell(row=i, column=4).value)),
-                            sn=sheet.cell(row=i, column=2).value,
-                            name=sheet.cell(row=i, column=3).value,
-                            id_card=sheet.cell(row=i, column=4).value,
-                            doc=json.dumps({
-                                'bday': sheet.cell(row=i, column=5).value,
-                                'tel': sheet.cell(row=i, column=6).value,
-                                'remark': sheet.cell(row=i, column=7).value,
-                                'vault_id': request.vault_id
-                            })))
+                        uuid=str(uuid.uuid5(uuid.NAMESPACE_DNS, sheet.cell(row=i, column=4).value)),
+                        sn=sheet.cell(row=i, column=2).value,
+                        name=sheet.cell(row=i, column=3).value,
+                        id_card=sheet.cell(row=i, column=4).value,
+                        doc=json.dumps({
+                            'bday': sheet.cell(row=i, column=5).value,
+                            'tel': sheet.cell(row=i, column=6).value,
+                            'remark': sheet.cell(row=i, column=7).value,
+                            'vault_id': request.vault_id
+                        })
+                    ))
 
         resp = {}
         resp['message'] = ''
