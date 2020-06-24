@@ -17,8 +17,8 @@ const gRPC = {
   },
   utilityService: {
     host: '192.168.1.248',
-    port: 50051,
-  }
+    port: 8913,
+  },
 };
 
 module.exports = gRPC;

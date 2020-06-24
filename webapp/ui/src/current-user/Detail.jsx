@@ -10,7 +10,6 @@ export default function Detail() {
   const [auth_super, setAuthSuper] = useState(false);
 
   useEffect(() => {
-    window.console.info(auth);
     setUsername(auth.username);
     setDept(auth.dept);
     setAuthSuper(auth.auth_super);

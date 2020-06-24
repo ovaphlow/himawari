@@ -81,9 +81,9 @@ class File(file_pb2_grpc.FileServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=8))
     file_pb2_grpc.add_FileServicer_to_server(File(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:8913')
     server.start()
-    print('UTILITY-SERVICE 运行于端口: %s' % (50051,))
+    print('UTILITY-SERVICE 运行于端口: %s' % (8913,))
     server.wait_for_termination()
 
 
