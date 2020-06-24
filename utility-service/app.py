@@ -22,13 +22,13 @@ class File(file_pb2_grpc.FileServicer):
         for sheet in wb:
             print('数据行数（包括标题行）', len(tuple(sheet.rows)), '行')
             for i in range(2, len(tuple(sheet.rows)) + 1):
-                # 判断关键数据是否有效
+                # 判断关键数据是否有效，如有异常情况发送系统消息
                 if len(sheet.cell(rows=i, columns=4).value) != 18:
                     with grpc.insecure_channel('127.0.0.1:8912') as channel:
                         stub = message_pb2_grpc.MessageStub(channel)
                         response = stub.Save(message_pb2.SaveRequest(
                             uuid=str(uuid.uuid1()),
-                            user_id=0,# request.user_id
+                            user_id=request.user_id
                             doc=json.dumps({
                                 'send_by': '导入档案服务',
                                 'title': '身份证长度错误',
@@ -45,7 +45,7 @@ class File(file_pb2_grpc.FileServicer):
                         stub = message_pb2_grpc.MessageStub(channel)
                         response = stub.Save(message_pb2.SaveRequest(
                             uuid=str(uuid.uuid1()),
-                            user_id=0,# request.user_id
+                            user_id=request.user_id
                             doc=json.dumps({
                                 'send_by': '导入档案服务',
                                 'title': '档案号或姓名数据异常',
@@ -57,10 +57,9 @@ class File(file_pb2_grpc.FileServicer):
                             })
                         ))
                     continue
-                # 检查档案号/身份证是否重复
-                # 如有异常情况发送消息
                 with grpc.insecure_channel('127.0.0.1:8911') as channel:
                     stub = archive_pb2_grpc.ArchiveStub(channel)
+                    # 检查档案号/身份证是否重复
                     response = stub.Save(archive_pb2.SaveRequest(
                             uuid=str(uuid.uuid5(uuid.NAMESPACE_DNS, sheet.cell(row=i, column=4).value)),
                             sn=sheet.cell(row=i, column=2).value,
@@ -69,7 +68,8 @@ class File(file_pb2_grpc.FileServicer):
                             doc=json.dumps({
                                 'bday': sheet.cell(row=i, column=5).value,
                                 'tel': sheet.cell(row=i, column=6).value,
-                                'remark': sheet.cell(row=i, column=7).value
+                                'remark': sheet.cell(row=i, column=7).value,
+                                'vault_id': request.vault_id
                             })))
 
         resp = {}

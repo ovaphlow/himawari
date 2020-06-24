@@ -41,7 +41,11 @@ router.post('/import-data', upload.single('file'), async (ctx) => {
       resolve(JSON.parse(response.data));
     });
   });
-  ctx.response.body = await fetch({ file_name });
+  ctx.response.body = await fetch({
+    file_name,
+    user_id: ctx.request.body.user_id,
+    vault_id: ctx.request.body.vault_id,
+  });
 });
 
 /**

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
+import useAuth from '../useAuth';
 import ComponentToolbar from './ComponentToolbar';
 import xlsxTemplate from '../assets/导入档案表格模板.xlsx';
 import VaultPicker from '../ComponentVaultPicker';
 
 export default function ImportData() {
+  const auth = useAuth();
   const [vault_id, setVaultId] = useState(0);
 
   const handleUpload = async () => {
@@ -15,6 +17,7 @@ export default function ImportData() {
     const formData = new FormData();
     const el = document.querySelector('#customFileLangHTML');
 
+    formData.append('user_id', auth.id);
     formData.append('vault_id', vault_id);
     formData.append('file', el.files[0]);
 
