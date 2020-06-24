@@ -44,7 +44,12 @@ export default function MessageList() {
         <nav aria-label="breadcrumb">
           <h1>
             <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
+              <li className="breadcrumb-item">
+                <a href="#/" className="text-reset text-decoration-none">
+                  当前用户
+                </a>
+              </li>
+              <li className="breadcrumb-item active" aria2-current="page">
                 <span className="text-muted">&gt;</span>
                 <strong>
                   系统消息
