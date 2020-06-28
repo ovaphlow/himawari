@@ -52,10 +52,8 @@ export default function SignUp() {
         <div className="clearfix p-2" />
       </div>
 
-      <div className="m-3" />
-
-      <div className="container-lg">
-        <div className="card bg-dark shadow mt-5 col-6 offset-3">
+      <div className="container-lg d-flex justify-content-center align-items-center vh-100">
+        <div className="card bg-dark shadow col-6">
           <div className="card-body">
             <div className="mb-3">
               <label className="form-label">用户名</label>
