@@ -34,52 +34,45 @@ export default function SignIn() {
   }, []);
 
   return (
-    <>
-      <div className="container-fluid">
-        <nav aria-label="breadcrumb">
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card bg-dark shadow col-6 col-lg-4">
+        <div className="card-header text-center">
           <h1>
-            <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <span className="text-muted">&gt;</span>
-                <strong>登录</strong>
-                <span className="text-muted">&lt;</span>
-              </li>
-            </ol>
+            #TITLE#
+            <br />
+            <small className="text-muted">登录</small>
           </h1>
-        </nav>
-        <div className="clearfix p-2" />
-      </div>
+        </div>
 
-      <div className="m-3" />
-
-      <div className="container-lg">
-        <div className="card bg-dark shadow mt-5 col-8 offset-2 col-md-6 offset-md-3">
-          <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label">用户名</label>
-              <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">密码</label>
-              <input type="password" value={password} className="form-control" onChange={(event) => setPassword(event.target.value)} />
-            </div>
+        <div className="card-body">
+          <div className="mb-3">
+            <label className="form-label">用户名</label>
+            <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
           </div>
 
-          <div className="card-footer">
-            <button type="button" className="btn btn-block btn-primary" onClick={handleSignIn}>
-              <i className="fa fa-fw fa-sign-in" />
-              登录
-            </button>
-
-            <div className="m-2" />
-
-            <p className="text-center mt-3 mb-0">
-              <a href="#/注册">注册帐号</a>
-            </p>
+          <div className="mb-3">
+            <label className="form-label">密码</label>
+            <input type="password" value={password} className="form-control" onChange={(event) => setPassword(event.target.value)} />
           </div>
         </div>
+
+        <div className="card-footer">
+          <button type="button" className="btn btn-block btn-primary" onClick={handleSignIn}>
+            <i className="fa fa-fw fa-sign-in" />
+            登录
+          </button>
+
+          <div className="m-2" />
+
+          <p className="text-center mt-3 mb-0">
+            <a href="#/注册">
+              <i className="fa fa-fw fa-user-plus" />
+              注册帐号
+            </a>
+          </p>
+        </div>
       </div>
-    </>
+    </div>
+
   );
 }

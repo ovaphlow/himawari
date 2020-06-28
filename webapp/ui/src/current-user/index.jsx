@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 
+import { SIGN_IN_URL } from '../constant';
 import ComponentNavbar from '../ComponentNavbar';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -17,6 +18,13 @@ ReactDOM.render(
 );
 
 function Index() {
+  useEffect(() => {
+    const auth = window.sessionStorage.getItem('auth');
+    if (!auth) {
+      window.location = SIGN_IN_URL;
+    }
+  }, []);
+
   return (
     <HashRouter>
       <ComponentNavbar category="当前用户" />

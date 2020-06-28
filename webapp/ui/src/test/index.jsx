@@ -1,49 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-
-import ComponentNavbar from '../ComponentNavbar';
 
 ReactDOM.render(<Index />, document.getElementById('app'));
 
 function Index() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <div>
-      <ComponentNavbar />
-
-      <div className="container-fluid">
-        <nav aria-label="breadcrumb">
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card bg-dark shadow col-6 col-lg-4">
+        <div className="card-header text-center">
           <h1>
-            <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <span className="text-muted">&gt;</span>
-                <strong>
-                  档案库
-                </strong>
-                <span className="text-muted">&lt;</span>
-              </li>
-            </ol>
+            #TITLE#
+            <br />
+            <small className="text-muted">登录</small>
           </h1>
-        </nav>
+        </div>
 
-        <div className="p-2" />
-      </div>
-
-      <div className="m-5" />
-
-      <div className="container-lg">
-        <div className="card shadow bg-dark">
-          <div className="card-body">
-            <table className="table table-dark table-strip">
-              <thead>
-                <tr>
-                  <th className="text-right">序号</th>
-                  <th>名称</th>
-                  <th>地址</th>
-                  <th>电话</th>
-                </tr>
-              </thead>
-            </table>
+        <div className="card-body">
+          <div className="mb-3">
+            <label className="form-label">用户名</label>
+            <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
           </div>
+
+          <div className="mb-3">
+            <label className="form-label">密码</label>
+            <input type="password" value={password} className="form-control" onChange={(event) => setPassword(event.target.value)} />
+          </div>
+        </div>
+
+        <div className="card-footer">
+          <button type="button" className="btn btn-block btn-primary">
+            <i className="fa fa-fw fa-sign-in" />
+            登录
+          </button>
+
+          <div className="m-2" />
+
+          <p className="text-center mt-3 mb-0">
+            <a href="#/注册">
+              <i className="fa fa-fw fa-user-plus" />
+              注册帐号
+            </a>
+          </p>
         </div>
       </div>
     </div>
