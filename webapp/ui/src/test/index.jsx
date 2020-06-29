@@ -15,14 +15,14 @@ function Index() {
       </header>
 
       <main className="flex-grow-1">
-        <div className="container h-100">
+        <div className="container-fluid h-100">
           <div className="row h-100 d-flex justify-content-center">
-            <div className="col-3">
+            <div className="col-3 col-lg-2">
               <div className="card bg-dark h-100">
                 <div className="card-body">
                   <ul className="nav flex-column">
                     <li className="nav-item">
-                      <a className="nav-link active" aria-current="page" href="#2">
+                      <a className="nav-link active text-reset text-decoration-none" aria-current="page" href="#2">
                         <span data-feather="home" />
                         Dashboard
                       </a>
@@ -31,8 +31,62 @@ function Index() {
                 </div>
               </div>
             </div>
+
             <div className="col">
-              <div className="card shadow bg-dark h-100 w-100">
+              <div className="container-lg h-100 d-flex flex-column">
+                <div className="d-flex justify-content-between alitn-items-end">
+                  <div className="btn-group">
+                    <button type="button" className="btn btn-link text-reset text-decoration-none">
+                      <i className="fa fa-fw fa-angle-left" />
+                      后退
+                    </button>
+                  </div>
+                  <span className="h1">12213</span>
+                  <ul className="list-inline align-self-end">
+                    <li className="list-inline-item">1123</li>
+                    <li className="list-inline-item">2234</li>
+                  </ul>
+                </div>
+                <div className="card bg-dark h-100">
+                  <div className="card-header">
+                    HEADER
+                  </div>
+                  <div className="card-body">
+                    <div className="mb-3">
+                      <label className="form-label">NAME</label>
+                      <input type="text" placeholder="1123123123" className="form-control rounded-0 input-underscore" />
+                    </div>
+                    {/* 1
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p>
+                    <p className="lead">89</p> */}
+                  </div>
+                  <div className="card-footer">
+                    FOOTER
+                  </div>
+                </div>
+              </div>
+              {/* <div className="card shadow bg-dark h-100 w-100 workspace">
                 <div className="card-body">
                   <p className="lead">89</p>
                   <p className="lead">89</p>
@@ -58,7 +112,7 @@ function Index() {
                   <p className="lead">89</p>
                   <p className="lead">89</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

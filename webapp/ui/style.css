@@ -10,15 +10,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background-color: #5b5f68; */
-  background-color: #2d4059;
-  /* color: white; */
+  background-color: #5b5f68;
   color: rgba(255, 255, 255, 0.897);
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 
 .container-fluid {
