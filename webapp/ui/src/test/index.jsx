@@ -22,9 +22,13 @@ function Index() {
                 <div className="card-body">
                   <ul className="nav flex-column">
                     <li className="nav-item">
-                      <a className="nav-link active text-reset text-decoration-none" aria-current="page" href="#2">
-                        <span data-feather="home" />
+                      <a className="nav-link text-reset text-decoration-none" aria-current="page" href="#2">
                         Dashboard
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link active text-reset text-decoration-none" aria-current="page" href="#2">
+                        <strong>&gt; Dashboard &lt;</strong>
                       </a>
                     </li>
                   </ul>
@@ -56,7 +60,7 @@ function Index() {
                       <label className="form-label">NAME</label>
                       <input type="text" placeholder="1123123123" className="form-control rounded-0 input-underscore" />
                     </div>
-                    {/* 1
+                    1
                     <p className="lead">89</p>
                     <p className="lead">89</p>
                     <p className="lead">89</p>
@@ -79,7 +83,7 @@ function Index() {
                     <p className="lead">89</p>
                     <p className="lead">89</p>
                     <p className="lead">89</p>
-                    <p className="lead">89</p> */}
+                    <p className="lead">89</p>
                   </div>
                   <div className="card-footer">
                     FOOTER
