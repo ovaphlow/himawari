@@ -5,14 +5,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
-  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css" />
 
   <style>
     html,
     body {
       height: 100%;
+      flex-direction: column;
       background-image:
         linear-gradient(to bottom, rgba(50,50,50,.5), rgba(50,50,50,0.5), rgba(50,50,50,1)),
         url('wallhaven-n6zrz7.jpg');
@@ -21,30 +20,18 @@
       background-size: cover;
     }
 
-    body {
-      /* background-color: #444f5a; */
-      background-color: #52616b;
-      /* background-color: #4d606e; */
-      color: rgba(255, 255, 255, 0.897);
-    }
-
-    .input-underscore {
-      color: rgba(255, 255, 255, 1);
-      border: 0;
-      border-bottom: 2px solid silver /* slategrey */;
-      border-radius: 0;
-      background-color: transparent;
+    .hh {
+      height: 100%;
+      flex-grow: 1;
+      flex-direction: column;
     }
   </style>
 
   <title>数字化档案</title>
-
-  <script src="../node_modules/popper.js/dist/popper.min.js"></script>
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 
-<body class="d-flex h-100 w-100 text-white">
-  <div id="app" class="w-100"></div>
+<body>
+  <div id="app" class="hh"></div>
 
   <script src="src/test/index.jsx"></script>
 </body>
