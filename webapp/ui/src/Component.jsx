@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faHome, faArchive, faBox, faHandPointUp, faHistory, faUserCircle, faSignOutAlt,
+  faHome, faArchive, faBox, faHandPointUp, faHistory, faUserCircle, faSignOutAlt, faCogs, faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -17,37 +17,39 @@ export function TopNav() {
 
         <div className="navbar-menu">
           <div className="navbar-start">
-            <a href="home.html" className="navbar-item">
-              <FontAwesomeIcon icon={faHome} fixedWidth />
-              首页
-            </a>
-
-            <a href="archive.html" className="navbar-item">
+            {/* <a href="archive.html" className="navbar-item">
               <FontAwesomeIcon icon={faArchive} fixedWidth />
               档案管理
-            </a>
+            </a> */}
 
-            <a href="archive-isolated.html" className="navbar-item">
+            {/* <a href="archive-isolated.html" className="navbar-item">
               <FontAwesomeIcon icon={faBox} fixedWidth />
               档案中转库
-            </a>
+            </a> */}
 
-            <a href="touch-screen.html" className="navbar-item">
+            {/* <a href="touch-screen.html" className="navbar-item">
               <FontAwesomeIcon icon={faHandPointUp} fixedWidth />
               触摸屏查询终端
-            </a>
+            </a> */}
 
-            <a href="api-journal.html" className="navbar-item">
+            {/* <a href="api-journal.html" className="navbar-item">
               <FontAwesomeIcon icon={faHistory} fixedWidth />
               API 调用记录
-            </a>
+            </a> */}
           </div>
 
           <div className="navbar-end">
+            <a href="home.html" className="navbar-item">
+              <FontAwesomeIcon icon={faHome} fixedWidth />
+            </a>
+
+            <a href="setting.html" className="navbar-link">
+              <FontAwesomeIcon icon={faCogs} fixedWidth />
+            </a>
+
             <div className="navbar-item has-dropdown is-hoverable">
               <a href="current-user.html" className="navbar-link">
                 <FontAwesomeIcon icon={faUserCircle} fixedWidth />
-                当前用户
               </a>
 
               <div className="navbar-dropdown">
@@ -78,14 +80,23 @@ export function LeftNav() {
         <p className="menu-label">档案功能</p>
         <ul className="menu-list">
           <li>
-            <a href="archive.html">
-              档案
+            <a href="archive.html#/录入">
+              <FontAwesomeIcon icon={faPlus} fixedWidth />
+              录入档案
             </a>
           </li>
 
           <li>
             <a href="archive.html">
-              档案中转
+              <FontAwesomeIcon icon={faArchive} fixedWidth />
+              档案管理
+            </a>
+          </li>
+
+          <li>
+            <a href="archive.html">
+              <FontAwesomeIcon icon={faBox} fixedWidth />
+              档案中转库
             </a>
           </li>
         </ul>
@@ -93,7 +104,8 @@ export function LeftNav() {
         <ul className="menu-list">
           <li>
             <a href="archive.html">
-              触摸屏
+              <FontAwesomeIcon icon={faHandPointUp} fixedWidth />
+              触摸屏查询终端
             </a>
           </li>
         </ul>
@@ -101,7 +113,8 @@ export function LeftNav() {
         <ul className="menu-list">
           <li>
             <a href="archive.html">
-              API
+              <FontAwesomeIcon icon={faHistory} fixedWidth />
+              API 调用记录
             </a>
           </li>
         </ul>
