@@ -47,12 +47,22 @@ export default function SignIn() {
         <div className="card-body">
           <div className="mb-3">
             <label className="form-label">用户名</label>
-            <input type="text" value={username} className="form-control" onChange={(event) => setUsername(event.target.value)} />
+            <input
+              type="text"
+              value={username}
+              className="form-control input-underscore"
+              onChange={(event) => setUsername(event.target.value)}
+            />
           </div>
 
           <div className="mb-3">
             <label className="form-label">密码</label>
-            <input type="password" value={password} className="form-control" onChange={(event) => setPassword(event.target.value)} />
+            <input
+              type="password"
+              value={password}
+              className="form-control input-underscore"
+              onChange={(event) => setPassword(event.target.value)}
+            />
           </div>
         </div>
 
@@ -73,6 +83,5 @@ export default function SignIn() {
         </div>
       </div>
     </div>
-
   );
 }

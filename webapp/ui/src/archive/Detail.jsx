@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { v5 as uuidv5 } from 'uuid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faArchive, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import ComponentAction from './ComponentAction';
-import ComponentToolbar from './ComponentToolbar';
 import ComponentVaultPicker from '../ComponentVaultPicker';
 import useAuth from '../useAuth';
 
@@ -39,7 +40,7 @@ export default function Detail({ cat }) {
         setVaultID(parseInt(doc.vault_id, 10));
       })();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   const handleIdCardBlur = () => {
@@ -143,50 +144,45 @@ export default function Detail({ cat }) {
   };
 
   return (
-    <div>
+    <>
       <div className="container-fluid">
-        <nav aria-label="breadcrumb">
-          <h1>
-            <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item">
-                <a href="#/" className="text-reset text-decoration-none">
-                  查询档案
-                </a>
-              </li>
-
-              <li className="breadcrumb-item active" aria-current="page">
-                {cat !== '编辑' && (
-                  <strong>
-                    <span className="text-muted">&gt;</span>
-                    {cat}
-                    <span className="text-muted">&lt;</span>
-                  </strong>
-                )}
-                {cat === '编辑' && (
-                  <strong>
-                    <span className="text-muted">&gt;</span>
-                    {sn}
-                    <span className="text-muted">&lt;</span>
-                  </strong>
-                )}
-              </li>
-            </ol>
-          </h1>
-        </nav>
+        <div className="d-flex justify-content-between align-items-end">
+          <h1>档案信息</h1>
+        </div>
 
         <hr />
 
-        <div className="text-center">
-          <ComponentToolbar />
-        </div>
+        <div className="d-flex justify-content-center">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <a href="home.html" className="text-reset text-decoration-none">
+                  <FontAwesomeIcon icon={faHome} fixedWidth />
+                  首页
+                </a>
+              </li>
 
-        <div className="clearfix p-2" />
+              <li className="breadcrumb-item">
+                <a href="archive.html" className="text-reset text-decoration-none">
+                  <FontAwesomeIcon icon={faArchive} fixedWidth />
+                  档案管理
+                </a>
+              </li>
+
+              <li className="breadcrumb-item active">
+                <strong>
+                  {(id && sn) || '转入'}
+                </strong>
+              </li>
+            </ol>
+          </nav>
+        </div>
       </div>
 
       <div className="m-3" />
 
       <div className="container-lg">
-        {cat === '编辑' && (
+        {id && (
           <ComponentAction archive_id={id} archive_uuid={new URLSearchParams(location.search).get('uuid')} />
         )}
 
@@ -202,7 +198,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={sn}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setSN(event.target.value)}
                 />
               </div>
@@ -212,7 +208,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={sn_repeal}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setSNRepeal(event.target.value)}
                 />
               </div>
@@ -232,7 +228,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={id_card || ''}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setIdCard(event.target.value)}
                   onBlur={handleIdCardBlur}
                 />
@@ -243,7 +239,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={name || ''}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setName(event.target.value)}
                 />
               </div>
@@ -253,7 +249,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={bday || ''}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setBday(event.target.value)}
                 />
               </div>
@@ -261,7 +257,7 @@ export default function Detail({ cat }) {
               <div className="mb-3 col">
                 <label className="form-label">性别</label>
                 <select
-                  className="form-control"
+                  className="form-control input-underscore"
                   value={gender || ''}
                   onChange={(event) => setGender(event.target.value)}
                 >
@@ -278,7 +274,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={tel || ''}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setTel(event.target.value)}
                 />
               </div>
@@ -288,7 +284,7 @@ export default function Detail({ cat }) {
                 <input
                   type="text"
                   value={remark || ''}
-                  className="form-control"
+                  className="form-control input-underscore"
                   onChange={(event) => setRemark(event.target.value)}
                 />
               </div>
@@ -308,21 +304,20 @@ export default function Detail({ cat }) {
 
             <div className="btn-group pull-right">
               {cat === '编辑' && (
-              <button type="button" className="btn btn-danger" onClick={handleRemove}>
-                <i className="fa fa-fw fa-trash-o" />
+              <button type="button" className="btn btn-outline-danger" onClick={handleRemove}>
                 删除
               </button>
               )}
 
               <button type="button" className="btn btn-primary" onClick={handleSave}>
-                <i className="fa fa-fw fa-save" />
+                <FontAwesomeIcon icon={faCheck} fixedWidth />
                 保存
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

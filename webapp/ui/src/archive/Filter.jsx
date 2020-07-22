@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHome, faArchive, faSearch, faEdit,
+} from '@fortawesome/free-solid-svg-icons';
 
 import ComponentToolbar from './ComponentToolbar';
 
@@ -22,32 +26,46 @@ export default function Filter() {
   };
 
   return (
-    <div>
-      <div className="container-fluid">
-        <nav aria-label="breadcrumb">
-          <h1>
-            <ol className="breadcrumb bg-dark">
-              <li className="breadcrumb-item active">
-                <span className="text-muted">&gt;</span>
-                <strong>查询档案</strong>
-                <span className="text-muted">&lt;</span>
-              </li>
-            </ol>
-          </h1>
-        </nav>
-
-        <hr />
-
-        <div className="text-center">
+    <>
+      <div className="container-fluid h-100">
+        <div className="d-flex align-items-end justify-content-between">
+          <h1>查询档案</h1>
           <ComponentToolbar />
         </div>
 
-        <div className="clearfix p-2" />
+        <hr />
+
+        <div className="d-flex justify-content-center">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb bg-dark">
+              <li className="breadcrumb-item">
+                <a href="home.html" className="text-reset text-decoration-none">
+                  <FontAwesomeIcon icon={faHome} fixedWidth />
+                  首页
+                </a>
+              </li>
+
+              <li className="breadcrumb-item">
+                <a href="archive.html" className="text-reset text-decoration-none">
+                  <FontAwesomeIcon icon={faArchive} fixedWidth />
+                  档案管理
+                </a>
+              </li>
+
+              <li className="breadcrumb-item active">
+                <strong>
+                  <FontAwesomeIcon icon={faSearch} fixedWidth />
+                  查询档案
+                </strong>
+              </li>
+            </ol>
+          </nav>
+        </div>
       </div>
 
       <div className="m-3" />
 
-      <div className="container-lg mt-4">
+      <div className="container-lg mt-4 h-100">
         <div className="card bg-dark shadow">
           <div className="card-header">
             <div className="row">
@@ -101,7 +119,7 @@ export default function Filter() {
                   <tr key={it.id}>
                     <td>
                       <a href={`#/${it.id}?uuid=${it.uuid}`}>
-                        <i className="fa fa-fw fa-edit" />
+                        <FontAwesomeIcon icon={faEdit} fixedWidth />
                       </a>
                       <span className="pull-right">{it.id}</span>
                     </td>
@@ -121,6 +139,6 @@ export default function Filter() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

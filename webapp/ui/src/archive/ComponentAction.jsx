@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare, faCamera, faImages } from '@fortawesome/free-solid-svg-icons';
 
 export default function ComponentAction({ archive_id, archive_uuid }) {
   return (
     <>
       <div className="btn-group">
         <a href={`#/${archive_id}/转出?uuid=${archive_uuid}`} className="btn btn-sm btn-light">
-          <i className="fa fa-fw fa-mail-forward" />
+          <FontAwesomeIcon icon={faShare} fixedWidth />
           转出
         </a>
       </div>
 
       <div className="btn-group pull-right">
         <a href={`picture.html#/扫描?archive_id=${archive_id}&archive_uuid=${archive_uuid}`} className="btn btn-sm btn-light">
-          <i className="fa fa-fw fa-camera" />
+          <FontAwesomeIcon icon={faCamera} fixedWidth />
           扫描
         </a>
 
         <a href={`picture.html#/?archive_id=${archive_id}&archive_uuid=${archive_uuid}`} className="btn btn-sm btn-light">
-          <i className="fa fa-fw fa-image" />
+          <FontAwesomeIcon icon={faImages} fixedWidth />
           查看档案图像
         </a>
       </div>

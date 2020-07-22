@@ -19,9 +19,9 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
-    "camelcase": 0,
-    "no-alert": 0,
-    "jsx-a11y/label-has-associated-control": 0,
-    "jsx-a11y/media-has-caption": 0,
+    camelcase: 0,
+    'no-alert': 0,
+    'jsx-a11y/label-has-associated-control': 0,
+    'jsx-a11y/media-has-caption': 0,
   },
 };

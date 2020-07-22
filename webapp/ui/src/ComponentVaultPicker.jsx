@@ -18,7 +18,7 @@ export default function ComponentVaultPicker({ name, value, onChange }) {
       <select
         name={name || 'vault_id'}
         value={value.toString()}
-        className="form-select"
+        className="form-select input-underscore"
         onChange={onChange}
       >
         <option value="0">未选择</option>
